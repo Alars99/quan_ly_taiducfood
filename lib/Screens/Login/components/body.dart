@@ -6,6 +6,7 @@ import 'package:quan_ly_taiducfood/components/rounded_button.dart';
 import 'package:quan_ly_taiducfood/components/rounded_input_field.dart';
 import 'package:quan_ly_taiducfood/components/rounded_password_field.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:quan_ly_taiducfood/navigation_home_screen.dart';
 
 class Body extends StatelessWidget {
   const Body({
@@ -35,7 +36,16 @@ class Body extends StatelessWidget {
             ),
             RoundedButton(
               text: "Đăng nhập",
-              press: () {},
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return NavigationHomeScreen();
+                    },
+                  ),
+                );
+              },
             ),
             SizedBox(height: size.height * 0.03),
             AlreadyHaveAnAccountCheck(
