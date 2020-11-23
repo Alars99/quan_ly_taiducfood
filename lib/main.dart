@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Quản Lý Bán Thịt TĐTFood',
+      title: 'Quản Lý Bán Hàng TaiDucFood',
       theme: ThemeData(
         primaryColor: kPrimaryColor,
         scaffoldBackgroundColor: Colors.white,

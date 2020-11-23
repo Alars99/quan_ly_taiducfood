@@ -9,6 +9,10 @@ import 'package:quan_ly_taiducfood/components/rounded_input_field.dart';
 import 'package:quan_ly_taiducfood/components/rounded_password_field.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../../components/rounded_button.dart';
+import '../../../components/rounded_button.dart';
+import '../../../components/rounded_password_field.dart';
+
 class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -27,11 +31,16 @@ class Body extends StatelessWidget {
               hintText: "Nhập email công ty",
               onChanged: (value) {},
             ),
+            RoundedButton(
+              text: "aaa",
+              textColor: Colors.black,
+              press: () {},
+            ),
             RoundedPasswordField(
               onChanged: (value) {},
             ),
             RoundedButton(
-              text: "Đăng Ký",
+              text: "Đăng nhập",
               press: () {},
             ),
             SizedBox(height: size.height * 0.03),
