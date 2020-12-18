@@ -4,9 +4,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_image/network.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:quan_ly_taiducfood/fitness_app/custom_ui/hotel_app_theme.dart';
-import 'package:quan_ly_taiducfood/fitness_app/models/product_search_data.dart';
-import 'package:quan_ly_taiducfood/fitness_app/products/product_add.dart';
+import 'package:quan_ly_taiducfood/main_action/custom_ui/hotel_app_theme.dart';
+import 'package:quan_ly_taiducfood/main_action/models/product_search_data.dart';
+import 'package:quan_ly_taiducfood/main_action/products/product_add.dart';
 
 import 'product_detail.dart';
 

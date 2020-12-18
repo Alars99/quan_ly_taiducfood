@@ -3,6 +3,6 @@ class Customer {
   String emal;
   String address;
   String provice;
-  String ;
+  // String ;
 
 }

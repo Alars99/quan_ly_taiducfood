@@ -6,7 +6,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image/network.dart';
 import 'package:intl/intl.dart';
-import 'package:quan_ly_taiducfood/fitness_app/models/product_detail_data.dart';
+import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
 
 import 'product_edit.dart';
 

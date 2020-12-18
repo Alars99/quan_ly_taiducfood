@@ -5,8 +5,8 @@ import 'package:quan_ly_taiducfood/app_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:quan_ly_taiducfood/login_action/Welcome/welcome_screen.dart';
 import 'Login_action/Login/login_screen.dart';
-import 'fitness_app/products/product_detail.dart';
-import 'fitness_app/products/product_edit.dart';
+import 'main_action/products/product_detail.dart';
+import 'main_action/products/product_edit.dart';
 import 'order_action/View/Order/order_screen.dart';
 
 //void main() => runApp(MyApp());

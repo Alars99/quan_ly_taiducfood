@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:quan_ly_taiducfood/fitness_app/models/product_cate_data.dart';
+import 'package:quan_ly_taiducfood/main_action/models/product_cate_data.dart';
 
 import '../../constants.dart';
 
