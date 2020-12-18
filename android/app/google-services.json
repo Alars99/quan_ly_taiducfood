@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "126599865942",
+    "firebase_url": "https://app-quan-ly-taiducfood.firebaseio.com",
+    "project_id": "app-quan-ly-taiducfood",
+    "storage_bucket": "app-quan-ly-taiducfood.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126599865942:android:09c5b8b5e76380a5eefdf7",
+        "android_client_info": {
+          "package_name": "com.example.quan_ly_taiducfood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "126599865942-5rd46spi1rouho9l5l9kmq9u02q4ksob.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quan_ly_taiducfood",
+            "certificate_hash": "754fd9e7246a7d757b2768dab9910f3f47220000"
+          }
+        },
+        {
+          "client_id": "126599865942-ag0n235anetp8eeqac9dtq726guhdm9r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDwh7SrAVtR34_Zc0mm7xXp9k0dYQed5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "126599865942-ag0n235anetp8eeqac9dtq726guhdm9r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

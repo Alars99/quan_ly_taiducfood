@@ -3,7 +3,7 @@ import 'package:quan_ly_taiducfood/fitness_app/traning/training_screen.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_view/bottom_bar_view.dart';
 import 'fintness_app_theme.dart';
-import 'my_diary/my_diary_screen.dart';
+import 'home/my_diary_screen.dart';
 
 class FitnessAppHomeScreen extends StatefulWidget {
   @override

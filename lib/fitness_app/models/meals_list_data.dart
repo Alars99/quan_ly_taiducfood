@@ -15,38 +15,38 @@ class MealsListData {
   List<String> meals;
   int kacl;
 
+  // static List<MealsListData> tabIconsList = <MealsListData>[
+  //   MealsListData(
+  //     imagePath: 'assets/fitness_app/breakfast.png',
+  //     titleTxt: 'Breakfast',
+  //     meals: <String>['Bread,', 'Peanut butter,', 'Apple'],
+  //     startColor: '#FA7D82',
+  //     endColor: '#FFB295',
+  //   ),
   static List<MealsListData> tabIconsList = <MealsListData>[
     MealsListData(
-      imagePath: 'assets/fitness_app/breakfast.png',
-      titleTxt: 'Breakfast',
-      kacl: 525,
-      meals: <String>['Bread,', 'Peanut butter,', 'Apple'],
-      startColor: '#FA7D82',
-      endColor: '#FFB295',
+      imagePath: 'assets/fitness_app/001-bill.png',
+      titleTxt: 'Tạo hóa đơn và giao hàng',
     ),
     MealsListData(
-      imagePath: 'assets/fitness_app/lunch.png',
-      titleTxt: 'Lunch',
-      kacl: 602,
-      meals: <String>['Salmon,', 'Mixed veggies,', 'Avocado'],
-      startColor: '#738AE6',
-      endColor: '#5C5EDD',
+      imagePath: 'assets/fitness_app/004-tshirt.png',
+      titleTxt: 'Thêm sản phẩm',
     ),
     MealsListData(
-      imagePath: 'assets/fitness_app/snack.png',
-      titleTxt: 'Snack',
-      kacl: 0,
-      meals: <String>['Recommend:', '800 kcal'],
-      startColor: '#FE95B6',
-      endColor: '#FF5287',
+      imagePath: 'assets/fitness_app/013-truck.png',
+      titleTxt: 'Tạo đơn nhập hàng',
     ),
     MealsListData(
-      imagePath: 'assets/fitness_app/dinner.png',
-      titleTxt: 'Dinner',
-      kacl: 0,
-      meals: <String>['Recommend:', '703 kcal'],
-      startColor: '#6F72CA',
-      endColor: '#1E1466',
+      imagePath: 'assets/fitness_app/021-invoice.png',
+      titleTxt: 'Tạo phiếu thu chi',
+    ),
+    MealsListData(
+      imagePath: 'assets/fitness_app/005-store.png',
+      titleTxt: 'Quản lý kho',
+    ),
+    MealsListData(
+      imagePath: 'assets/fitness_app/019-headphone.png',
+      titleTxt: 'Quản lý nhân viên',
     ),
   ];
 }

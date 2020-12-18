@@ -17,7 +17,7 @@ class Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Quản lý Bán Hàng",
+              "Quản lý Bán Hàng Demo",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
             ),
             SizedBox(height: size.height * 0.05),
