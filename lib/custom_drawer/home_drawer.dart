@@ -1,4 +1,4 @@
-import 'package:quan_ly_taiducfood/Screens/Login/login_screen.dart';
+import 'package:quan_ly_taiducfood/login_action/Login/login_screen.dart';
 import 'package:quan_ly_taiducfood/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -110,8 +110,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     builder: (BuildContext context, Widget child) {
                       return ScaleTransition(
                         scale: AlwaysStoppedAnimation<double>(
-                            1.0 - (widget.iconAnimationController.value) * 0.2
-                        ),
+                            1.0 - (widget.iconAnimationController.value) * 0.2),
                         child: RotationTransition(
                           turns: AlwaysStoppedAnimation<double>(Tween<double>(
                                       begin: 0.0, end: 24.0)

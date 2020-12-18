@@ -2,7 +2,7 @@ import 'package:quan_ly_taiducfood/app_theme.dart';
 import 'package:quan_ly_taiducfood/custom_drawer/drawer_user_controller.dart';
 import 'package:quan_ly_taiducfood/custom_drawer/home_drawer.dart';
 import 'package:quan_ly_taiducfood/feedback_screen.dart';
-import 'package:quan_ly_taiducfood/fitness_app/fitness_app_home_screen.dart';
+import 'package:quan_ly_taiducfood/main_action/fitness_app_home_screen.dart';
 import 'package:quan_ly_taiducfood/help_screen.dart';
 import 'package:quan_ly_taiducfood/invite_friend_screen.dart';
 import 'package:flutter/material.dart';

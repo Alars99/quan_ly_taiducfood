@@ -3,8 +3,8 @@ import 'package:quan_ly_taiducfood/constants.dart';
 import 'dart:io';
 import 'package:quan_ly_taiducfood/app_theme.dart';
 import 'package:flutter/services.dart';
-import 'package:quan_ly_taiducfood/fitness_app/fitness_app_home_screen.dart';
-import 'hotel_booking/View/Order/order_screen.dart';
+import 'Login_action/Login/login_screen.dart';
+import 'order_action/View/Order/order_screen.dart';
 
 //void main() => runApp(MyApp());
 
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         textTheme: AppTheme.textTheme,
         platform: TargetPlatform.iOS,
       ),
-      home: FitnessAppHomeScreen(),
+      home: LoginScreen(),
     );
   }
 }
