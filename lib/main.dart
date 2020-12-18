@@ -3,7 +3,10 @@ import 'package:quan_ly_taiducfood/constants.dart';
 import 'dart:io';
 import 'package:quan_ly_taiducfood/app_theme.dart';
 import 'package:flutter/services.dart';
+import 'package:quan_ly_taiducfood/login_action/Welcome/welcome_screen.dart';
 import 'Login_action/Login/login_screen.dart';
+import 'fitness_app/products/product_detail.dart';
+import 'fitness_app/products/product_edit.dart';
 import 'order_action/View/Order/order_screen.dart';
 
 //void main() => runApp(MyApp());
@@ -30,17 +33,20 @@ class MyApp extends StatelessWidget {
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Quản Lý Bán Hàng TaiDucFood',
-      theme: ThemeData(
-        primaryColor: kPrimaryColor,
-        scaffoldBackgroundColor: Colors.white,
-        primarySwatch: Colors.blue,
-        textTheme: AppTheme.textTheme,
-        platform: TargetPlatform.iOS,
-      ),
-      home: LoginScreen(),
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Quản Lý Bán Hàng TaiDucFood',
+        theme: ThemeData(
+          primaryColor: kPrimaryColor,
+          scaffoldBackgroundColor: Colors.white,
+          primarySwatch: Colors.blue,
+          textTheme: AppTheme.textTheme,
+          platform: TargetPlatform.iOS,
+        ),
+        home: WelcomeScreen(),
+        routes: {
+          ProductDetailScreen.routeName: (ctxPD) => ProductDetailScreen(),
+          ProductEdit.routeName: (ctxPE) => ProductEdit(),
+        });
   }
 }
 
