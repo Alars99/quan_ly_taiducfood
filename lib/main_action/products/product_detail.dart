@@ -5,8 +5,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image/network.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
+import 'package:quan_ly_taiducfood/main_action/products/products_search.dart';
 
 import 'product_edit.dart';
 
@@ -63,8 +65,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
           values[key]["priceBuon"],
           values[key]["amount"],
           values[key]["desc"],
-          values[key]["allowSale"],
-          values[key]["tax"],
+          // values[key]["allowSale"],
+          // values[key]["tax"],
           values[key]["priceVon"],
         );
         productDetailList.add(productDetail);
@@ -123,22 +125,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               productDetailList[index].brand = '';
                             }
                             return productDetailUI(
-                              productDetailList[index].id,
-                              productDetailList[index].brand,
-                              productDetailList[index].name,
-                              productDetailList[index].image,
-                              productDetailList[index].price,
-                              productDetailList[index].barcode,
-                              productDetailList[index].weight,
-                              // productDetailList[index].cate,
-                              productDetailList[index].priceNhap,
-                              productDetailList[index].priceBuon,
-                              productDetailList[index].amount,
-                              productDetailList[index].desc,
-                              productDetailList[index].allowSale,
-                              productDetailList[index].tax,
-                              productDetailList[index].priceVon
-                            );
+                                productDetailList[index].id,
+                                productDetailList[index].brand,
+                                productDetailList[index].name,
+                                productDetailList[index].image,
+                                productDetailList[index].price,
+                                productDetailList[index].barcode,
+                                productDetailList[index].weight,
+                                // productDetailList[index].cate,
+                                productDetailList[index].priceNhap,
+                                productDetailList[index].priceBuon,
+                                productDetailList[index].amount,
+                                productDetailList[index].desc,
+                                // productDetailList[index].allowSale,
+                                // productDetailList[index].tax,
+                                productDetailList[index].priceVon);
                           }),
                     ),
                   ],
@@ -157,27 +158,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   }
 
   Widget productDetailUI(
-    String id,
-    String brand,
-    String name,
-    String image,
-    String price,
-    String barcode,
-    String weight,
-    // String cate,
-    String priceNhap,
-    String priceBuon,
-    String amount,
-    String desc,
-    String allowSale,
-    String tax,
-    String priceVon
-  ) {
+      String id,
+      String brand,
+      String name,
+      String image,
+      String price,
+      String barcode,
+      String weight,
+      // String cate,
+      String priceNhap,
+      String priceBuon,
+      String amount,
+      String desc,
+      // String allowSale,
+      // String tax,
+      String priceVon) {
     final Map data = ModalRoute.of(context).settings.arguments;
     final idproduct = data['id'];
     final idMain = data['idMain'];
     final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
-    final priceInt = int.parse(price);
+    final priceInt = int.parse(price.toString());
+    final priceNhapInt = int.parse(priceNhap.toString());
+    final priceBuonInt = int.parse(priceBuon.toString());
+    final priceVonInt = int.parse(priceVon.toString());
+    final weightInt = int.parse(weight.toString());
+    final amountInt = int.parse(amount.toString());
     if (id == idproduct) {
       double mainWidth = MediaQuery.of(context).size.width * 1;
       double valueWidth = MediaQuery.of(context).size.width * 0.5;
@@ -291,7 +296,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                           Container(
                             width: valueWidth,
                             child: Text(
-                              "",
+                              formatCurrency.format(weightInt),
                               style: new TextStyle(
                                 fontSize: 14.5,
                                 fontFamily: "Roboto",
@@ -356,7 +361,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
                                     Text(
-                                      "123456789",
+                                      formatCurrency.format(amountInt),
                                       style: new TextStyle(
                                         fontSize: 16,
                                         fontFamily: "Roboto",
@@ -407,7 +412,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                           Container(
                             width: valueWidth,
                             child: Text(
-                              formatCurrency.format(0),
+                              formatCurrency.format(priceNhapInt),
                               style: new TextStyle(
                                 fontSize: 16,
                                 fontFamily: "Roboto",
@@ -429,7 +434,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                           Container(
                             width: valueWidth,
                             child: Text(
-                              formatCurrency.format(0),
+                              formatCurrency.format(priceBuonInt),
                               style: new TextStyle(
                                 fontSize: 16,
                                 fontFamily: "Roboto",
@@ -440,18 +445,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                         SizedBox(height: 20),
                         new Row(children: <Widget>[
                           Text(
-                            "Giá Nhập",
+                            "Giá Vốn",
                             style: new TextStyle(
                               fontSize: 14.5,
                               color: Colors.black54,
                               fontFamily: "Roboto",
                             ),
                           ),
-                          Text('            :   '),
+                          Text('               :   '),
                           Container(
                             width: valueWidth,
                             child: Text(
-                              formatCurrency.format(0),
+                              formatCurrency.format(priceVonInt),
                               style: new TextStyle(
                                 fontSize: 16,
                                 fontFamily: "Roboto",
@@ -526,7 +531,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               ),
                               SizedBox(height: 20),
                               Text(
-                                "a",
+                                desc,
                                 style: new TextStyle(
                                   fontSize: 14.5,
                                   color: Colors.black,
@@ -607,16 +612,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                           'image': image,
                           'price': price,
                           'idMain': idMain,
-                          // barcode,
-                          // weight,
+                          'barcode': barcode,
+                          'weight': weight,
                           // cate,
-                          // priceNhap,
-                          // priceBuon,
-                          // amount,
-                          // desc,
+                          'priceNhap': priceNhap,
+                          'priceBuon': priceBuon,
+                          'amount': amount,
+                          'desc': desc,
                           // allowSale,
                           // tax
-                          // priceVon
+                          'priceVon': priceVon
                         });
                         // 'idMain': idMain
                       },
@@ -640,9 +645,37 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                     height: 50,
                     child: FlatButton(
                       onPressed: () {
-                        delete();
-                        deleteSearchList();
-                        Navigator.pop(context);
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => AlertDialog(
+                            title: Text("Chắc xóa không?"),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  delete();
+                                  deleteSearchList();
+                                  Fluttertoast.showToast(
+                                      msg: "Xóa sản phẩm thành công",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      textColor: Colors.black87,
+                                      fontSize: 16.0);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Có"),
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop("Không");
+                                },
+                                child: Text("Không"),
+                              ),
+                            ],
+                          ),
+                        );
                       },
                       color: Colors.red,
                       // ignore: missing_required_param
