@@ -36,8 +36,8 @@ class _ProductEditState extends State<ProductEdit> {
       amount,
       desc;
   String _data = "";
-  bool tax = false;
-  bool allowSale = false;
+  bool tax = true;
+  bool allowSale = true;
 
   String _downloadImgUrl;
   File _image;
@@ -61,6 +61,8 @@ class _ProductEditState extends State<ProductEdit> {
   TextEditingController _controllerEditName = TextEditingController();
   TextEditingController _controllerEditBrand = TextEditingController();
   TextEditingController _controllerEditImage = TextEditingController();
+  TextEditingController _controllerEditBarcode = TextEditingController();
+  TextEditingController _controllerEditDesc = TextEditingController();
 
   _scan() async {
     await FlutterBarcodeScanner.scanBarcode(
@@ -94,6 +96,13 @@ class _ProductEditState extends State<ProductEdit> {
       _controllerEditBrand.text = data['brand'];
       _controllerEditImage.text = data['image'];
       _controllerPrice.text = data['price'];
+      _controllerEditBarcode.text = data['barcode'];
+      _controllerEditDesc.text = data['desc'];
+      _controllerAmount.text = data['amount'];
+      _controllerPriceNhap.text = data['priceNhap'];
+      _controllerPriceBuon.text = data['priceBuon'];
+      _controllerPriceVon.text = data['priceVon'];
+      _controllerWeight.text = data['weight'];
       int idMainInt = int.parse(data['idMain'].toString()) - 1;
       productCate = data_cate[idMainInt];
     });
@@ -251,45 +260,46 @@ class _ProductEditState extends State<ProductEdit> {
                                 decoration: InputDecoration(
                                   labelText: 'Mã sản phẩm',
                                 )),
-                            // new TextFormField(
-                            //     validator: (value) {
-                            //       if (value.isEmpty) {
-                            //         return 'Chưa nhập Barcode sản phẩm';
-                            //       } else {
-                            //         barcode = value;
-                            //       }
-                            //     },
-                            //     keyboardType: TextInputType.number,
-                            //     key: Key(_data), // <- Magic!
-                            //     initialValue: _data,
-                            //     //controller: _controller,
-                            //     //onChanged: (text) {},
-                            //     autocorrect: true,
-                            //     decoration: InputDecoration(
-                            //       labelText: 'Barcode',
-                            //       suffixIcon: IconButton(
-                            //           autofocus: false,
-                            //           onPressed: () => _scan(),
-                            //           icon:
-                            //               Icon(Icons.qr_code_scanner_outlined)),
-                            //     )),
-                            // new TextFormField(
-                            //   validator: (value) {
-                            //     if (value.isEmpty || value == '0') {
-                            //       return 'Chưa nhập Khối lượng sản phẩm';
-                            //     } else {
-                            //       weight = value;
-                            //     }
-                            //   },
-                            //   controller: _controllerWeight,
-                            //   autocorrect: true,
-                            //   keyboardType: TextInputType.number,
-                            //   textInputAction: TextInputAction.next,
-                            //   onEditingComplete: () => node.nextFocus(),
-                            //   decoration: InputDecoration(
-                            //     labelText: 'Khối lượng (g)',
-                            //   ),
-                            // ),
+                            new TextFormField(
+                                controller: _controllerEditBarcode,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Chưa nhập Barcode sản phẩm';
+                                  } else {
+                                    barcode = value;
+                                  }
+                                },
+                                keyboardType: TextInputType.number,
+                                key: Key(_data),
+                                // initialValue: _data, // FIX CHỖ NÀY KO EDIT ĐC BARCODE
+                                //controller: _controller,
+                                //onChanged: (text) {},
+                                autocorrect: true,
+                                decoration: InputDecoration(
+                                  labelText: 'Barcode',
+                                  suffixIcon: IconButton(
+                                      autofocus: false,
+                                      onPressed: () => _scan(),
+                                      icon:
+                                          Icon(Icons.qr_code_scanner_outlined)),
+                                )),
+                            new TextFormField(
+                              validator: (value) {
+                                if (value.isEmpty || value == '0') {
+                                  return 'Chưa nhập Khối lượng sản phẩm';
+                                } else {
+                                  weight = value;
+                                }
+                              },
+                              controller: _controllerWeight,
+                              autocorrect: true,
+                              keyboardType: TextInputType.number,
+                              textInputAction: TextInputAction.next,
+                              onEditingComplete: () => node.nextFocus(),
+                              decoration: InputDecoration(
+                                labelText: 'Khối lượng (g)',
+                              ),
+                            ),
                           ]),
                     ),
                   ),
@@ -312,46 +322,46 @@ class _ProductEditState extends State<ProductEdit> {
                             new Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                // Container(
-                                //   width: 140,
-                                //   child: new TextFormField(
-                                //     validator: (value) {
-                                //       if (value.isEmpty || value == '0') {
-                                //         return 'Chưa nhập Tồn kho sản phẩm';
-                                //       } else {
-                                //         amount = value;
-                                //       }
-                                //     },
-                                //     controller: _controllerAmount,
-                                //     decoration: InputDecoration(
-                                //       labelText: 'Tồn kho',
-                                //     ),
-                                //     keyboardType: TextInputType.number,
-                                //     autocorrect: true,
-                                //     textInputAction: TextInputAction.next,
-                                //     onEditingComplete: () => node.nextFocus(),
-                                //   ),
-                                // ),
-                                // Container(
-                                //   width: 140,
-                                //   child: new TextFormField(
-                                //     validator: (value) {
-                                //       if (value.isEmpty || value == '0') {
-                                //         return 'Chưa nhập Giá vốn sản phẩm';
-                                //       } else {
-                                //         priceVon = value;
-                                //       }
-                                //     },
-                                //     controller: _controllerPriceVon,
-                                //     autocorrect: true,
-                                //     keyboardType: TextInputType.number,
-                                //     textInputAction: TextInputAction.next,
-                                //     onEditingComplete: () => node.nextFocus(),
-                                //     decoration: InputDecoration(
-                                //       labelText: 'Giá vốn',
-                                //     ),
-                                //   ),
-                                // ),
+                                Container(
+                                  width: 140,
+                                  child: new TextFormField(
+                                    validator: (value) {
+                                      if (value.isEmpty || value == '0') {
+                                        return 'Chưa nhập Tồn kho sản phẩm';
+                                      } else {
+                                        amount = value;
+                                      }
+                                    },
+                                    controller: _controllerAmount,
+                                    decoration: InputDecoration(
+                                      labelText: 'Tồn kho',
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    autocorrect: true,
+                                    textInputAction: TextInputAction.next,
+                                    onEditingComplete: () => node.nextFocus(),
+                                  ),
+                                ),
+                                Container(
+                                  width: 140,
+                                  child: new TextFormField(
+                                    validator: (value) {
+                                      if (value.isEmpty || value == '0') {
+                                        return 'Chưa nhập Giá vốn sản phẩm';
+                                      } else {
+                                        priceVon = value;
+                                      }
+                                    },
+                                    controller: _controllerPriceVon,
+                                    autocorrect: true,
+                                    keyboardType: TextInputType.number,
+                                    textInputAction: TextInputAction.next,
+                                    onEditingComplete: () => node.nextFocus(),
+                                    decoration: InputDecoration(
+                                      labelText: 'Giá vốn',
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                             new Row(
@@ -377,68 +387,68 @@ class _ProductEditState extends State<ProductEdit> {
                                     onEditingComplete: () => node.nextFocus(),
                                   ),
                                 ),
-                                // Container(
-                                //   width: 140,
-                                //   child: new TextFormField(
-                                //     validator: (value) {
-                                //       if (value.isEmpty || value == '0') {
-                                //         return 'Chưa nhập Giá bán buôn sản phẩm';
-                                //       } else {
-                                //         priceBuon = value;
-                                //       }
-                                //     },
-                                //     controller: _controllerPriceBuon,
-                                //     autocorrect: true,
-                                //     keyboardType: TextInputType.number,
-                                //     textInputAction: TextInputAction.next,
-                                //     onEditingComplete: () => node.nextFocus(),
-                                //     decoration: InputDecoration(
-                                //       labelText: 'Giá bán buôn',
-                                //     ),
-                                //   ),
-                                // ),
+                                Container(
+                                  width: 140,
+                                  child: new TextFormField(
+                                    validator: (value) {
+                                      if (value.isEmpty || value == '0') {
+                                        return 'Chưa nhập Giá bán buôn sản phẩm';
+                                      } else {
+                                        priceBuon = value;
+                                      }
+                                    },
+                                    controller: _controllerPriceBuon,
+                                    autocorrect: true,
+                                    keyboardType: TextInputType.number,
+                                    textInputAction: TextInputAction.next,
+                                    onEditingComplete: () => node.nextFocus(),
+                                    decoration: InputDecoration(
+                                      labelText: 'Giá bán buôn',
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
-                            // Container(
-                            //   child: new TextFormField(
-                            //     validator: (value) {
-                            //       if (value.isEmpty || value == '0') {
-                            //         return 'Chưa nhập Giá nhập sản phẩm';
-                            //       } else {
-                            //         priceNhap = value;
-                            //       }
-                            //     },
-                            //     controller: _controllerPriceNhap,
-                            //     autocorrect: true,
-                            //     keyboardType: TextInputType.number,
-                            //     textInputAction: TextInputAction.next,
-                            //     onEditingComplete: () => node.nextFocus(),
-                            //     decoration: InputDecoration(
-                            //       labelText: 'Giá nhập',
-                            //     ),
-                            //   ),
-                            // ),
-                            // Row(
-                            //   crossAxisAlignment: CrossAxisAlignment.center,
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   mainAxisSize: MainAxisSize.max,
-                            //   children: [
-                            //     Container(
-                            //         child: new Text(
-                            //       'Áp dụng thuế',
-                            //       style: new TextStyle(fontSize: 17),
-                            //     )),
-                            //     Container(
-                            //         child: new Switch(
-                            //             value: tax,
-                            //             onChanged: (bool s) {
-                            //               setState(() {
-                            //                 tax = s;
-                            //                 print(tax);
-                            //               });
-                            //             }))
-                            //   ],
-                            // )
+                            Container(
+                              child: new TextFormField(
+                                validator: (value) {
+                                  if (value.isEmpty || value == '0') {
+                                    return 'Chưa nhập Giá nhập sản phẩm';
+                                  } else {
+                                    priceNhap = value;
+                                  }
+                                },
+                                controller: _controllerPriceNhap,
+                                autocorrect: true,
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                onEditingComplete: () => node.nextFocus(),
+                                decoration: InputDecoration(
+                                  labelText: 'Giá nhập',
+                                ),
+                              ),
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                    child: new Text(
+                                  'Áp dụng thuế',
+                                  style: new TextStyle(fontSize: 17),
+                                )),
+                                Container(
+                                    child: new Switch(
+                                        value: tax,
+                                        onChanged: (bool s) {
+                                          setState(() {
+                                            tax = s;
+                                            print(tax);
+                                          });
+                                        }))
+                              ],
+                            )
                           ]),
                     ),
                   ),
@@ -504,44 +514,45 @@ class _ProductEditState extends State<ProductEdit> {
                                 onEditingComplete: () => node.nextFocus(),
                               ),
                             ),
-                            // Container(
-                            //   child: new TextFormField(
-                            //     validator: (value) {
-                            //       if (value.isEmpty) {
-                            //         desc = 'Không có mô tả';
-                            //       } else {
-                            //         desc = value;
-                            //       }
-                            //     },
-                            //     decoration: InputDecoration(
-                            //       labelText: 'Mô tả',
-                            //     ),
-                            //     autocorrect: true,
-                            //     textInputAction: TextInputAction.next,
-                            //     onEditingComplete: () => node.nextFocus(),
-                            //   ),
-                            // ),
-                            // Row(
-                            //   crossAxisAlignment: CrossAxisAlignment.center,
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   mainAxisSize: MainAxisSize.max,
-                            //   children: [
-                            //     Container(
-                            //         child: new Text(
-                            //       'Cho phép bán',
-                            //       style: new TextStyle(fontSize: 17),
-                            //     )),
-                            //     Container(
-                            //         child: new Switch(
-                            //             value: allowSale,
-                            //             onChanged: (bool s) {
-                            //               setState(() {
-                            //                 allowSale = s;
-                            //                 print(allowSale);
-                            //               });
-                            //             })),
-                            //   ],
-                            // ),
+                            Container(
+                              child: new TextFormField(
+                                controller: _controllerEditDesc,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    desc = 'Không có mô tả';
+                                  } else {
+                                    desc = value;
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Mô tả',
+                                ),
+                                autocorrect: true,
+                                textInputAction: TextInputAction.next,
+                                onEditingComplete: () => node.nextFocus(),
+                              ),
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                    child: new Text(
+                                  'Cho phép bán',
+                                  style: new TextStyle(fontSize: 17),
+                                )),
+                                Container(
+                                    child: new Switch(
+                                        value: allowSale,
+                                        onChanged: (bool s) {
+                                          setState(() {
+                                            allowSale = s;
+                                            print(allowSale);
+                                          });
+                                        })),
+                              ],
+                            ),
                           ]),
                     ),
                   ),
@@ -562,8 +573,17 @@ class _ProductEditState extends State<ProductEdit> {
             // print(_controllerEditId.text);
             // print('${productCate.name}');
             // print('${productCate.id}');
+
             edit();
             editSearchList();
+            Fluttertoast.showToast(
+                msg: "Sửa sản phẩm thành công",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                textColor: Colors.black87,
+                fontSize: 16.0);
+            Navigator.of(context).pop();
           },
           backgroundColor: kPrimaryColor,
           label: Text('Lưu'),

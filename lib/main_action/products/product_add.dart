@@ -559,6 +559,13 @@ class _ProductAddState extends State<ProductAdd> {
         uploadImg();
         uploadSearchList();
         upload();
+        Fluttertoast.showToast(
+            msg: "Thêm sản phẩm thành công",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.black87,
+            fontSize: 16.0);
         Navigator.pop(context);
       }
       if (cId() == true) {

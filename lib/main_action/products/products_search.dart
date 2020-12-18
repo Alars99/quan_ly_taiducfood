@@ -16,6 +16,7 @@ class ProductSearchScreen extends StatefulWidget {
   final AnimationController animationController;
   @override
   _ProductSearchScreenState createState() => _ProductSearchScreenState();
+  static const routeName = '/product-search';
 }
 
 class _ProductSearchScreenState extends State<ProductSearchScreen>

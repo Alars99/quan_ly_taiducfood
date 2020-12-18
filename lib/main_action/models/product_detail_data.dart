@@ -13,8 +13,8 @@ class ProductDetail {
       priceBuon,
       amount,
       desc,
-      allowSale,
-      tax,
+      // allowSale,
+      // tax,
       priceVon;
   ProductDetail(
       this.id,
@@ -29,7 +29,7 @@ class ProductDetail {
       this.priceBuon,
       this.amount,
       this.desc,
-      this.allowSale,
-      this.tax,
+      // this.allowSale,
+      // this.tax,
       this.priceVon);
 }
