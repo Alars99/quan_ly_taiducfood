@@ -31,6 +31,7 @@ class Sanpham {
     mapping['brand'] = brand;
     mapping['price'] = price;
     mapping['count'] = count;
+    mapping['amout'] = amout;
     return mapping;
   }
 }

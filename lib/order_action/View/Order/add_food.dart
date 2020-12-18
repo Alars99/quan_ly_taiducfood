@@ -38,6 +38,8 @@ class _AddFoodState extends State<AddFood> {
           name: values[key]["name"],
           brand: values[key]["brand"],
           price: values[key]["price"],
+          img: values[key]["image"],
+          amout: int.parse(values[key]["amount"]),
         );
         list.add(sanpham);
       }
@@ -401,7 +403,8 @@ class _AddFoodState extends State<AddFood> {
                                               left: 8,
                                               top: 8,
                                             ),
-                                            child: Text("Số lượng: "),
+                                            child: Text("Số lượng: " +
+                                                date.amout.toString()),
                                           ),
                                         ],
                                       ),

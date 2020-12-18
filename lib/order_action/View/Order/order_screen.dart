@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
 import 'package:quan_ly_taiducfood/login_action/Login/components/background.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart';
 import 'package:flutter/material.dart';
@@ -497,7 +498,10 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                       Radius.circular(4.0),
                     ),
                     onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DesignCourseHomeScreen()));
                       // setState(() {
                       //   isDatePopupOpen = true;
                       // });
@@ -1039,7 +1043,6 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                     Radius.circular(32.0),
                   ),
                   onTap: () {
-                    print("â");
                     Navigator.pop(context);
                   },
                   child: Padding(
@@ -1107,10 +1110,10 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
             Row(
               children: <Widget>[
                 SizedBox(
-                  width: 200,
+                  width: 180,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 8, bottom: 16),
+                  padding: EdgeInsets.only(right: 0  , bottom: 16),
                   child: Text(
                     "Tạm tính: " + tong.toString() + " VND",
                     textAlign: TextAlign.right,
