@@ -16,6 +16,7 @@ class ProductDetail {
       // allowSale,
       // tax,
       priceVon;
+      //daBan
   ProductDetail(
       this.id,
       this.brand,

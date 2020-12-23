@@ -8,6 +8,8 @@ import 'package:quan_ly_taiducfood/customer_action/customer_Details.dart';
 import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
 import 'package:quan_ly_taiducfood/login_action/Welcome/welcome_screen.dart';
 import 'package:quan_ly_taiducfood/main_action/products/products_search.dart';
+import 'package:quan_ly_taiducfood/order_action/View/Order/order_detail_screen.dart';
+import 'package:quan_ly_taiducfood/order_action/View/Order/order_list_screen.dart';
 import 'Login_action/Login/login_screen.dart';
 import 'main_action/products/product_detail.dart';
 import 'main_action/products/product_edit.dart';
@@ -47,11 +49,13 @@ class MyApp extends StatelessWidget {
           platform: TargetPlatform.iOS,
         ),
         home: DesignCourseHomeScreen());
-    // routes: {
-    //   ProductDetailScreen.routeName: (ctxPD) => ProductDetailScreen(),
-    //   ProductEdit.routeName: (ctxPE) => ProductEdit(),
-    //   ProductSearchScreen.routeName: (ctxPS) => ProductSearchScreen(),
-    // });
+        routes: {
+          ProductDetailScreen.routeName: (ctxPD) => ProductDetailScreen(),
+          ProductEdit.routeName: (ctxPE) => ProductEdit(),
+          ProductSearchScreen.routeName: (ctxPS) => ProductSearchScreen(),
+          OrderListScreen.routeName: (ctxOLS) => OrderListScreen(),
+          OrderDetailScreen.routeName: (ctxODS) => OrderDetailScreen(),
+        });
   }
 }
 

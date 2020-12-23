@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image/network.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -192,10 +193,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            new Image(
-              image: new NetworkImageWithRetry(image),
-              fit: BoxFit.fill,
+            Container(
               width: 330,
+              child: Image(
+                image: new NetworkImageWithRetry(image),
+                fit: BoxFit.fill,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(7.0),
@@ -296,7 +299,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                           Container(
                             width: valueWidth,
                             child: Text(
-                              formatCurrency.format(weightInt),
+                              weightInt.toString() + 'g',
                               style: new TextStyle(
                                 fontSize: 14.5,
                                 fontFamily: "Roboto",
@@ -361,7 +364,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
                                     Text(
-                                      formatCurrency.format(amountInt),
+                                      amountInt.toString(),
                                       style: new TextStyle(
                                         fontSize: 16,
                                         fontFamily: "Roboto",
