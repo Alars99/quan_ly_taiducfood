@@ -86,6 +86,16 @@ class _ProductEditState extends State<ProductEdit> {
     ProductCate(9, 'Sản Phẩm Khác'),
   ];
 
+  Future downdloadImage() async {
+    await Firebase.initializeApp();
+    Reference imgReference =
+        FirebaseStorage.instance.ref().child(_controllerEditImage.text);
+    String downloadImg = await imgReference.getDownloadURL();
+    setState(() {
+      _downloadImgUrl = downloadImg;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -105,6 +115,7 @@ class _ProductEditState extends State<ProductEdit> {
       _controllerWeight.text = data['weight'];
       int idMainInt = int.parse(data['idMain'].toString()) - 1;
       productCate = data_cate[idMainInt];
+      downdloadImage();
     });
   }
 
@@ -116,16 +127,6 @@ class _ProductEditState extends State<ProductEdit> {
       setState(() {
         _image = image;
         print(_image);
-      });
-    }
-
-    Future downdloadImage() async {
-      await Firebase.initializeApp();
-      Reference imgReference =
-          FirebaseStorage.instance.ref().child(_controllerEditImage.text);
-      String downloadImg = await imgReference.getDownloadURL();
-      setState(() {
-        _downloadImgUrl = downloadImg;
       });
     }
 
@@ -175,11 +176,16 @@ class _ProductEditState extends State<ProductEdit> {
                             child: Container(
                               width: 250,
                               height: 230,
-                              child: (_image != null)
-                                  ? Image.file(
-                                      _image,
+                              child: (_image == null && _downloadImgUrl != null)
+                                  ? Image(
+                                      image: new NetworkImageWithRetry(
+                                          _downloadImgUrl),
                                       fit: BoxFit.fill,
                                     )
+                                  // Image.file(
+                                  //     _image,
+                                  //     fit: BoxFit.fill,
+                                  //   )
                                   //  ==
                                   // null
                                   // ? Image(
@@ -654,6 +660,7 @@ class _ProductEditState extends State<ProductEdit> {
 
   Future<void> edit() async {
     // String fileName = basename(_image.path);
+    String _controllerPriceString;
     String idFood = productCate.id.toString();
     if (formKey.currentState.validate()) {
       DatabaseReference referenceList = FirebaseDatabase.instance
@@ -688,25 +695,27 @@ class _ProductEditState extends State<ProductEdit> {
       // mapProList["allowSale"] = allowSale;
       // mapProList["tax"] = tax;
 
+      _controllerPriceString =
+          _controllerPrice.text.toString().replaceAll(",", "");
+      print(_controllerPriceString);
       referenceList.child(_controllerEditId.text.toString()).update({
         "name": _controllerEditName.text.toString(),
         "id": _controllerEditId.text.toString(),
         "brand": _controllerEditBrand.text.toString(),
-        "price": _controllerPrice.text.toString(),
+        "price": _controllerPriceString.toString(),
         // "image": _controllerEditImage.text.toString(),
       });
     }
   }
 
   Future<void> editSearchList() async {
+    String _controllerPriceString;
     // String fileName = basename(_image.path);
     if (formKey.currentState.validate()) {
       DatabaseReference referenceSearch =
           FirebaseDatabase.instance.reference().child('SearchList');
 
       // HashMap mapSearch = new HashMap();
-
-      // price = price.replaceAll(",", "");
 
       // mapSearch["id"] = id;
       // mapSearch["image"] = fileName;
@@ -716,11 +725,15 @@ class _ProductEditState extends State<ProductEdit> {
       // mapSearch["idMain"] = productCate.id.toString();
 
       // referenceSearch.child(id).set(mapSearch);
+
+      _controllerPriceString =
+          _controllerPrice.text.toString().replaceAll(",", "");
+      print(_controllerPriceString);
       referenceSearch.child(_controllerEditId.text.toString()).update({
         "name": _controllerEditName.text.toString(),
         "id": _controllerEditId.text.toString(),
         "brand": _controllerEditBrand.text.toString(),
-        "price": _controllerPrice.text.toString(),
+        "price": _controllerPriceString.toString(),
         // "image": _controllerEditImage.text.toString(),
       });
     }

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image/network.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -167,6 +169,20 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
 
   Widget ListUI(
       String id, String idMain, String name, String image, String price) {
+    bool _validURL = Uri.parse(image).isAbsolute;
+    if (_validURL != true) {
+      Future downdloadImage() async {
+        await Firebase.initializeApp();
+        Reference imgReference = FirebaseStorage.instance.ref().child(image);
+        Future<String> downloadImg =
+            (await imgReference.getDownloadURL()) as Future<String>;
+        setState(() {
+          image = downloadImg as String;
+          print(image);
+        });
+      }
+    }
+
     double c_width = MediaQuery.of(context).size.width * 0.6;
     return GestureDetector(
       onTap: () {
@@ -206,11 +222,15 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
                                           padding: EdgeInsets.all(15),
                                           width: 100,
                                           height: 100,
-                                          child: new Image(
+                                          child: Image(
                                             image: new NetworkImageWithRetry(
                                                 image),
                                             fit: BoxFit.fill,
                                           ),
+                                          // new Image(
+                                          //   image: new NetworkImageWithRetry(
+                                          //       image),
+                                          //   fit: BoxFit.fill,
                                         ),
                                         SizedBox(
                                           width: 10,
@@ -270,100 +290,4 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
       });
     });
   }
-//   Widget getMainListViewUI() {
-//     return FutureBuilder<bool>(
-//       future: getData(),
-//       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-//         if (!snapshot.hasData) {
-//           return const SizedBox();
-//         } else {
-//           return ListView.builder(
-//             controller: scrollController,
-//             padding: EdgeInsets.only(
-//               top: AppBar().preferredSize.height +
-//                   MediaQuery.of(context).padding.top +
-//                   24,
-//               bottom: 62 + MediaQuery.of(context).padding.bottom,
-//             ),
-//             itemCount: productMainList.length,
-//             scrollDirection: Axis.vertical,
-//             itemBuilder: (BuildContext context, int index) {
-//               widget.animationController.forward();
-//               return productMainUI(productMainList[index].nameFood,
-//                   productMainList[index].ImgUrl);
-//             },
-//           );
-//         }
-//       },
-//     );
-//   }
-
-//   Widget getAppBarUI() {
-//     return Column(
-//       children: <Widget>[
-//         AnimatedBuilder(
-//           animation: widget.animationController,
-//           builder: (BuildContext context, Widget child) {
-//             return FadeTransition(
-//               opacity: topBarAnimation,
-//               child: Transform(
-//                 transform: Matrix4.translationValues(
-//                     0.0, 30 * (1.0 - topBarAnimation.value), 0.0),
-//                 child: Container(
-//                   decoration: BoxDecoration(
-//                     color: FitnessAppTheme.white.withOpacity(topBarOpacity),
-//                     borderRadius: const BorderRadius.only(
-//                       bottomLeft: Radius.circular(32.0),
-//                     ),
-//                     boxShadow: <BoxShadow>[
-//                       BoxShadow(
-//                           color: FitnessAppTheme.grey
-//                               .withOpacity(0.4 * topBarOpacity),
-//                           offset: const Offset(1.1, 1.1),
-//                           blurRadius: 10.0),
-//                     ],
-//                   ),
-//                   child: Column(
-//                     children: <Widget>[
-//                       SizedBox(
-//                         height: MediaQuery.of(context).padding.top,
-//                       ),
-//                       Padding(
-//                         padding: EdgeInsets.only(
-//                             left: 16,
-//                             right: 16,
-//                             top: 16 - 8.0 * topBarOpacity,
-//                             bottom: 12 - 8.0 * topBarOpacity),
-//                         child: Row(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: <Widget>[
-//                             Expanded(
-//                               child: Padding(
-//                                 padding: const EdgeInsets.all(8.0),
-//                                 child: Text(
-//                                   'Sản Phẩm',
-//                                   textAlign: TextAlign.center,
-//                                   style: TextStyle(
-//                                     fontFamily: FitnessAppTheme.fontName,
-//                                     fontWeight: FontWeight.w700,
-//                                     fontSize: 18 + 6 - 6 * topBarOpacity,
-//                                     letterSpacing: 1.2,
-//                                     color: FitnessAppTheme.darkerText,
-//                                   ),
-//                                 ),
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       )
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             );
-//           },
-//         )
-//       ],
-//     );
-//   }
 }

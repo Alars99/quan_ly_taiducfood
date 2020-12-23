@@ -1,5 +1,8 @@
+import 'dart:collection';
 import 'dart:ui';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
 import 'package:quan_ly_taiducfood/login_action/Login/components/background.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart';
@@ -7,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quan_ly_taiducfood/order_action/model/test.dart';
 import 'add_food.dart';
+import 'order_list_screen.dart';
 import 'order_theme.dart';
 import 'order_list_view.dart';
 
@@ -19,6 +23,9 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
     with TickerProviderStateMixin {
   AnimationController animationController;
 
+  String idGioHang;
+  String idDonHang;
+
   final ScrollController _scrollController = ScrollController();
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 5));
@@ -30,12 +37,13 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
   var _orderService = OrderService();
 
   List<Sanpham> orderList = List<Sanpham>();
+  int paymethod = 0;
   double tongTienhang = 0;
   double tong = 0;
   int tongSoluong = 0;
   double phiGiaohang = 0;
   int chietKhau = 0;
-  int giaban = 0;
+  int giaban = 0; //ban sỉ, lẻ
 
   getReset() {
     tongTienhang = 0;
@@ -88,16 +96,49 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
     }
   }
 
-  getDathang() async {
-    print("Đơn hàng là:" +
-        tongTienhang.toString() +
-        tongSoluong.toString() +
-        chietKhau.toString() +
-        " %" +
-        phiGiaohang.toString() +
-        giaban.toString() +
-        "Khách hàng" +
-        "Phương thức thanh toán");
+  // ignore: non_constant_identifier_names
+  Future<void> getDathang_GioHang() async {
+    DateTime now = DateTime.now();
+    DatabaseReference reference =
+        FirebaseDatabase.instance.reference().child('Order');
+    idDonHang = reference.push().key;
+    idGioHang = reference.push().key;
+    HashMap mapOrder = new HashMap();
+
+    mapOrder["idDonHang"] = idDonHang.toString();
+    mapOrder["idGioHang"] = idGioHang.toString();
+    mapOrder["tongTienhang"] = tongTienhang.toString();
+    mapOrder["tongSoluong"] = tongSoluong.toString();
+    mapOrder["phiGiaohang"] = phiGiaohang.toString();
+    mapOrder["chietKhau"] = chietKhau.toString();
+    mapOrder["banSiLe"] = giaban.toString();
+    mapOrder["paymethod"] = paymethod.toString();
+    mapOrder["idKhachHang"] = "0";
+    mapOrder["ngaymua"] =
+        DateFormat('dd/MM/yyyy kk:mm:ss').format(now).toString();
+    mapOrder["trangthai"] = "0";
+
+    reference.child(idDonHang).set(mapOrder);
+
+    ///////////////////////////////////////////////////////////
+
+    DatabaseReference referenceCart =
+        FirebaseDatabase.instance.reference().child('Cart');
+
+    print(orderList.length);
+    for (var sanpham in orderList) {
+      String idSanpham = reference.push().key;
+      HashMap mapCart = new HashMap();
+      mapCart["idGioHang"] = idGioHang.toString();
+      mapCart["id"] = sanpham.id.toString();
+      mapCart["name"] = sanpham.name.toString();
+      mapCart["brand"] = sanpham.brand.toString();
+      mapCart["price"] = sanpham.price.toString();
+      mapCart["count"] = sanpham.count.toString();
+      mapCart["idKhachHang"] = "0";
+      referenceCart.child(idGioHang).child(idSanpham).set(mapCart);
+      print(sanpham.name);
+    }
   }
 
   @override
@@ -223,59 +264,59 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
     );
   }
 
-  Widget getListUI() {
-    return Container(
-      decoration: BoxDecoration(
-        color: OrderAppTheme.buildLightTheme().backgroundColor,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              offset: const Offset(0, -2),
-              blurRadius: 8.0),
-        ],
-      ),
-      child: Column(
-        children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height - 156 - 50,
-            child: FutureBuilder<bool>(
-              future: getData(),
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox();
-                } else {
-                  return ListView.builder(
-                    itemCount: orderList.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (BuildContext context, int index) {
-                      final int count =
-                          orderList.length > 10 ? 10 : orderList.length;
-                      final Animation<double> animation =
-                          Tween<double>(begin: 0.0, end: 1.0).animate(
-                              CurvedAnimation(
-                                  parent: animationController,
-                                  curve: Interval((1 / count) * index, 1.0,
-                                      curve: Curves.fastOutSlowIn)));
-                      animationController.forward();
+  // Widget getListUI() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       color: OrderAppTheme.buildLightTheme().backgroundColor,
+  //       boxShadow: <BoxShadow>[
+  //         BoxShadow(
+  //             color: Colors.grey.withOpacity(0.2),
+  //             offset: const Offset(0, -2),
+  //             blurRadius: 8.0),
+  //       ],
+  //     ),
+  //     child: Column(
+  //       children: <Widget>[
+  //         Container(
+  //           height: MediaQuery.of(context).size.height - 156 - 50,
+  //           child: FutureBuilder<bool>(
+  //             future: getData(),
+  //             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+  //               if (!snapshot.hasData) {
+  //                 return const SizedBox();
+  //               } else {
+  //                 return ListView.builder(
+  //                   itemCount: orderList.length,
+  //                   scrollDirection: Axis.vertical,
+  //                   itemBuilder: (BuildContext context, int index) {
+  //                     final int count =
+  //                         orderList.length > 10 ? 10 : orderList.length;
+  //                     final Animation<double> animation =
+  //                         Tween<double>(begin: 0.0, end: 1.0).animate(
+  //                             CurvedAnimation(
+  //                                 parent: animationController,
+  //                                 curve: Interval((1 / count) * index, 1.0,
+  //                                     curve: Curves.fastOutSlowIn)));
+  //                     animationController.forward();
 
-                      return OrderListView(
-                        callback: () {
-                          getAllOrderList();
-                        },
-                        sanpham: orderList[index],
-                        animation: animation,
-                        animationController: animationController,
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
+  //                     return OrderListView(
+  //                       callback: () {
+  //                         getAllOrderList();
+  //                       },
+  //                       sanpham: orderList[index],
+  //                       animation: animation,
+  //                       animationController: animationController,
+  //                     );
+  //                   },
+  //                 );
+  //               }
+  //             },
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget getTimeDateUI() {
     return Padding(
@@ -1113,7 +1154,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                   width: 180,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 0  , bottom: 16),
+                  padding: EdgeInsets.only(right: 0, bottom: 16),
                   child: Text(
                     "Tạm tính: " + tong.toString() + " VND",
                     textAlign: TextAlign.right,
@@ -1124,9 +1165,13 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
             Container(),
             RaisedButton(
               onPressed: () {
-                setState(() {
-                  getDathang();
-                });
+                getDathang_GioHang();
+                print(idGioHang);
+                Navigator.of(context).pushNamed(OrderListScreen.routeName,
+                    arguments: {
+                      'idGioHang': idGioHang,
+                      'idDonHang': idDonHang
+                    });
               },
               textColor: Colors.black,
               padding: const EdgeInsets.all(0.0),
