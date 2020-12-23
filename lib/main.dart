@@ -3,6 +3,8 @@ import 'package:quan_ly_taiducfood/constants.dart';
 import 'dart:io';
 import 'package:quan_ly_taiducfood/app_theme.dart';
 import 'package:flutter/services.dart';
+import 'package:quan_ly_taiducfood/customer_action/add_customer.dart';
+import 'package:quan_ly_taiducfood/customer_action/customer_Details.dart';
 import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
 import 'package:quan_ly_taiducfood/login_action/Welcome/welcome_screen.dart';
 import 'package:quan_ly_taiducfood/main_action/products/products_search.dart';
@@ -44,12 +46,12 @@ class MyApp extends StatelessWidget {
           textTheme: AppTheme.textTheme,
           platform: TargetPlatform.iOS,
         ),
-        home: WelcomeScreen(),
-        routes: {
-          ProductDetailScreen.routeName: (ctxPD) => ProductDetailScreen(),
-          ProductEdit.routeName: (ctxPE) => ProductEdit(),
-          ProductSearchScreen.routeName: (ctxPS) => ProductSearchScreen(),
-        });
+        home: DesignCourseHomeScreen());
+    // routes: {
+    //   ProductDetailScreen.routeName: (ctxPD) => ProductDetailScreen(),
+    //   ProductEdit.routeName: (ctxPE) => ProductEdit(),
+    //   ProductSearchScreen.routeName: (ctxPS) => ProductSearchScreen(),
+    // });
   }
 }
 

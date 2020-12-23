@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:quan_ly_taiducfood/customer_action/add_customer.dart';
+import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
 import 'package:quan_ly_taiducfood/customer_action/popular_course_list_view.dart';
 import 'package:quan_ly_taiducfood/main.dart';
+import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_theme.dart';
 import 'design_course_app_theme.dart';
 
@@ -10,6 +13,26 @@ class DesignCourseHomeScreen extends StatefulWidget {
 }
 
 class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
+  var customer = Customer();
+  var _customerService = CustomerService();
+  List<Customer> _customerList = List();
+
+  getAllCustomerList() async {
+    _customerList.clear();
+    var customers = await _customerService.readCustomerList();
+    customers.forEach((customer) {
+      setState(() {
+        var customerModel = new Customer();
+        customerModel.idCustomer = customer['idCustomer'];
+        customerModel.name = customer['name'];
+        customerModel.phone = customer['phone'];
+        customerModel.email = customer['email'];
+        customerModel.address = customer['address'];
+        _customerList.add(customerModel);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,7 +75,9 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
         children: <Widget>[
           Flexible(
             child: PopularCourseListView(
-              callBack: () {},
+              callBack: () {
+                setState(() {});
+              },
             ),
           )
         ],
@@ -144,7 +169,9 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
                 borderRadius: const BorderRadius.all(
                   Radius.circular(32.0),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Icon(
@@ -180,7 +207,8 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
                   Radius.circular(32.0),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AddCustomer()));
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),

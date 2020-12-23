@@ -1,7 +1,11 @@
+import 'dart:ffi';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:quan_ly_taiducfood/customer_action/design_course_app_theme.dart';
 import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
-import 'package:quan_ly_taiducfood/login_action/Login/components/background.dart';
+import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
+import 'package:quan_ly_taiducfood/customer_action/popular_course_list_view.dart';
+import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,13 +27,16 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 5));
 
-  String name;
-  _OrderHomeScreenState();
+  String nameCustomer = "Thêm khách hàng";
+  String idCustomer = "";
 
   var sanpham = Sanpham();
+  var customer = Customer();
   var _orderService = OrderService();
+  var _customerService = CustomerService();
 
   List<Sanpham> orderList = List<Sanpham>();
+  List<Customer> customerList = List<Customer>();
   double tongTienhang = 0;
   double tong = 0;
   int tongSoluong = 0;
@@ -73,6 +80,31 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
     getTong();
   }
 
+  gettAllCustomerList() async {
+    customerList.clear();
+    var customers = await _customerService.readCustomerList();
+    customers.forEach((customer) {
+      setState(() {
+        var customerModel = new Customer();
+        customerModel.idCustomer = customer['id'];
+        customerModel.name = customer['name'];
+        customerModel.phone = customer['phone'];
+        customerModel.email = customer['email'];
+        customerModel.address = customer['address'];
+
+        customerList.add(customerModel);
+      });
+    });
+  }
+
+  getInfoCustomer(int index) {
+    print(customerList[index].name);
+    nameCustomer = customerList[index].name;
+    customer.idCustomer = customerList[index].idCustomer;
+    customer.address = customerList[index].address;
+    customer.phone = customerList[index].phone;
+  }
+
   getTong() async {
     tong = 0;
     tongTienhang = 0;
@@ -111,7 +143,9 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     getAllOrderList();
+    gettAllCustomerList();
   }
 
   Future<bool> getData() async {
@@ -485,8 +519,9 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
       child: Row(
         children: <Widget>[
           Expanded(
-            child: Row(
+            child: Column(
               children: <Widget>[
+                Text("Khách hàng:"),
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
@@ -497,14 +532,16 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                     borderRadius: const BorderRadius.all(
                       Radius.circular(4.0),
                     ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DesignCourseHomeScreen()));
-                      // setState(() {
-                      //   isDatePopupOpen = true;
-                      // });
+                    onTap: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DesignCourseHomeScreen()),
+                      );
+
+                      setState(() {
+                        getInfoCustomer(int.parse(result));
+                      });
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -514,7 +551,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'Thêm khách hàng',
+                            nameCustomer,
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
@@ -1113,7 +1150,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                   width: 180,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 0  , bottom: 16),
+                  padding: EdgeInsets.only(right: 0, bottom: 16),
                   child: Text(
                     "Tạm tính: " + tong.toString() + " VND",
                     textAlign: TextAlign.right,

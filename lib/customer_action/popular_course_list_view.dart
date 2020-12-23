@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:quan_ly_taiducfood/customer_action/customer_Details.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
+import 'package:quan_ly_taiducfood/order_action/View/Order/order_screen.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_theme.dart';
 
 class PopularCourseListView extends StatefulWidget {
@@ -16,8 +18,10 @@ class PopularCourseListView extends StatefulWidget {
 class _PopularCourseListViewState extends State<PopularCourseListView>
     with TickerProviderStateMixin {
   List<Customer> customerList = List<Customer>();
-  CustomerService customerService;
-  Customer customer;
+
+  var sanpham = Customer();
+  var customerSer = CustomerService();
+  var orderScreen = OrderHomeScreen();
   AnimationController animationController;
 
   @override
@@ -27,18 +31,24 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    getAllCustomerList();
+    super.didChangeDependencies();
+  }
+
   getAllCustomerList() async {
     customerList.clear();
-    var customers = await customerService.readOrderList();
+    var customers = await customerSer.readCustomerList();
     customers.forEach((customer) {
       setState(() {
         var customerModel = new Customer();
-        customerModel.idCustomer = customer['idCustomer'];
-        customerModel.idOrder = customer['idOrder'];
+        customerModel.idCustomer = customer['id'];
         customerModel.name = customer['name'];
         customerModel.phone = customer['phone'];
         customerModel.email = customer['email'];
         customerModel.address = customer['address'];
+
         customerList.add(customerModel);
       });
     });
@@ -77,8 +87,15 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
                   );
                   animationController.forward();
                   return CategoryView(
+                    getInfoCustomer: () {
+                      Navigator.pop(context, index.toString());
+                    },
                     callback: () {
-                      widget.callBack();
+                      setState(() {
+                        customerSer
+                            .deleteOneOrderList(customerList[index].idCustomer);
+                        getAllCustomerList();
+                      });
                     },
                     customer: customerList[index],
                     animation: animation,
@@ -100,10 +117,12 @@ class CategoryView extends StatelessWidget {
       this.customer,
       this.animationController,
       this.animation,
-      this.callback})
+      this.callback,
+      this.getInfoCustomer})
       : super(key: key);
 
   final VoidCallback callback;
+  final VoidCallback getInfoCustomer;
   final Customer customer;
   final AnimationController animationController;
   final Animation<dynamic> animation;
@@ -120,9 +139,11 @@ class CategoryView extends StatelessWidget {
                 0.0, 50 * (1.0 - animation.value), 0.0),
             child: InkWell(
               splashColor: Colors.transparent,
-              onTap: () {},
+              onTap: () {
+                getInfoCustomer();
+              },
               child: SizedBox(
-                height: 120,
+                height: 130,
                 child: Stack(
                   alignment: AlignmentDirectional.bottomCenter,
                   children: <Widget>[
@@ -170,7 +191,9 @@ class CategoryView extends StatelessWidget {
                                                       const BorderRadius.all(
                                                     Radius.circular(32.0),
                                                   ),
-                                                  onTap: () {},
+                                                  onTap: () {
+                                                    callback();
+                                                  },
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsets.all(
@@ -184,7 +207,7 @@ class CategoryView extends StatelessWidget {
                                                   ),
                                                 ),
                                               ),
-                                            )
+                                            ),
                                           ],
                                         ),
                                         Row(
@@ -201,13 +224,49 @@ class CategoryView extends StatelessWidget {
                                                     fontSize: 13),
                                               ),
                                             ),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  top: 8, left: 77),
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                    Radius.circular(32.0),
+                                                  ),
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                DetailsCustomer(
+                                                                  customer:
+                                                                      customer,
+                                                                )));
+
+                                                    print(customer.idCustomer);
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Icon(
+                                                      Icons.person_search,
+                                                      color: OrderAppTheme
+                                                              .buildLightTheme()
+                                                          .primaryColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
                                           ],
                                         ),
                                         Container(
                                           width: 320,
                                           child: Padding(
                                             padding: EdgeInsets.only(
-                                                top: 8, left: 8),
+                                                top: 8, left: 8, bottom: 8),
                                             child: Text(
                                               "Địa chỉ: " + customer.address,
                                               style: TextStyle(
