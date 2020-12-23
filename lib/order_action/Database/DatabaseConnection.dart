@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 class DatabaseConnection {
   setDatabase() async {
     var directory = await getApplicationDocumentsDirectory();
-    var path = join(directory.path, 'demo3');
+    var path = join(directory.path, 'demo4');
     var database =
         await openDatabase(path, version: 1, onCreate: _onCreatingDatabase);
 

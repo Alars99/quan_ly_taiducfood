@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           textTheme: AppTheme.textTheme,
           platform: TargetPlatform.iOS,
         ),
-        home: DesignCourseHomeScreen());
+        home: DesignCourseHomeScreen(),
         routes: {
           ProductDetailScreen.routeName: (ctxPD) => ProductDetailScreen(),
           ProductEdit.routeName: (ctxPE) => ProductEdit(),
