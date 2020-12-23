@@ -1,20 +1,36 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:quan_ly_taiducfood/customer_action/history_customer.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
+import 'package:quan_ly_taiducfood/customer_action/update_customer.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_theme.dart';
 import 'design_course_app_theme.dart';
 
-class AddCustomer extends StatefulWidget {
+class DetailsCustomer extends StatefulWidget {
+  const DetailsCustomer({Key key, this.customer}) : super(key: key);
+  final Customer customer;
   @override
-  _AddcustomerScreen createState() => _AddcustomerScreen();
+  _DetailscustomerScreen createState() => _DetailscustomerScreen(customer);
 }
 
-class _AddcustomerScreen extends State<AddCustomer> {
-  var customer = Customer();
+class _DetailscustomerScreen extends State<DetailsCustomer> {
   var _customerService = CustomerService();
+  var customer = Customer();
+  _DetailscustomerScreen(this.customer);
+
+  // getAllCustomer() async {
+  //   var customers = await _customerService.readCustomer("1");
+  //   customers.forEach((customer) {
+  //     setState(() {
+  //       customer.idCustomer = customer['idCustomer'];
+  //       customer.name = customer['name'];
+  //       customer.phone = customer['phone'];
+  //       customer.email = customer['email'];
+  //       customer.address = customer['address'];
+  //     });
+  //   });
+  // }
 
   @override
   void initState() {
@@ -53,20 +69,74 @@ class _AddcustomerScreen extends State<AddCustomer> {
 
   Widget getInfoUI() {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 50),
+      padding: const EdgeInsets.only(left: 8),
       child: Container(
           child: Column(
         children: [
+          Row(
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width * 0.95,
+                height: 64,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: HexColor('#F8FAFB'),
+                      borderRadius: const BorderRadius.only(
+                        bottomRight: Radius.circular(13.0),
+                        bottomLeft: Radius.circular(13.0),
+                        topLeft: Radius.circular(13.0),
+                        topRight: Radius.circular(13.0),
+                      ),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Icon(Icons.person, color: HexColor('#B9BABC')),
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 0, right: 8),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8, right: 16),
+                          child: Container(
+                            padding: EdgeInsets.zero,
+                            child: Text(
+                              customer.name,
+                              style: TextStyle(
+                                fontFamily: 'WorkSans',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: DesignCourseAppTheme.nearlyBlue,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const Expanded(
+                child: SizedBox(),
+              ),
+            ],
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+                width: MediaQuery.of(context).size.width * 0.95,
                 height: 64,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  padding: const EdgeInsets.only(bottom: 8),
                   child: Container(
                     decoration: BoxDecoration(
                       color: HexColor('#F8FAFB'),
@@ -79,194 +149,32 @@ class _AddcustomerScreen extends State<AddCustomer> {
                     ),
                     child: Row(
                       children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  return customer.name = value;
-                                } else {
-                                  return "chưa nhập gì";
-                                }
-                              },
-                              style: TextStyle(
-                                fontFamily: 'WorkSans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: DesignCourseAppTheme.nearlyBlue,
-                              ),
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                labelText: 'Họ và tên: ',
-                                border: InputBorder.none,
-                                helperStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  letterSpacing: 0.2,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                              ),
-                              onEditingComplete: () {},
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Icon(Icons.person, color: HexColor('#B9BABC')),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const Expanded(
-                child: SizedBox(),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                height: 64,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: HexColor('#F8FAFB'),
-                      borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                        bottomLeft: Radius.circular(13.0),
-                        topLeft: Radius.circular(13.0),
-                        topRight: Radius.circular(13.0),
-                      ),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  return customer.phone = value;
-                                } else {
-                                  return "chưa nhập gì";
-                                }
-                              },
-                              style: TextStyle(
-                                fontFamily: 'WorkSans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: DesignCourseAppTheme.nearlyBlue,
-                              ),
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                labelText: 'Số điện thoại: ',
-                                border: InputBorder.none,
-                                helperStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  letterSpacing: 0.2,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Icon(Icons.phone, color: HexColor('#B9BABC')),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const Expanded(
-                child: SizedBox(),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                height: 64,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: HexColor('#F8FAFB'),
-                      borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                        bottomLeft: Radius.circular(13.0),
-                        topLeft: Radius.circular(13.0),
-                        topRight: Radius.circular(13.0),
-                      ),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  return customer.address = value;
-                                } else {
-                                  return "chưa nhập gì";
-                                }
-                              },
-                              style: TextStyle(
-                                fontFamily: 'WorkSans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: DesignCourseAppTheme.nearlyBlue,
-                              ),
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                labelText: 'Địa chỉ: ',
-                                border: InputBorder.none,
-                                helperStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  letterSpacing: 0.2,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                              ),
-                              onEditingComplete: () {},
-                            ),
-                          ),
-                        ),
                         SizedBox(
                           width: 60,
                           height: 60,
                           child: Icon(Icons.location_city,
                               color: HexColor('#B9BABC')),
-                        )
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 0, right: 8),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8, right: 16),
+                          child: Container(
+                            padding: EdgeInsets.zero,
+                            child: Text(
+                              customer.address,
+                              style: TextStyle(
+                                fontFamily: 'WorkSans',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                                color: DesignCourseAppTheme.nearlyBlue,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -274,18 +182,19 @@ class _AddcustomerScreen extends State<AddCustomer> {
               ),
               const Expanded(
                 child: SizedBox(),
-              )
+              ),
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+                width: MediaQuery.of(context).size.width * 0.95,
                 height: 64,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  padding: const EdgeInsets.only(bottom: 8),
                   child: Container(
                     decoration: BoxDecoration(
                       color: HexColor('#F8FAFB'),
@@ -298,48 +207,31 @@ class _AddcustomerScreen extends State<AddCustomer> {
                     ),
                     child: Row(
                       children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  return customer.email = value;
-                                } else {
-                                  return "chưa nhập gì";
-                                }
-                              },
-                              style: TextStyle(
-                                fontFamily: 'WorkSans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: DesignCourseAppTheme.nearlyBlue,
-                              ),
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                labelText: 'Email: ',
-                                border: InputBorder.none,
-                                helperStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  letterSpacing: 0.2,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                              ),
-                              onEditingComplete: () {},
-                            ),
-                          ),
-                        ),
                         SizedBox(
                           width: 60,
                           height: 60,
                           child: Icon(Icons.email, color: HexColor('#B9BABC')),
-                        )
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 0, right: 8),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8, right: 16),
+                          child: Container(
+                            padding: EdgeInsets.zero,
+                            child: Text(
+                              customer.email,
+                              style: TextStyle(
+                                fontFamily: 'WorkSans',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: DesignCourseAppTheme.nearlyBlue,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -347,7 +239,64 @@ class _AddcustomerScreen extends State<AddCustomer> {
               ),
               const Expanded(
                 child: SizedBox(),
-              )
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width * 0.95,
+                height: 64,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: HexColor('#F8FAFB'),
+                      borderRadius: const BorderRadius.only(
+                        bottomRight: Radius.circular(13.0),
+                        bottomLeft: Radius.circular(13.0),
+                        topLeft: Radius.circular(13.0),
+                        topRight: Radius.circular(13.0),
+                      ),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Icon(Icons.phone, color: HexColor('#B9BABC')),
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 0, right: 8),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8, right: 16),
+                          child: Container(
+                            padding: EdgeInsets.zero,
+                            child: Text(
+                              customer.phone,
+                              style: TextStyle(
+                                fontFamily: 'WorkSans',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: DesignCourseAppTheme.nearlyBlue,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const Expanded(
+                child: SizedBox(),
+              ),
             ],
           ),
           Row(
@@ -373,20 +322,19 @@ class _AddcustomerScreen extends State<AddCustomer> {
                       children: <Widget>[
                         Expanded(
                           child: Container(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
+                            padding: const EdgeInsets.only(left: 8, right: 8),
                             child: RaisedButton(
                               onPressed: () {
-                                customer.idCustomer =
-                                    "cus" + Random().nextInt(100).toString();
-                                print(customer.idCustomer +
-                                    customer.name +
-                                    customer.address +
-                                    customer.phone +
-                                    customer.email);
-                                _customerService.saveOrderList(customer);
-                                Navigator.pop(context);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            HistoryCustomer()));
                               },
-                              child: Text("Tạo"),
+                              child: Text(
+                                "Lịch sử mua hàng",
+                                textAlign: TextAlign.center,
+                              ),
                               padding: EdgeInsets.only(top: 8, bottom: 8),
                               color: Colors.green[300],
                               textColor: Colors.white,
@@ -398,9 +346,14 @@ class _AddcustomerScreen extends State<AddCustomer> {
                             padding: const EdgeInsets.only(left: 16, right: 16),
                             child: RaisedButton(
                               onPressed: () {
-                                Navigator.pop(context);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UpdateCustomer(
+                                              customer: customer,
+                                            )));
                               },
-                              child: Text("Hủy"),
+                              child: Text("Cập nhật"),
                               padding: EdgeInsets.only(top: 8, bottom: 8),
                               color: Colors.red[300],
                               textColor: Colors.white,
@@ -448,11 +401,11 @@ class _AddcustomerScreen extends State<AddCustomer> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 70, right: 65),
+            padding: EdgeInsets.only(left: 65, right: 45),
             child: Row(
               children: <Widget>[
                 Text(
-                  'Thêm khách hàng',
+                  'Thông tin khách hàng',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,

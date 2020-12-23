@@ -7,14 +7,20 @@ import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.da
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_theme.dart';
 import 'design_course_app_theme.dart';
 
-class AddCustomer extends StatefulWidget {
+class UpdateCustomer extends StatefulWidget {
+  const UpdateCustomer({Key key, this.customer}) : super(key: key);
+
   @override
-  _AddcustomerScreen createState() => _AddcustomerScreen();
+  _UpdateCustomer createState() => _UpdateCustomer(customer);
+
+  final Customer customer;
 }
 
-class _AddcustomerScreen extends State<AddCustomer> {
+class _UpdateCustomer extends State<UpdateCustomer> {
   var customer = Customer();
   var _customerService = CustomerService();
+
+  _UpdateCustomer(this.customer);
 
   @override
   void initState() {
@@ -53,17 +59,16 @@ class _AddcustomerScreen extends State<AddCustomer> {
 
   Widget getInfoUI() {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 50),
+      padding: const EdgeInsets.only(left: 16),
       child: Container(
           child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+                width: 330,
                 height: 64,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 8),
@@ -84,11 +89,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
                             padding: const EdgeInsets.only(left: 16, right: 16),
                             child: TextFormField(
                               onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  return customer.name = value;
-                                } else {
-                                  return "chưa nhập gì";
-                                }
+                                customer.name = value;
                               },
                               style: TextStyle(
                                 fontFamily: 'WorkSans',
@@ -98,16 +99,16 @@ class _AddcustomerScreen extends State<AddCustomer> {
                               ),
                               keyboardType: TextInputType.text,
                               decoration: InputDecoration(
-                                labelText: 'Họ và tên: ',
+                                hintText: customer.name,
                                 border: InputBorder.none,
                                 helperStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 8,
                                   color: HexColor('#B9BABC'),
                                 ),
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 16,
+                                  fontSize: 8,
                                   letterSpacing: 0.2,
                                   color: HexColor('#B9BABC'),
                                 ),
@@ -136,7 +137,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+                width: 330,
                 height: 64,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 8),
@@ -157,11 +158,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
                             padding: const EdgeInsets.only(left: 16, right: 16),
                             child: TextFormField(
                               onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  return customer.phone = value;
-                                } else {
-                                  return "chưa nhập gì";
-                                }
+                                customer.phone = value;
                               },
                               style: TextStyle(
                                 fontFamily: 'WorkSans',
@@ -171,7 +168,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
                               ),
                               keyboardType: TextInputType.text,
                               decoration: InputDecoration(
-                                labelText: 'Số điện thoại: ',
+                                hintText: customer.phone,
                                 border: InputBorder.none,
                                 helperStyle: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -208,7 +205,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+                width: 330,
                 height: 64,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 8),
@@ -229,11 +226,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
                             padding: const EdgeInsets.only(left: 16, right: 16),
                             child: TextFormField(
                               onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  return customer.address = value;
-                                } else {
-                                  return "chưa nhập gì";
-                                }
+                                customer.address = value;
                               },
                               style: TextStyle(
                                 fontFamily: 'WorkSans',
@@ -243,7 +236,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
                               ),
                               keyboardType: TextInputType.text,
                               decoration: InputDecoration(
-                                labelText: 'Địa chỉ: ',
+                                hintText: customer.address,
                                 border: InputBorder.none,
                                 helperStyle: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -282,7 +275,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+                width: 330,
                 height: 64,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 8),
@@ -303,11 +296,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
                             padding: const EdgeInsets.only(left: 16, right: 16),
                             child: TextFormField(
                               onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  return customer.email = value;
-                                } else {
-                                  return "chưa nhập gì";
-                                }
+                                customer.email = value;
                               },
                               style: TextStyle(
                                 fontFamily: 'WorkSans',
@@ -317,7 +306,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
                               ),
                               keyboardType: TextInputType.text,
                               decoration: InputDecoration(
-                                labelText: 'Email: ',
+                                hintText: customer.email,
                                 border: InputBorder.none,
                                 helperStyle: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -355,7 +344,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+                width: 330,
                 height: 64,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 8),
@@ -376,17 +365,15 @@ class _AddcustomerScreen extends State<AddCustomer> {
                             padding: const EdgeInsets.only(left: 16, right: 16),
                             child: RaisedButton(
                               onPressed: () {
-                                customer.idCustomer =
-                                    "cus" + Random().nextInt(100).toString();
                                 print(customer.idCustomer +
                                     customer.name +
                                     customer.address +
                                     customer.phone +
                                     customer.email);
-                                _customerService.saveOrderList(customer);
+                                _customerService.updateCustomer(customer);
                                 Navigator.pop(context);
                               },
-                              child: Text("Tạo"),
+                              child: Text("Cập nhật"),
                               padding: EdgeInsets.only(top: 8, bottom: 8),
                               color: Colors.green[300],
                               textColor: Colors.white,
@@ -448,11 +435,11 @@ class _AddcustomerScreen extends State<AddCustomer> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 70, right: 65),
+            padding: EdgeInsets.only(left: 70, right: 40),
             child: Row(
               children: <Widget>[
                 Text(
-                  'Thêm khách hàng',
+                  'Cập nhật khách hàng',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,

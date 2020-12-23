@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:quan_ly_taiducfood/customer_action/update_customer.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 
@@ -35,6 +37,20 @@ class Repository {
     return await connection.delete(table);
   }
 
-  deleteOneData(table, itemId) async { var connection = await database;
-    return await connection.rawDelete("Delete From $table where id = '$itemId'");}
+  deleteOneData(table, itemId) async {
+    var connection = await database;
+    return await connection
+        .rawDelete("Delete From $table where id = '$itemId'");
+  }
+
+  readOneData(table, itemId) async {
+    var connection = await database;
+    return await connection
+        .rawDelete("Select From $table where id = '$itemId'");
+  }
+
+  updateData(table, data) async {
+    var connection = await database;
+    return await connection.update(table, data);
+  }
 }
