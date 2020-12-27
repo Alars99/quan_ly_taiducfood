@@ -4,6 +4,8 @@ import 'package:quan_ly_taiducfood/main_action/ui_view/mediterranesn_diet_view.d
 import 'package:quan_ly_taiducfood/main_action/ui_view/title_view.dart';
 import 'package:quan_ly_taiducfood/main_action/fintness_app_theme.dart';
 import 'package:quan_ly_taiducfood/main_action/home/meals_list_view.dart';
+import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
+import 'package:quan_ly_taiducfood/statistical_action/Controller/statistical.dart';
 import 'package:flutter/material.dart';
 
 import 'meals_list_view.dart';
@@ -20,9 +22,41 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     with TickerProviderStateMixin {
   Animation<double> topBarAnimation;
 
+  var statistical = Statistical();
+  List<OrderList> _list = List();
+  int dem = 0;
+
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
+
+  getAll() {
+    DatabaseReference referenceProduct =
+        FirebaseDatabase.instance.reference().child("Order");
+    referenceProduct.once().then((DataSnapshot snapshot) {
+      _list.clear();
+      var keys = snapshot.value.keys;
+      var values = snapshot.value;
+      for (var key in keys) {
+        OrderList order = new OrderList(
+          values[key]["idDonHang"],
+          values[key]["idGioHang"],
+          values[key]["tongTienhang"],
+          values[key]["tongSoluong"],
+          values[key]["phiGiaohang"],
+          values[key]["chietKhau"],
+          values[key]["banSiLe"],
+          values[key]["paymethod"],
+          values[key]["idKhachHang"],
+          values[key]["ngaymua"],
+          values[key]["trangthai"],
+        );
+        _list.add(order);
+      }
+      dem = _list.length;
+      print(dem);
+    });
+  }
 
   @override
   void initState() {
@@ -30,7 +64,6 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
         CurvedAnimation(
             parent: widget.animationController,
             curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
-    addAllListData();
 
     scrollController.addListener(() {
       if (scrollController.offset >= 24) {
@@ -57,9 +90,15 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getAll();
+    addAllListData();
+  }
+
   void addAllListData() {
     const int count = 9;
-
     listViews.add(
       TitleView(
         titleTxt: 'Doanh thu',
@@ -71,6 +110,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
         animationController: widget.animationController,
       ),
     );
+    // doanh thu thang + doanh thu ngay
     listViews.add(
       MediterranesnDietView(
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
@@ -78,8 +118,13 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
             curve:
                 Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
+        doanhthuthang: statistical.getDoanhThuThang(),
+        donhangmoi: count,
+        donhanghuy: statistical.getDonHuy(),
+        donhangtra: statistical.getDonTra(),
       ),
     );
+    // menu chuc nang
     listViews.add(
       MealsListView(
         mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -90,6 +135,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
         mainScreenAnimationController: widget.animationController,
       ),
     );
+    // thong tin don hang
     listViews.add(
       BodyMeasurementView(
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
@@ -97,6 +143,10 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
             curve:
                 Interval((1 / count) * 5, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
+        chothanhtoan: 0,
+        choxuatkho: 0,
+        danggiaohang: 0,
+        donchuaduyet: 0,
       ),
     );
   }

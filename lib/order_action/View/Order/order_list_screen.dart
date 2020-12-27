@@ -34,7 +34,6 @@ class _OrderListScreenState extends State<OrderListScreen>
 
   List<OrderList> orderList = [];
 
-
   @override
   void initState() {
     super.initState();
@@ -71,6 +70,7 @@ class _OrderListScreenState extends State<OrderListScreen>
         );
         orderList.add(order);
       }
+    
       setState(() {});
     });
   }

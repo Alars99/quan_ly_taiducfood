@@ -49,7 +49,7 @@ class MealsListData {
     ),
     MealsListData(
       imagePath: 'assets/fitness_app/019-headphone.png',
-      titleTxt: 'Quản lý nhân viên',
+      titleTxt: 'Quản lý khách hàng',
       uiId: 5,
     ),
   ];

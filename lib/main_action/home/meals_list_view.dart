@@ -1,6 +1,8 @@
 import 'package:quan_ly_taiducfood/main_action/fintness_app_theme.dart';
 import 'package:quan_ly_taiducfood/main_action/models/meals_list_data.dart';
 import 'package:flutter/material.dart';
+import 'package:quan_ly_taiducfood/main_action/products/product_add.dart';
+import 'package:quan_ly_taiducfood/main_action/products/products_search.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_screen.dart';
 
 class MealsListView extends StatefulWidget {
@@ -121,6 +123,37 @@ class MealsView extends StatelessWidget {
                         onTap: () {
                           print(mealsListData.uiId);
                           if (mealsListData.uiId == 0) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OrderHomeScreen()));
+                          }
+                          if (mealsListData.uiId == 1) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductAdd()));
+                          }
+                          if (mealsListData.uiId == 2) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OrderHomeScreen()));
+                          }
+                          if (mealsListData.uiId == 3) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OrderHomeScreen()));
+                          }
+                          if (mealsListData.uiId == 4) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProductSearchScreen()));
+                          }
+                          if (mealsListData.uiId == 5) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

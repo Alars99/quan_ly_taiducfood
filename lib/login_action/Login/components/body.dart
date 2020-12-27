@@ -36,16 +36,7 @@ class Body extends StatelessWidget {
             ),
             RoundedButton(
               text: "Đăng nhập",
-              press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return NavigationHomeScreen();
-                    },
-                  ),
-                );
-              },
+              press: () {},
             ),
             SizedBox(height: size.height * 0.03),
             AlreadyHaveAnAccountCheck(

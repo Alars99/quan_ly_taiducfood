@@ -6,10 +6,21 @@ import 'package:flutter/material.dart';
 final db = FirebaseDatabase.instance.reference().child("productList");
 
 class BodyMeasurementView extends StatelessWidget {
-  const BodyMeasurementView({Key key, this.animationController, this.animation})
+  const BodyMeasurementView(
+      {Key key,
+      this.animationController,
+      this.animation,
+      this.donchuaduyet,
+      this.chothanhtoan,
+      this.choxuatkho,
+      this.danggiaohang})
       : super(key: key);
   final AnimationController animationController;
   final Animation animation;
+  final int donchuaduyet;
+  final int chothanhtoan;
+  final int choxuatkho;
+  final int danggiaohang;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +71,7 @@ class BodyMeasurementView extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(top: 8),
                                     child: Text(
-                                      "0",
+                                      donchuaduyet.toString(),
                                       style: TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,
                                           fontWeight: FontWeight.bold,
@@ -71,29 +82,7 @@ class BodyMeasurementView extends StatelessWidget {
                               ),
                             ),
                             Expanded(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Chờ xuất kho",
-                                    style: TextStyle(
-                                        fontFamily: FitnessAppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        color: FitnessAppTheme.grey
-                                            .withOpacity(0.8),
-                                        fontSize: 12),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 8),
-                                    child: Text(
-                                      "0",
-                                      style: TextStyle(
-                                          fontFamily: FitnessAppTheme.fontName,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14),
-                                    ),
-                                  )
-                                ],
-                              ),
+                              child: Column(),
                             ),
                             Expanded(
                               child: Column(
@@ -110,7 +99,7 @@ class BodyMeasurementView extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(top: 8),
                                     child: Text(
-                                      "0",
+                                      chothanhtoan.toString(),
                                       style: TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,
                                           fontWeight: FontWeight.bold,
@@ -142,7 +131,7 @@ class BodyMeasurementView extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(top: 8),
                                     child: Text(
-                                      "0",
+                                      choxuatkho.toString(),
                                       style: TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,
                                           fontWeight: FontWeight.bold,
@@ -167,7 +156,7 @@ class BodyMeasurementView extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(top: 8),
                                     child: Text(
-                                      "0",
+                                      danggiaohang.toString(),
                                       style: TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,
                                           fontWeight: FontWeight.bold,

@@ -1,14 +1,27 @@
 import 'package:quan_ly_taiducfood/main_action/fintness_app_theme.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:flutter/material.dart';
+import 'package:quan_ly_taiducfood/statistical_action/Controller/statistical.dart';
 import 'dart:math' as math;
 
 class MediterranesnDietView extends StatelessWidget {
   final AnimationController animationController;
   final Animation animation;
+  final double doanhthungay;
+  final double doanhthuthang;
+  final int donhangmoi;
+  final int donhanghuy;
+  final int donhangtra;
 
   const MediterranesnDietView(
-      {Key key, this.animationController, this.animation})
+      {Key key,
+      this.animationController,
+      this.animation,
+      this.doanhthungay,
+      this.doanhthuthang,
+      this.donhangmoi,
+      this.donhanghuy,
+      this.donhangtra})
       : super(key: key);
 
   @override
@@ -106,7 +119,7 @@ class MediterranesnDietView extends StatelessWidget {
                                                       const EdgeInsets.only(
                                                           left: 4, bottom: 3),
                                                   child: Text(
-                                                    '1.000.000',
+                                                    doanhthungay.toString(),
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       fontFamily:
@@ -205,7 +218,7 @@ class MediterranesnDietView extends StatelessWidget {
                                                       const EdgeInsets.only(
                                                           left: 4, bottom: 3),
                                                   child: Text(
-                                                    '10.000.000',
+                                                    doanhthuthang.toString(),
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       fontFamily:
@@ -291,7 +304,7 @@ class MediterranesnDietView extends StatelessWidget {
                                   padding:
                                       const EdgeInsets.only(top: 6, left: 38),
                                   child: Text(
-                                    '0',
+                                    donhangmoi.toString(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontFamily: FitnessAppTheme.fontName,
@@ -330,7 +343,7 @@ class MediterranesnDietView extends StatelessWidget {
                                       padding: const EdgeInsets.only(
                                           top: 6, left: 19),
                                       child: Text(
-                                        '1',
+                                        donhanghuy.toString(),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,
@@ -370,7 +383,7 @@ class MediterranesnDietView extends StatelessWidget {
                                       padding: const EdgeInsets.only(
                                           top: 6, left: 35),
                                       child: Text(
-                                        '1',
+                                        donhangtra.toString(),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,

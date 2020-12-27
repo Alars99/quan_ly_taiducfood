@@ -1,7 +1,6 @@
 import 'package:quan_ly_taiducfood/main_action/products/products_search.dart';
 import 'package:quan_ly_taiducfood/main_action/models/tabIcon_data.dart';
 import 'package:flutter/material.dart';
-import 'bottom_navigation_view/bottom_bar_view.dart';
 import 'fintness_app_theme.dart';
 import 'home/my_diary_screen.dart';
 
@@ -74,53 +73,6 @@ class _FitnessAppHomeScreenState extends State<FitnessAppHomeScreen>
       children: <Widget>[
         const Expanded(
           child: SizedBox(),
-        ),
-        BottomBarView(
-          tabIconsList: tabIconsList,
-          addClick: () {},
-          changeIndex: (int index) {
-            if (index == 0) {
-              animationController.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  tabBody =
-                      MyDiaryScreen(animationController: animationController);
-                });
-              });
-            } else if (index == 1) {
-              animationController.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  // tabBody =
-                  //     TrainingScreen(animationController: animationController);
-                });
-              });
-            } else if (index == 2) {
-              animationController.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  tabBody = ProductSearchScreen(
-                      animationController: animationController);
-                });
-              });
-            } else if (index == 3) {
-              animationController.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  // tabBody =
-                  //     TrainingScreen(animationController: animationController);
-                });
-              });
-            }
-          },
         ),
       ],
     );
