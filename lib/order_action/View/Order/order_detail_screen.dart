@@ -2,8 +2,11 @@ import 'dart:collection';
 import 'dart:ui';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
+import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
+import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,8 +15,11 @@ import 'add_food.dart';
 import 'order_list_screen_view.dart';
 import 'order_theme.dart';
 import 'order_list_view.dart';
+import 'package:quan_ly_taiducfood/order_action/Database/Repostitory.dart';
 
 class OrderDetailScreen extends StatefulWidget {
+  const OrderDetailScreen({Key key}) : super(key: key);
+
   @override
   _OrderDetailScreenState createState() => _OrderDetailScreenState();
   static const routeName = '/order-detail-screen';
@@ -24,6 +30,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   AnimationController animationController;
 
   List<Sanpham> orderList = [];
+  List<Customer> customerList = [];
+  var cus = Customer();
+  var customerSer = CustomerService();
+  String name = "";
 
   final ScrollController _scrollController = ScrollController();
   DateTime startDate = DateTime.now();
@@ -36,9 +46,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
         duration: const Duration(milliseconds: 1000), vsync: this);
   }
 
+  getAllCustomerList(String id) async {
+    customerList.clear();
+    var customers = await customerSer.readCustomerList();
+    customers.forEach((customer) {
+      setState(() {
+        if (customer['id'] == id) {
+          var customerModel = new Customer();
+          customerModel.idCustomer = customer['id'];
+          customerModel.name = customer['name'];
+          customerModel.phone = customer['phone'];
+          customerModel.email = customer['email'];
+          customerModel.address = customer['address'];
+          customerList.add(customerModel);
+        }
+      });
+    });
+  }
+
   getList() {
     final Map data = ModalRoute.of(context).settings.arguments;
     String idgiohang = data['idGioHang'].toString();
+    var idcus = data['idKhachHang'].toString();
+    getAllCustomerList(idcus);
     DatabaseReference referenceProduct =
         FirebaseDatabase.instance.reference().child("Cart").child(idgiohang);
     referenceProduct.once().then((DataSnapshot snapshot) {
@@ -55,7 +85,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
           orderList.add(sanpham);
         });
       }
-      print(orderList.length);
     });
   }
 
@@ -99,25 +128,25 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Padding(
-                                  padding: EdgeInsets.all(7.0),
-                                  child: Card(
-                                    clipBehavior: Clip.antiAlias,
-                                    elevation: 2,
-                                    child: Column(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(7.0),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                  "đặt hàng, duyệt, đóng gói, xuất kho, hoàn thành")
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )),
+                              // Padding(
+                              //     padding: EdgeInsets.all(7.0),
+                              //     child: Card(
+                              //       clipBehavior: Clip.antiAlias,
+                              //       elevation: 2,
+                              //       child: Column(
+                              //         children: [
+                              //           Padding(
+                              //             padding: EdgeInsets.all(7.0),
+                              //             child: Row(
+                              //               children: [
+                              //                 Text(
+                              //                     "đặt hàng, duyệt, đóng gói, xuất kho, hoàn thành")
+                              //               ],
+                              //             ),
+                              //           ),
+                              //         ],
+                              //       ),
+                              //     )),
                               Padding(
                                 padding: EdgeInsets.all(7.0),
                                 child: Card(
@@ -177,9 +206,27 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Text('Tên Khách Hàng'),
+                                                    Text('Tên khách hàng'),
                                                     SizedBox(height: 5),
-                                                    Text('Nguyễn Văn A'),
+                                                    Text(customerList
+                                                        .first.name),
+                                                    SizedBox(height: 5),
+                                                    Text(
+                                                        'Địa chỉ giao hàng: '),
+                                                    SizedBox(height: 5),
+                                                    Text(customerList
+                                                        .first.address),
+                                                    SizedBox(height: 5),
+                                                    Text('Số điện thoại:'),
+                                                    SizedBox(height: 5),
+                                                    Text(customerList
+                                                        .first.phone),
+                                                    SizedBox(height: 5),
+                                                    Text('Email: '),
+                                                    SizedBox(height: 5),
+                                                    Text(customerList
+                                                        .first.email),
+                                                    SizedBox(height: 5),
                                                   ],
                                                 ),
                                               ],
@@ -357,6 +404,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                   Positioned(
                     bottom: MediaQuery.of(context).viewInsets.bottom,
                     child: Container(
+                      color: Colors.white,
                       height: 60,
                       width: MediaQuery.of(context).size.width,
                       child: Row(
@@ -364,8 +412,85 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          RaisedButton(
-                              onPressed: () {}, child: Text("Đặt Hàng"),)
+                          Container(
+                            width: 280,
+                            //220
+                            height: 47,
+                            child: RaisedButton(
+                              onPressed: () {},
+                              child: Text("Duyệt Đơn",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                  )),
+                            ),
+                          ),
+                          // SizedBox(
+                          //   width: 10,
+                          // ),
+                          // Container(
+                          //   decoration: BoxDecoration(
+                          //     shape: BoxShape.circle,
+                          //     color: Colors.blue,
+                          //   ),
+                          //   child: IconButton(
+                          //     icon: Icon(
+                          //       Icons.edit,
+                          //       color: Colors.white,
+                          //     ),
+                          //     onPressed: () {
+                          //       print('s');
+                          //     },
+                          //   ),
+                          // ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.red,
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Chắc xóa không?"),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: () {
+                                          deleteCart();
+                                          deleteOrder();
+                                          Fluttertoast.showToast(
+                                              msg: "Xóa đơn hàng thành công",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 1,
+                                              textColor: Colors.black87,
+                                              fontSize: 16.0);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("Có"),
+                                      ),
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop("Không");
+                                        },
+                                        child: Text("Không"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -377,6 +502,24 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
         ),
       ),
     );
+  }
+
+  Future<void> deleteOrder() async {
+    final Map data = ModalRoute.of(context).settings.arguments;
+    final idDonHang = data['idDonHang'];
+    DatabaseReference referenceList =
+        FirebaseDatabase.instance.reference().child('Order');
+
+    referenceList.child(idDonHang).remove();
+  }
+
+  Future<void> deleteCart() async {
+    final Map data = ModalRoute.of(context).settings.arguments;
+    final idGioHang = data['idGioHang'];
+    DatabaseReference referenceList =
+        FirebaseDatabase.instance.reference().child('Cart');
+
+    referenceList.child(idGioHang).remove();
   }
 
   Widget orderUIList(String name, int count, String price) {
@@ -499,12 +642,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       ),
       child: Padding(
         padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top, left: 8, right: 8),
+            top: MediaQuery.of(context).padding.top, left: 8, right: 55),
         child: Row(
           children: <Widget>[
             Container(
               alignment: Alignment.centerLeft,
-              width: AppBar().preferredSize.height + 20,
+              width: AppBar().preferredSize.height,
               height: AppBar().preferredSize.height,
               child: Material(
                 color: Colors.transparent,
@@ -533,29 +676,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 ),
               ),
             ),
-            Container(
-              width: AppBar().preferredSize.height + 20,
-              height: AppBar().preferredSize.height,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(32.0),
-                      ),
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(FontAwesomeIcons.list),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
           ],
         ),
       ),

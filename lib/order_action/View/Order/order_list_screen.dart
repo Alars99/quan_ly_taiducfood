@@ -70,7 +70,6 @@ class _OrderListScreenState extends State<OrderListScreen>
         );
         orderList.add(order);
       }
-    
       setState(() {});
     });
   }
@@ -168,12 +167,12 @@ class _OrderListScreenState extends State<OrderListScreen>
       ),
       child: Padding(
         padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top, left: 8, right: 8),
+            top: MediaQuery.of(context).padding.top, left: 8, right: 45),
         child: Row(
           children: <Widget>[
             Container(
               alignment: Alignment.centerLeft,
-              width: AppBar().preferredSize.height + 20,
+              width: AppBar().preferredSize.height,
               height: AppBar().preferredSize.height,
               child: Material(
                 color: Colors.transparent,
@@ -202,29 +201,6 @@ class _OrderListScreenState extends State<OrderListScreen>
                 ),
               ),
             ),
-            Container(
-              width: AppBar().preferredSize.height + 20,
-              height: AppBar().preferredSize.height,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(32.0),
-                      ),
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(FontAwesomeIcons.list),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
           ],
         ),
       ),

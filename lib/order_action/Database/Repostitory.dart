@@ -45,8 +45,7 @@ class Repository {
 
   readOneData(table, itemId) async {
     var connection = await database;
-    return await connection
-        .rawDelete("Select From $table where id = '$itemId'");
+    return await connection.query(table, where: 'id=?', whereArgs: [itemId]);
   }
 
   updateData(table, data) async {

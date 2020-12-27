@@ -16,6 +16,7 @@ import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart'
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quan_ly_taiducfood/order_action/model/test.dart';
+import 'package:quan_ly_taiducfood/statistical_action/View/doanhthu_screen.dart';
 import 'add_food.dart';
 import 'order_list_screen.dart';
 import 'order_theme.dart';
@@ -151,9 +152,10 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
     mapOrder["chietKhau"] = chietKhau.toString();
     mapOrder["banSiLe"] = giaban.toString();
     mapOrder["paymethod"] = paymethod.toString();
-    mapOrder["idKhachHang"] = "0";
-    mapOrder["ngaymua"] =
-        DateFormat('dd/MM/yyyy kk:mm:ss').format(now).toString();
+    mapOrder["idKhachHang"] = customer.idCustomer.toString();
+    mapOrder["ngaymua"] = DateFormat('dd/MM/yyyy').format(now).toString();
+    mapOrder["giomua"] = DateFormat('kk:mm:ss').format(now).toString();
+
     mapOrder["trangthai"] = "0";
 
     reference.child(idDonHang).set(mapOrder);
@@ -1160,7 +1162,12 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                       borderRadius: const BorderRadius.all(
                         Radius.circular(32.0),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => OrderListScreen()));
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(FontAwesomeIcons.list),
