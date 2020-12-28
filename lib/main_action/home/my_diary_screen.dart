@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:http/http.dart';
 import 'package:quan_ly_taiducfood/main_action/ui_view/body_measurement.dart';
 import 'package:quan_ly_taiducfood/main_action/ui_view/mediterranesn_diet_view.dart';
 import 'package:quan_ly_taiducfood/main_action/ui_view/title_view.dart';
@@ -21,14 +22,26 @@ class MyDiaryScreen extends StatefulWidget {
 class _MyDiaryScreenState extends State<MyDiaryScreen>
     with TickerProviderStateMixin {
   Animation<double> topBarAnimation;
-
-  var statistical = Statistical();
   List<OrderList> _list = List();
-  int dem = 0;
-
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
+
+  int donhang,
+      donhuy,
+      dontra,
+      chuaduyet,
+      chothanhtoan,
+      choxuatkhoa,
+      danggiaohang;
+
+  double doanhthuthang, doanhthungay;
+
+  void checkDonhang(String trangthai) {
+    if (trangthai == "0") {
+      chuaduyet++;
+    } else if (trangthai == "1") {}
+  }
 
   getAll() {
     DatabaseReference referenceProduct =
@@ -51,11 +64,28 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
           values[key]["ngaymua"],
           values[key]["trangthai"],
         );
+        checkDonhang(values[key]["trangthai"]);
         _list.add(order);
       }
-      dem = _list.length;
-      print(dem);
+      donhang = _list.length;
+
+      setState(() {
+        addAllListData();
+      });
     });
+  }
+
+  void getDataDB() {
+    donhang = 0;
+    donhuy = 0;
+    dontra = 0;
+    chuaduyet = 0;
+    chothanhtoan = 0;
+    choxuatkhoa = 0;
+    danggiaohang = 0;
+    doanhthungay = 0.0;
+    doanhthuthang = 0.0;
+    getAll();
   }
 
   @override
@@ -93,8 +123,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    getAll();
-    addAllListData();
+    getDataDB();
   }
 
   void addAllListData() {
@@ -118,10 +147,11 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
             curve:
                 Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
-        doanhthuthang: statistical.getDoanhThuThang(),
-        donhangmoi: count,
-        donhanghuy: statistical.getDonHuy(),
-        donhangtra: statistical.getDonTra(),
+        doanhthungay: doanhthungay,
+        doanhthuthang: doanhthuthang,
+        donhangmoi: donhang,
+        donhanghuy: donhuy,
+        donhangtra: dontra,
       ),
     );
     // menu chuc nang
@@ -143,10 +173,10 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
             curve:
                 Interval((1 / count) * 5, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
-        chothanhtoan: 0,
-        choxuatkho: 0,
-        danggiaohang: 0,
-        donchuaduyet: 0,
+        chothanhtoan: chothanhtoan,
+        choxuatkho: choxuatkhoa,
+        danggiaohang: danggiaohang,
+        donchuaduyet: chuaduyet,
       ),
     );
   }
