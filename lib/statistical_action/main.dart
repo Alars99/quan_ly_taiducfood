@@ -1,5 +1,9 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main.dart';
+import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/statistical_action/category_list_view.dart';
 import 'package:quan_ly_taiducfood/statistical_action/course_info_screen.dart';
 import 'package:quan_ly_taiducfood/statistical_action/popular_course_list_view.dart';
@@ -12,6 +16,88 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreen extends State<MainScreen> {
   CategoryType categoryType = CategoryType.ui;
+  ProductDetail productDetail;
+
+  double tongTien, tiennhapky, tienxuatky;
+  int soluong = 0;
+
+  DateTime endDate;
+  DateTime startDate;
+  DateTime _dateTime;
+
+  List<ProductDetail> productDetailList = List();
+  getData() {
+    int dem = 0;
+    double ketqua = 0;
+    for (int i = 1; i < 10; i++) {
+      for (int i = 1; i <= 30; i++) {
+        _dateTime =
+            DateTime.utc(startDate.year, startDate.month, startDate.day + i);
+        print(DateFormat("dd/MM/yyyy").format(_dateTime));
+        DatabaseReference referenceProduct = FirebaseDatabase.instance
+            .reference()
+            .child('productList')
+            .child(i.toString())
+            .child('Product')
+            .child('id');
+
+        referenceProduct.once().then((DataSnapshot snapshot) {
+          productDetailList.clear();
+          var keys = snapshot.value.keys;
+          var values = snapshot.value;
+
+          for (var key in keys) {
+            ProductDetail productDetail = new ProductDetail(
+              values[key]["id"],
+              values[key]["brand"],
+              values[key]["name"],
+              values[key]["image"],
+              values[key]["price"],
+              values[key]["barcode"],
+              values[key]["weight"],
+              // values[key]["cate"],
+              values[key]["priceNhap"],
+              values[key]["priceBuon"],
+              values[key]["amount"],
+              values[key]["desc"],
+              values[key]["allowSale"].toString(),
+              values[key]["tax"].toString(),
+              values[key]["priceVon"],
+            );
+            productDetailList.add(productDetail);
+            ketqua = double.parse(productDetail.priceVon) *
+                double.parse(productDetail.amount);
+            dem = dem + int.parse(productDetail.amount);
+            tongTien += ketqua;
+          }
+
+          soluong = dem;
+          setState(() {});
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    soluong = 0;
+    tongTien = 0;
+    tiennhapky = 0;
+    tienxuatky = 0;
+    endDate = DateTime.now();
+    startDate = DateTime.utc(endDate.year, endDate.month - 1, endDate.day);
+    print(startDate);
+    print(endDate);
+    var a = endDate.difference(startDate).inDays;
+    print(a);
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    getData();
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,17 +197,23 @@ class _MainScreen extends State<MainScreen> {
                 child: Text("Tồn kho cuối kỳ"),
               ),
               Expanded(
-                child: Text("22/11 - 23/12"),
+                child: Text(startDate.day.toString() +
+                    "/" +
+                    startDate.month.toString() +
+                    " - " +
+                    endDate.day.toString() +
+                    "/" +
+                    endDate.month.toString()),
               ),
               Expanded(
                 child: Text(
-                  "1,500,000",
+                  tongTien.toString(),
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
               Expanded(
                 child: Text(
-                  "SL: 15",
+                  "SL: " + soluong.toString(),
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -158,7 +250,7 @@ class _MainScreen extends State<MainScreen> {
                         child: Column(
                           children: [
                             Text("Nhập trong kỳ"),
-                            Text("3,000,000"),
+                            Text(tiennhapky.toString())
                           ],
                         ),
                       )
@@ -174,7 +266,7 @@ class _MainScreen extends State<MainScreen> {
                         child: Column(
                           children: [
                             Text("Xuất trong kỳ"),
-                            Text("1,500,000"),
+                            Text(tienxuatky.toString()),
                           ],
                         ),
                       )
