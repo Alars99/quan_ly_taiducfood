@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -587,6 +588,7 @@ class _ProductAddState extends State<ProductAdd> {
   }
 
   Future<void> upload() async {
+    final now = DateTime.now();
     String fileName = basename(_image.path);
     String idFood = productCate.id.toString();
     if (formKey.currentState.validate()) {
@@ -620,6 +622,7 @@ class _ProductAddState extends State<ProductAdd> {
       mapProList["desc"] = desc;
       mapProList["allowSale"] = allowSale;
       mapProList["tax"] = tax;
+      mapProList["ngayUp"] = DateFormat('dd/MM/yyyy').format(now).toString();
 
       referenceList.child(id).set(mapProList);
     }

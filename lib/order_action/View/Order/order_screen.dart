@@ -175,7 +175,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
       mapCart["brand"] = sanpham.brand.toString();
       mapCart["price"] = sanpham.price.toString();
       mapCart["count"] = sanpham.count.toString();
-      mapCart["idKhachHang"] = "0";
+      mapCart["idKhachHang"] = customer.idCustomer.toString();
       referenceCart.child(idGioHang).child(idSanpham).set(mapCart);
       print(sanpham.name);
     }

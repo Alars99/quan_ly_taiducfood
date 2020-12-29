@@ -72,6 +72,7 @@ class _OrderListScreenState extends State<OrderListScreen>
       }
       setState(() {});
     });
+    print(orderList.length);
   }
 
   Future<bool> getData() async {
@@ -89,9 +90,10 @@ class _OrderListScreenState extends State<OrderListScreen>
   Widget build(BuildContext context) {
     return Theme(
       data: OrderAppTheme.buildLightTheme(),
-      child: Container(
-        child: Scaffold(
-          body: Stack(
+      child: Scaffold(
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
             children: <Widget>[
               InkWell(
                 splashColor: Colors.transparent,
@@ -102,16 +104,17 @@ class _OrderListScreenState extends State<OrderListScreen>
                   FocusScope.of(context).requestFocus(FocusNode());
                 },
                 child: Column(
-                  children: <Widget>[
+                  children: [
                     getAppBarUI(),
-                    Expanded(
-                      child: NestedScrollView(
+                    Container(
+                      child: SingleChildScrollView(
                         controller: _scrollController,
-                        headerSliverBuilder:
-                            (BuildContext context, bool innerBoxIsScrolled) {
-                          return <Widget>[];
-                        },
-                        body: Container(
+                        // headerSliverBuilder:
+                        //     (BuildContext context, bool innerBoxIsScrolled) {
+                        //   return <Widget>[];
+                        // },
+                        child: Container(
+                          height: MediaQuery.of(context).size.height - 80,
                           color:
                               OrderAppTheme.buildLightTheme().backgroundColor,
                           child: ListView.builder(
@@ -143,7 +146,6 @@ class _OrderListScreenState extends State<OrderListScreen>
                         ),
                       ),
                     ),
-                    // getAppBar1UI(),
                   ],
                 ),
               ),

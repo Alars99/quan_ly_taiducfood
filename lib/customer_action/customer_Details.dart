@@ -325,11 +325,13 @@ class _DetailscustomerScreen extends State<DetailsCustomer> {
                             padding: const EdgeInsets.only(left: 8, right: 8),
                             child: RaisedButton(
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            HistoryCustomer()));
+                                Navigator.of(context).pushNamed(
+                                  HistoryCustomer.routeName,
+                                  arguments: {
+                                    'idCustomer': customer.idCustomer,
+                                  },
+                                );
+                                print(customer.idCustomer);
                               },
                               child: Text(
                                 "Lịch sử mua hàng",

@@ -31,7 +31,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
 
   List<Sanpham> orderList = [];
   List<Customer> customerList = [];
-  var cus = Customer();
+  // var cus = Customer();
   var customerSer = CustomerService();
   String name = "";
 
@@ -67,7 +67,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   getList() {
     final Map data = ModalRoute.of(context).settings.arguments;
     String idgiohang = data['idGioHang'].toString();
-    var idcus = data['idKhachHang'].toString();
+    String idCustomer = data['idCustomer'].toString();
+    String idcus = data['idKhachHang'].toString();
+    if (idcus == "null") {
+      idcus = idCustomer;
+    }
     getAllCustomerList(idcus);
     DatabaseReference referenceProduct =
         FirebaseDatabase.instance.reference().child("Cart").child(idgiohang);

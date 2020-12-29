@@ -13,8 +13,8 @@ class ProductDetail {
       priceBuon,
       amount,
       desc,
-      // allowSale,
-      // tax,
+      allowSale,
+      tax,
       priceVon;
       //daBan
   ProductDetail(
@@ -30,7 +30,7 @@ class ProductDetail {
       this.priceBuon,
       this.amount,
       this.desc,
-      // this.allowSale,
-      // this.tax,
+      this.allowSale,
+      this.tax,
       this.priceVon);
 }

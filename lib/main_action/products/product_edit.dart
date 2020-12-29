@@ -479,29 +479,37 @@ class _ProductEditState extends State<ProductEdit> {
                               width: MediaQuery.of(context).size.width,
                               child: Row(
                                 children: [
-                                  new DropdownButton<ProductCate>(
-                                    value: productCate,
-                                    onChanged: (ProductCate newValue) {
-                                      setState(() {
-                                        productCate = newValue;
-                                        print(
-                                            "Loại: ${productCate.name}  ----  Id : ${productCate.id}");
-                                      });
-                                    },
-                                    items: data_cate.map((ProductCate pdCate) {
-                                      return new DropdownMenuItem<ProductCate>(
-                                        value: pdCate,
-                                        child: new Text(
-                                          pdCate.name,
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
+                                  // new DropdownButton<ProductCate>(
+                                  //   value: productCate,
+                                  //   onChanged: (ProductCate newValue) {
+                                  //     setState(() {
+                                  //       productCate = newValue;
+                                  //       print(
+                                  //           "Loại: ${productCate.name}  ----  Id : ${productCate.id}");
+                                  //     });
+                                  //   },
+                                  //   items: data_cate.map((ProductCate pdCate) {
+                                  //     return new DropdownMenuItem<ProductCate>(
+                                  //       value: pdCate,
+                                  //       child: new Text(
+                                  //         pdCate.name,
+                                  //       ),
+                                  //     );
+                                  //   }).toList(),
+                                  // ),
                                 ],
                               ),
                             ),
+                            SizedBox(
+                              height: 5,
+                            ),
                             new Text(
-                                "Loại: ${productCate.name}  ----  Id : ${productCate.id}"),
+                              "${productCate.name}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             Container(
                               child: new TextFormField(
                                 controller: _controllerEditBrand,
@@ -699,6 +707,7 @@ class _ProductEditState extends State<ProductEdit> {
           _controllerPrice.text.toString().replaceAll(",", "");
       print(_controllerPriceString);
       referenceList.child(_controllerEditId.text.toString()).update({
+        // "allowSale": _controllerA.text.toString(),
         "name": _controllerEditName.text.toString(),
         "id": _controllerEditId.text.toString(),
         "brand": _controllerEditBrand.text.toString(),

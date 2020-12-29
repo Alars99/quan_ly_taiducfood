@@ -66,8 +66,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
           values[key]["priceBuon"],
           values[key]["amount"],
           values[key]["desc"],
-          // values[key]["allowSale"],
-          // values[key]["tax"],
+          values[key]["allowSale"].toString(),
+          values[key]["tax"].toString(),
           values[key]["priceVon"],
         );
         productDetailList.add(productDetail);
@@ -138,8 +138,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                 productDetailList[index].priceBuon,
                                 productDetailList[index].amount,
                                 productDetailList[index].desc,
-                                // productDetailList[index].allowSale,
-                                // productDetailList[index].tax,
+                                productDetailList[index].allowSale,
+                                productDetailList[index].tax,
                                 productDetailList[index].priceVon);
                           }),
                     ),
@@ -171,8 +171,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
       String priceBuon,
       String amount,
       String desc,
-      // String allowSale,
-      // String tax,
+      String allowSale,
+      String tax,
       String priceVon) {
     final Map data = ModalRoute.of(context).settings.arguments;
     final idproduct = data['id'];
@@ -545,11 +545,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                         Divider(),
                         new Row(
                           children: [
-                            IconButton(
-                                icon: Icon(Icons.check_circle_outline_outlined),
-                                iconSize: 20,
-                                color: Colors.green,
-                                onPressed: () {}),
+                            allowSale.toString() == "true"
+                                ? IconButton(
+                                    icon: Icon(
+                                        Icons.check_circle_outline_outlined),
+                                    iconSize: 20,
+                                    color: Colors.green,
+                                    onPressed: () {})
+                                : IconButton(
+                                    icon: Icon(
+                                        Icons.check_circle_outline_outlined),
+                                    iconSize: 20,
+                                    color: Colors.grey,
+                                    onPressed: () {}),
                             Text(
                               'Cho phép bán!',
                               style: new TextStyle(
@@ -576,19 +584,34 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         new Row(
+                          mainAxisSize: MainAxisSize.max,
                           children: [
-                            IconButton(
-                                icon: Icon(Icons.circle),
-                                color: Colors.green,
-                                iconSize: 20,
-                                onPressed: () {}),
-                            Text(
-                              'Có tính thuế',
-                              style: new TextStyle(
-                                  fontSize: 17,
-                                  color: Colors.black,
-                                  fontFamily: "Roboto"),
-                            ),
+                            tax.toString() == "true"
+                                ? IconButton(
+                                    icon: Icon(Icons.circle),
+                                    color: Colors.green,
+                                    iconSize: 20,
+                                    onPressed: () {})
+                                : IconButton(
+                                    icon: Icon(Icons.circle),
+                                    color: Colors.grey,
+                                    iconSize: 20,
+                                    onPressed: () {}),
+                            tax.toString() == "true"
+                                ? Text(
+                                    'Có tính thuế',
+                                    style: new TextStyle(
+                                        fontSize: 17,
+                                        color: Colors.black,
+                                        fontFamily: "Roboto"),
+                                  )
+                                : Text(
+                                    'Không tính thuế',
+                                    style: new TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black,
+                                        fontFamily: "Roboto"),
+                                  ),
                           ],
                         ),
                       ]),
@@ -622,7 +645,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                           'priceBuon': priceBuon,
                           'amount': amount,
                           'desc': desc,
-                          // allowSale,
+                          'allowSale': allowSale,
                           // tax
                           'priceVon': priceVon
                         });

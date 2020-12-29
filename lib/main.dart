@@ -5,11 +5,14 @@ import 'package:quan_ly_taiducfood/app_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:quan_ly_taiducfood/customer_action/add_customer.dart';
 import 'package:quan_ly_taiducfood/customer_action/customer_Details.dart';
+import 'package:quan_ly_taiducfood/customer_action/history_customer.dart';
 import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
 import 'package:quan_ly_taiducfood/login_action/Welcome/welcome_screen.dart';
+import 'package:quan_ly_taiducfood/main_action/fitness_app_home_screen.dart';
 import 'package:quan_ly_taiducfood/main_action/products/products_search.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_detail_screen.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_list_screen.dart';
+import 'package:quan_ly_taiducfood/statistical_action/View/doanhthu_screen.dart';
 import 'Login_action/Login/login_screen.dart';
 import 'main_action/products/product_detail.dart';
 import 'main_action/products/product_edit.dart';
@@ -55,6 +58,7 @@ class MyApp extends StatelessWidget {
           ProductSearchScreen.routeName: (ctxPS) => ProductSearchScreen(),
           OrderListScreen.routeName: (ctxOLS) => OrderListScreen(),
           OrderDetailScreen.routeName: (ctxODS) => OrderDetailScreen(),
+          HistoryCustomer.routeName: (ctxHC) => HistoryCustomer(),
         });
   }
 }

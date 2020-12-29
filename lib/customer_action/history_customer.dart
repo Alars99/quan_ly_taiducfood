@@ -1,23 +1,81 @@
 import 'dart:math';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
+import 'package:quan_ly_taiducfood/order_action/View/Order/order_detail_screen.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_theme.dart';
+import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
 import 'design_course_app_theme.dart';
 
 class HistoryCustomer extends StatefulWidget {
   @override
   _HistoryCustomerScreen createState() => _HistoryCustomerScreen();
+  static const routeName = '/history-customer';
 }
 
 class _HistoryCustomerScreen extends State<HistoryCustomer> {
   var customer = Customer();
   var _customerService = CustomerService();
 
+  List<OrderList> orderList = [];
+  List<Customer> customerList = [];
+
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    final Map data = ModalRoute.of(context).settings.arguments;
+    var idCus = data['idCustomer'];
+    getAllCustomerList(idCus);
+    DatabaseReference referenceProduct =
+        FirebaseDatabase.instance.reference().child("Order");
+    referenceProduct.once().then((DataSnapshot snapshot) {
+      orderList.clear();
+      var keys = snapshot.value.keys;
+      var values = snapshot.value;
+      for (var key in keys) {
+        OrderList order = new OrderList(
+          values[key]["idDonHang"],
+          values[key]["idGioHang"],
+          values[key]["tongTienhang"],
+          values[key]["tongSoluong"],
+          values[key]["phiGiaohang"],
+          values[key]["chietKhau"],
+          values[key]["banSiLe"],
+          values[key]["paymethod"],
+          values[key]["idKhachHang"],
+          values[key]["ngaymua"],
+          values[key]["trangthai"],
+        );
+        orderList.add(order);
+      }
+      setState(() {});
+    });
+  }
+
+  getAllCustomerList(String id) async {
+    customerList.clear();
+    var customers = await _customerService.readCustomerList();
+    customers.forEach((customer) {
+      setState(() {
+        if (customer['id'] == id) {
+          var customerModel = new Customer();
+          customerModel.idCustomer = customer['id'];
+          customerModel.name = customer['name'];
+          customerModel.phone = customer['phone'];
+          customerModel.email = customer['email'];
+          customerModel.address = customer['address'];
+          customerList.add(customerModel);
+        }
+      });
+    });
   }
 
   @override
@@ -38,7 +96,41 @@ class _HistoryCustomerScreen extends State<HistoryCustomer> {
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: <Widget>[
-                      getInfoUI(),
+                      orderList.length == 0
+                          ? Center(
+                              child: Text(
+                              "Không có lịch sử mua hàng",
+                              style: TextStyle(fontSize: 17),
+                            ))
+                          : Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height - 213,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        itemCount: orderList.length,
+                                        itemBuilder: (_, index) {
+                                          return getInfoUI(
+                                            orderList[index].idDonHang,
+                                            orderList[index].idKhachHang,
+                                            orderList[index].ngaymua,
+                                            orderList[index].trangthai,
+                                            orderList[index].idGioHang,
+                                            orderList[index].banSiLe,
+                                            orderList[index].chietKhau,
+                                            orderList[index].paymethod,
+                                            orderList[index].phiGiaohang,
+                                            orderList[index].tongSoluong,
+                                            orderList[index].tongTienhang,
+                                          );
+                                        }),
+                                  ),
+                                ],
+                              ),
+                            ),
                     ],
                   ),
                 ),
@@ -50,117 +142,150 @@ class _HistoryCustomerScreen extends State<HistoryCustomer> {
     );
   }
 
-  Widget getInfoUI() {
-    customer.name = 'nhật trường';
-    customer.email = 'nnhattruong23@gmail.com';
-    customer.address = 'Ung văn khiêm - Bình Thạnh';
-    customer.phone = '0943502207';
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 8),
-      child: Container(
-          child: Column(
-        children: [
-          Row(
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * 0.95,
-                height: 85,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: HexColor('#F8FAFB'),
-                      borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                        bottomLeft: Radius.circular(13.0),
-                        topLeft: Radius.circular(13.0),
-                        topRight: Radius.circular(13.0),
+  Widget getInfoUI(
+      String idDonHang,
+      String idKhachHang,
+      String ngaymua,
+      String trangthai,
+      String idGioHang,
+      String banSiLe,
+      String chietKhau,
+      String paymethod,
+      String phiGiaohang,
+      String tongSoluong,
+      String tongTienhang) {
+    print(customerList.first.idCustomer + " , " + idKhachHang);
+    if (customerList.first.idCustomer == idKhachHang) {
+      return GestureDetector(
+        onTap: () {
+          Navigator.of(context).pushNamed(
+            OrderDetailScreen.routeName,
+            arguments: {
+              'idCustomer': customerList.first.idCustomer,
+              'idGioHang': idGioHang,
+              'idDonHang': idDonHang,
+              'banSiLe': banSiLe,
+              'chietKhau': chietKhau,
+              'idKhachHang': idKhachHang,
+              'ngaymua': ngaymua,
+              'paymethod': paymethod,
+              'phiGiaohang': phiGiaohang,
+              'trangthai': trangthai,
+              'tongSoluong': tongSoluong,
+              'tongTienhang': tongTienhang,
+            },
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: Container(
+              child: Column(
+            children: [
+              Row(
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    height: 85,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: HexColor('#F8FAFB'),
+                          borderRadius: const BorderRadius.only(
+                            bottomRight: Radius.circular(13.0),
+                            bottomLeft: Radius.circular(13.0),
+                            topLeft: Radius.circular(13.0),
+                            topRight: Radius.circular(13.0),
+                          ),
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 8, left: 10, right: 8),
+                                  child: Container(
+                                    width: 50,
+                                    padding: EdgeInsets.zero,
+                                    child: Text(
+                                      idDonHang,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontFamily: 'WorkSans',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                        color: DesignCourseAppTheme.nearlyBlue,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 8, left: 8, right: 16),
+                                  child: Container(
+                                    padding: EdgeInsets.zero,
+                                    child: Text(
+                                      customerList.first.name,
+                                      style: TextStyle(
+                                        fontFamily: 'WorkSans',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                        color: DesignCourseAppTheme.nearlyBlue,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 8, left: 8, right: 8),
+                                  child: Container(
+                                    padding: EdgeInsets.zero,
+                                    child: Text(
+                                      ngaymua.toString(),
+                                      style: TextStyle(
+                                        fontFamily: 'WorkSans',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                        color: DesignCourseAppTheme.nearlyBlue,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 8),
+                                  child: Icon(Icons.chevron_right),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 16, top: 8),
+                                  child: Text(
+                                    trangthai.toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'WorkSans',
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(top: 8, left: 10, right: 8),
-                              child: Container(
-                                padding: EdgeInsets.zero,
-                                child: Text(
-                                  "dh01",
-                                  style: TextStyle(
-                                    fontFamily: 'WorkSans',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                    color: DesignCourseAppTheme.nearlyBlue,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(top: 8, left: 8, right: 16),
-                              child: Container(
-                                padding: EdgeInsets.zero,
-                                child: Text(
-                                  "Nguyễn Nhật Trường",
-                                  style: TextStyle(
-                                    fontFamily: 'WorkSans',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                    color: DesignCourseAppTheme.nearlyBlue,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(top: 8, left: 8, right: 8),
-                              child: Container(
-                                padding: EdgeInsets.zero,
-                                child: Text(
-                                  "23/12/2020",
-                                  style: TextStyle(
-                                    fontFamily: 'WorkSans',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                    color: DesignCourseAppTheme.nearlyBlue,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 8),
-                              child: Icon(Icons.chevron_right),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(right: 16, top: 8),
-                              child: Text(
-                                "Đã giao hàng",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'WorkSans',
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
                   ),
-                ),
+                ],
               ),
             ],
-          ),
-        ],
-      )),
-    );
+          )),
+        ),
+      );
+    }
+    return Container();
   }
 
   Widget getAppBarUI() {

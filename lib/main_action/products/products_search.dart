@@ -62,10 +62,9 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       appBar: new AppBar(
         title: new Text('Sản Phẩm'),
-        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(Icons.add),
@@ -134,7 +133,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
                 ))
               : Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 213,
+                  height: MediaQuery.of(context).size.height - 155,
                   child: Column(
                     children: [
                       Expanded(
