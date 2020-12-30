@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Quản Lý Bán Hàng TaiDucFood',
         theme: ThemeData(
-          primaryColor: kPrimaryColor,
+          primaryColor: HexColor('#54D3C2'),
           scaffoldBackgroundColor: Colors.white,
           primarySwatch: Colors.blue,
           textTheme: AppTheme.textTheme,
