@@ -1,6 +1,7 @@
-
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:quan_ly_taiducfood/main.dart';
+import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
 import 'package:quan_ly_taiducfood/statistical_action/design_course_app_theme.dart';
 import 'package:quan_ly_taiducfood/statistical_action/models/category.dart';
 
@@ -16,11 +17,49 @@ class _CategoryListViewState extends State<CategoryListView>
     with TickerProviderStateMixin {
   AnimationController animationController;
 
+  int sohoadon;
+  double giaDoanhthu;
+  List<OrderList> orderList = List();
+
+  getDoanhThu() {
+    DatabaseReference referenceProduct =
+        FirebaseDatabase.instance.reference().child("Order");
+    referenceProduct.once().then((DataSnapshot snapshot) {
+      orderList.clear();
+      var keys = snapshot.value.keys;
+      var values = snapshot.value;
+      for (var key in keys) {
+        OrderList order = new OrderList(
+          values[key]["idDonHang"],
+          values[key]["idGioHang"],
+          values[key]["tongTienhang"],
+          values[key]["tongSoluong"],
+          values[key]["phiGiaohang"],
+          values[key]["chietKhau"],
+          values[key]["banSiLe"],
+          values[key]["paymethod"],
+          values[key]["idKhachHang"],
+          values[key]["ngaymua"],
+          values[key]["trangthai"],
+        );
+        orderList.add(order);
+      }
+      for (var sp in orderList) {
+        giaDoanhthu += double.parse(sp.tongTienhang);
+        sohoadon = orderList.length;
+      }
+      setState(() {});
+    });
+  }
+
   @override
   void initState() {
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
+    sohoadon = 0;
+    giaDoanhthu = 0;
+    getDoanhThu();
   }
 
   Future<bool> getData() async {
@@ -54,9 +93,7 @@ class _CategoryListViewState extends State<CategoryListView>
                 children: [
                   InkWell(
                     splashColor: Colors.transparent,
-                    onTap: () {
-                      print("Doanh thu");
-                    },
+                    onTap: () {},
                     child: SizedBox(
                       width: 280,
                       child: Stack(
@@ -116,7 +153,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                                             .center,
                                                     children: <Widget>[
                                                       Text(
-                                                        '15 hóa đơn',
+                                                        sohoadon.toString(),
                                                         textAlign:
                                                             TextAlign.left,
                                                         style: TextStyle(
@@ -146,7 +183,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                                             .start,
                                                     children: <Widget>[
                                                       Text(
-                                                        '1,500,000 vnd',
+                                                        giaDoanhthu.toString(),
                                                         textAlign:
                                                             TextAlign.left,
                                                         style: TextStyle(

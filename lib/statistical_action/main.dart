@@ -30,51 +30,54 @@ class _MainScreen extends State<MainScreen> {
     int dem = 0;
     double ketqua = 0;
     for (int i = 1; i < 10; i++) {
-      for (int i = 1; i <= 30; i++) {
-        _dateTime =
-            DateTime.utc(startDate.year, startDate.month, startDate.day + i);
-        print(DateFormat("dd/MM/yyyy").format(_dateTime));
-        DatabaseReference referenceProduct = FirebaseDatabase.instance
-            .reference()
-            .child('productList')
-            .child(i.toString())
-            .child('Product')
-            .child('id');
+      DatabaseReference referenceProduct = FirebaseDatabase.instance
+          .reference()
+          .child('productList')
+          .child(i.toString())
+          .child('Product');
 
-        referenceProduct.once().then((DataSnapshot snapshot) {
-          productDetailList.clear();
-          var keys = snapshot.value.keys;
-          var values = snapshot.value;
+      referenceProduct.once().then((DataSnapshot snapshot) {
+        productDetailList.clear();
+        var keys = snapshot.value.keys;
+        var values = snapshot.value;
 
-          for (var key in keys) {
-            ProductDetail productDetail = new ProductDetail(
-              values[key]["id"],
-              values[key]["brand"],
-              values[key]["name"],
-              values[key]["image"],
-              values[key]["price"],
-              values[key]["barcode"],
-              values[key]["weight"],
-              values[key]["cate"],
-              values[key]["priceNhap"],
-              values[key]["priceBuon"],
-              values[key]["amount"],
-              values[key]["desc"],
-              values[key]["allowSale"].toString(),
-              values[key]["tax"].toString(),
-              values[key]["priceVon"],
-            );
-            productDetailList.add(productDetail);
-            ketqua = double.parse(productDetail.priceVon) *
-                double.parse(productDetail.amount);
-            dem = dem + int.parse(productDetail.amount);
-            tongTien += ketqua;
+        for (var key in keys) {
+          ProductDetail productDetail = new ProductDetail(
+            values[key]["id"],
+            values[key]["brand"],
+            values[key]["name"],
+            values[key]["image"],
+            values[key]["price"],
+            values[key]["barcode"],
+            values[key]["weight"],
+            values[key]["cate"],
+            values[key]["priceNhap"],
+            values[key]["priceBuon"],
+            values[key]["amount"],
+            values[key]["desc"],
+            values[key]["allowSale"].toString(),
+            values[key]["tax"].toString(),
+            values[key]["priceVon"],
+            values[key]["ngayUp"],
+          );
+          productDetailList.add(productDetail);
+        }
+
+        for (int i = 1; i <= 30; i++) {
+          _dateTime =
+              DateTime.utc(startDate.year, startDate.month, startDate.day + i);
+          for (var sp in productDetailList) {
+            if (sp.ngayUp == DateFormat("dd/MM/yyyy").format(_dateTime)) {
+              dem = dem + int.parse(sp.amount);
+              ketqua = double.parse(sp.priceVon) * double.parse(sp.amount);
+              tongTien += ketqua;
+              tiennhapky += double.parse(sp.priceNhap);
+            }
           }
-
-          soluong = dem;
-          setState(() {});
-        });
-      }
+        }
+        soluong = dem;
+        setState(() {});
+      });
     }
   }
 
@@ -86,10 +89,7 @@ class _MainScreen extends State<MainScreen> {
     tienxuatky = 0;
     endDate = DateTime.now();
     startDate = DateTime.utc(endDate.year, endDate.month - 1, endDate.day);
-    print(startDate);
-    print(endDate);
-    var a = endDate.difference(startDate).inDays;
-    print(a);
+
     super.initState();
   }
 
@@ -150,7 +150,7 @@ class _MainScreen extends State<MainScreen> {
         ),
         CategoryListView(
           callBack: () {
-            moveTo();
+            setState(() {});
           },
         ),
       ],
