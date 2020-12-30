@@ -55,7 +55,7 @@ class _MainScreen extends State<MainScreen> {
               values[key]["price"],
               values[key]["barcode"],
               values[key]["weight"],
-              // values[key]["cate"],
+              values[key]["cate"],
               values[key]["priceNhap"],
               values[key]["priceBuon"],
               values[key]["amount"],

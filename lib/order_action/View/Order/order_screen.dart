@@ -31,6 +31,8 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
     with TickerProviderStateMixin {
   AnimationController animationController;
 
+  final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
+
   String idGioHang;
   String idDonHang;
 
@@ -361,6 +363,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
   // }
 
   Widget getTimeDateUI() {
+    int phiGiaohangInt = phiGiaohang.round();
     return Padding(
       padding: const EdgeInsets.only(left: 18, bottom: 16),
       child: Row(
@@ -459,7 +462,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                             height: 8,
                           ),
                           Text(
-                            phiGiaohang.toString() + " VND",
+                            formatCurrency.format(phiGiaohangInt),
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
@@ -479,6 +482,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
   }
 
   Widget getSoLuongUI() {
+    int tongTienhangInt = tongTienhang.round();
     return Padding(
       padding: const EdgeInsets.only(left: 18, bottom: 16),
       child: Row(
@@ -545,7 +549,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                         height: 8,
                       ),
                       Text(
-                        tongTienhang.toString() + ' VND',
+                        formatCurrency.format(tongTienhangInt),
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
@@ -1184,6 +1188,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
   }
 
   Widget getAppBar1UI() {
+    int tongInt = tong.round();
     return Container(
       decoration: BoxDecoration(
         color: OrderAppTheme.buildLightTheme().backgroundColor,
@@ -1206,7 +1211,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                 Padding(
                   padding: EdgeInsets.only(right: 0, bottom: 16),
                   child: Text(
-                    "Tạm tính: " + tong.toString() + " VND",
+                    "Tạm tính: " + formatCurrency.format(tongInt),
                     textAlign: TextAlign.right,
                   ),
                 ),

@@ -15,8 +15,10 @@ class DoanhthuScreen extends StatefulWidget {
 class _DoanhthuScreen extends State<DoanhthuScreen> {
   CategoryType categoryType = CategoryType.ui;
 
+  final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
   int touchedGroupIndex;
-  double a = 46298765;
+  // formatCurrency.format(a)
+  double a = 45846563;
 
   final Color leftBarColor = const Color(0xff53fdd7);
   final double width = 7;
@@ -24,9 +26,46 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
   List<BarChartGroupData> rawBarGroups;
   List<BarChartGroupData> showingBarGroups;
 
+  final birthdayDate = DateTime(2020, 11, 27);
+  final savedDateString = "20/11/2020";
+  final sp = DateTime(2020, 11, 21);
+  // final sp = DateTime(2020, 11, 20);
+  // final sp = DateTime(2020, 11, 27);
+  // final sp = DateTime(2021, 9, 19);
+
   @override
   void initState() {
     super.initState();
+    DateTime tempDate = new DateFormat("dd/MM/yyyy").parse(savedDateString);
+    print(tempDate);
+    var different = tempDate.difference(birthdayDate).inDays;
+
+    var spdateT = sp.difference(birthdayDate).inDays;
+    var spdateS = tempDate.difference(sp).inDays;
+
+    if (different < 0) {
+      different = -different;
+    }
+    if (spdateT < 0) {
+      spdateT = -spdateT;
+    }
+    if (spdateS < 0) {
+      spdateS = -spdateS;
+    }
+    print(different);
+    print(spdateT.toString() + "      sp - birthdayDate");
+    print(spdateS.toString() + "      sp - tempDate");
+    if (spdateS <= different && spdateT <= different) {
+      print("true");
+    } else {
+      print("false");
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
     final barGroup1 = makeGroupData(0, a / 2.5, 12);
     final barGroup2 = makeGroupData(1, a / 2, 12);
     final barGroup3 = makeGroupData(2, a / 1.5, 5);
@@ -80,6 +119,8 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
   }
 
   Widget getKhoUI() {
+    final formatCurrency = new NumberFormat.simpleCurrency(
+        locale: 'vi', name: "VNĐ", decimalDigits: 0);
     int dt = a.round();
     final now = DateTime.now();
     final dday = new DateTime(now.year, now.month, now.day);
@@ -95,7 +136,7 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 0, right: 16),
             child: Text(
-              'Doanh thu: ' + dt.toString() + " vnd",
+              'Doanh thu: ' + formatCurrency.format(dt),
               textAlign: TextAlign.left,
               style: TextStyle(
                 fontWeight: FontWeight.w600,

@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/order_action/model/test.dart';
 import 'order_theme.dart';
 
@@ -21,6 +22,8 @@ class OrderListView extends StatelessWidget {
   final Animation<dynamic> animation;
   @override
   Widget build(BuildContext context) {
+    final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
+    int giaspInt = double.parse(sanpham.price).round();
     return AnimatedBuilder(
       animation: animationController,
       builder: (BuildContext context, Widget child) {
@@ -88,7 +91,7 @@ class OrderListView extends StatelessWidget {
                                                   padding: EdgeInsets.only(
                                                       top: 8, bottom: 8),
                                                   child: Text(
-                                                    "Số lượng còn lại:" +
+                                                    "Số lượng còn lại: " +
                                                         sanpham.amout
                                                             .toString(),
                                                     style: TextStyle(
@@ -112,8 +115,8 @@ class OrderListView extends StatelessWidget {
                                                   padding:
                                                       EdgeInsets.only(top: 8),
                                                   child: Text(
-                                                    sanpham.price.toString() +
-                                                        " vnd",
+                                                    formatCurrency
+                                                        .format(giaspInt),
                                                     style: TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.black
@@ -199,7 +202,7 @@ class OrderListView extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Icon(
-                                  Icons.delete,
+                                  Icons.horizontal_rule,
                                   color: OrderAppTheme.buildLightTheme()
                                       .primaryColor,
                                 ),

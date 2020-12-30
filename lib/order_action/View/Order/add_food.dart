@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart';
 import 'package:quan_ly_taiducfood/order_action/model/popular_filter_list.dart';
 import 'package:quan_ly_taiducfood/order_action/model/test.dart';
@@ -14,6 +15,7 @@ class AddFood extends StatefulWidget {
 }
 
 class _AddFoodState extends State<AddFood> {
+  final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
   var sanpham = Sanpham();
   var _orderService = OrderService();
   double tongTienhang;
@@ -338,6 +340,7 @@ class _AddFoodState extends State<AddFood> {
       for (int i = 0; i < columnCount; i++) {
         try {
           final Sanpham date = list[count];
+          int priceInt = double.parse(date.price).round();
           listUI.add(Expanded(
             child: Column(
               children: <Widget>[
@@ -396,7 +399,8 @@ class _AddFoodState extends State<AddFood> {
                                               top: 8,
                                             ),
                                             child: Text("Giá: " +
-                                                date.price.toString()),
+                                                formatCurrency
+                                                    .format(priceInt)),
                                           ),
                                           Padding(
                                             padding: EdgeInsets.only(

@@ -316,7 +316,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                   ),
                                                 ),
                                                 Text(
-                                                  data['tongTienhang']
+                                                  '${(double.parse(data['tongTienhang']) * 100) / int.parse(data['chietKhau']) - double.parse(data['phiGiaohang'])}'
                                                       .toString(),
                                                   style: new TextStyle(
                                                     fontSize: 15.5,

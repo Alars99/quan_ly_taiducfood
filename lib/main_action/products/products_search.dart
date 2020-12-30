@@ -10,6 +10,7 @@ import 'package:quan_ly_taiducfood/main_action/custom_ui/hotel_app_theme.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_search_data.dart';
 import 'package:quan_ly_taiducfood/main_action/products/product_add.dart';
 
+import '../../main.dart';
 import 'product_detail.dart';
 
 class ProductSearchScreen extends StatefulWidget {
@@ -61,100 +62,118 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.white,
-      appBar: new AppBar(
-        title: new Text('Sản Phẩm'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(context,
-                  new MaterialPageRoute(builder: (context) => ProductAdd()));
-            },
-            color: Colors.white,
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: new Scaffold(
+        backgroundColor: Colors.white,
+        appBar: new AppBar(
+          title: new Text(
+            'Sản Phẩm',
+            style: TextStyle(color: Colors.white),
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 0, bottom: 0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: HotelAppTheme.buildLightTheme().backgroundColor,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(12.0),
-                        ),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              offset: const Offset(0, 2),
-                              blurRadius: 4.0),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 16, right: 16, top: 4, bottom: 4),
-                        child: TextField(
-                          onChanged: (text) {
-                            Search(text.toLowerCase());
-                          },
-                          style: const TextStyle(
-                            fontSize: 18,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(context,
+                    new MaterialPageRoute(builder: (context) => ProductAdd()));
+              },
+              color: Colors.white,
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 0, bottom: 0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color:
+                              HotelAppTheme.buildLightTheme().backgroundColor,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(12.0),
                           ),
-                          cursorColor:
-                              HotelAppTheme.buildLightTheme().primaryColor,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Tên sản phẩm...',
-                            icon: Icon(FontAwesomeIcons.search,
-                                size: 20, color: Colors.purple),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                offset: const Offset(0, 2),
+                                blurRadius: 4.0),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 16, right: 16, top: 4, bottom: 4),
+                          child: TextField(
+                            onChanged: (text) {
+                              Search(text.toLowerCase());
+                            },
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                            cursorColor:
+                                HotelAppTheme.buildLightTheme().primaryColor,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Tên sản phẩm...',
+                              icon: Icon(FontAwesomeIcons.search,
+                                  size: 20, color: HexColor('#54D3C2')),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          productSearchList.length == 0
-              ? Center(
-                  child: Text(
-                  "Không có sản phẩm",
-                  style: TextStyle(fontSize: 20),
-                ))
-              : Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 155,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: productSearchList.length,
-                            itemBuilder: (_, index) {
-                              return ListUI(
-                                productSearchList[index].id,
-                                productSearchList[index].idMain,
-                                productSearchList[index].name,
-                                productSearchList[index].image,
-                                productSearchList[index].price,
-                              );
-                            }),
+            productSearchList.length == 0
+                ? Center(
+                    child: Text(
+                    "Không có sản phẩm",
+                    style: TextStyle(fontSize: 20),
+                  ))
+                : Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height - 155,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: productSearchList.length,
+                                itemBuilder: (_, index) {
+                                  return ListUI(
+                                    productSearchList[index].id,
+                                    productSearchList[index].idMain,
+                                    productSearchList[index].name,
+                                    productSearchList[index].image,
+                                    productSearchList[index].price,
+                                  );
+                                }),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -168,20 +187,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
 
   Widget ListUI(
       String id, String idMain, String name, String image, String price) {
-    bool _validURL = Uri.parse(image).isAbsolute;
-    if (_validURL != true) {
-      Future downdloadImage() async {
-        await Firebase.initializeApp();
-        Reference imgReference = FirebaseStorage.instance.ref().child(image);
-        Future<String> downloadImg =
-            (await imgReference.getDownloadURL()) as Future<String>;
-        setState(() {
-          image = downloadImg as String;
-          print(image);
-        });
-      }
-    }
-
     double c_width = MediaQuery.of(context).size.width * 0.6;
     return GestureDetector(
       onTap: () {
@@ -221,15 +226,12 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
                                           padding: EdgeInsets.all(15),
                                           width: 100,
                                           height: 100,
-                                          child: Image(
-                                            image: new NetworkImageWithRetry(
-                                                image),
-                                            fit: BoxFit.fill,
-                                          ),
-                                          // new Image(
-                                          //   image: new NetworkImageWithRetry(
-                                          //       image),
-                                          //   fit: BoxFit.fill,
+                                          child: Image.network(image
+                                                  .contains("image_picker")
+                                              ? 'https://firebasestorage.googleapis.com/v0/b/app-quan-ly-taiducfood.appspot.com/o/' +
+                                                  image +
+                                                  '?alt=media&token=63435cda-cb54-4b82-bec7-08edadbb049e'
+                                              : image),
                                         ),
                                         SizedBox(
                                           width: 10,

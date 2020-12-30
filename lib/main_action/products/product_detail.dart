@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image/network.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:quan_ly_taiducfood/main.dart';
+import 'package:quan_ly_taiducfood/main_action/models/product_cate_data.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/main_action/products/products_search.dart';
 
@@ -30,6 +32,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
 
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
+
+  ProductCate productCate;
+  List<ProductCate> data_cate = <ProductCate>[
+    ProductCate(1, 'Thịt Bò Úc'),
+    ProductCate(2, 'Thịt Gà'),
+    ProductCate(3, 'Thịt Bò Mỹ'),
+    ProductCate(4, 'Thịt Cừu'),
+    ProductCate(5, 'Thịt Dê'),
+    ProductCate(6, 'Thịt Heo'),
+    ProductCate(7, 'Thịt Trâu'),
+    ProductCate(8, 'Hải Sản'),
+    ProductCate(9, 'Sản Phẩm Khác'),
+  ];
 
   @override
   void initState() {
@@ -61,7 +76,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
           values[key]["price"],
           values[key]["barcode"],
           values[key]["weight"],
-          // values[key]["cate"],
+          values[key]["cate"],
           values[key]["priceNhap"],
           values[key]["priceBuon"],
           values[key]["amount"],
@@ -91,21 +106,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //leading: Icon(Icons.arrow_back),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          color: Colors.white,
+        ),
         title: Text(
           'Chi Tiết Sản Phẩm',
-          style: new TextStyle(
-            fontSize: 17.0,
-          ),
+          style: new TextStyle(fontSize: 17.0, color: Colors.white),
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.edit),
-        //     onPressed: () {
-        //     },
-        //     color: Colors.white,
-        //   )
-        // ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -133,7 +144,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                 productDetailList[index].price,
                                 productDetailList[index].barcode,
                                 productDetailList[index].weight,
-                                // productDetailList[index].cate,
+                                productDetailList[index].cate,
                                 productDetailList[index].priceNhap,
                                 productDetailList[index].priceBuon,
                                 productDetailList[index].amount,
@@ -166,7 +177,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
       String price,
       String barcode,
       String weight,
-      // String cate,
+      String cate,
       String priceNhap,
       String priceBuon,
       String amount,
@@ -185,6 +196,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     final weightInt = int.parse(weight.toString());
     final amountInt = int.parse(amount.toString());
     if (id == idproduct) {
+      int idMainInt = int.parse(data['idMain'].toString()) - 1;
+      productCate = data_cate[idMainInt];
       double mainWidth = MediaQuery.of(context).size.width * 1;
       double valueWidth = MediaQuery.of(context).size.width * 0.5;
       return Container(
@@ -195,10 +208,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
           children: <Widget>[
             Container(
               width: 330,
-              child: Image(
-                image: new NetworkImageWithRetry(image),
-                fit: BoxFit.fill,
-              ),
+              child: Image.network(image.contains("image_picker")
+                  ? 'https://firebasestorage.googleapis.com/v0/b/app-quan-ly-taiducfood.appspot.com/o/' +
+                      image +
+                      '?alt=media&token=63435cda-cb54-4b82-bec7-08edadbb049e'
+                  : image),
             ),
             Padding(
               padding: const EdgeInsets.all(7.0),
@@ -307,28 +321,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                             ),
                           ),
                         ]),
-                        SizedBox(height: 20),
-                        new Row(children: <Widget>[
-                          Text(
-                            "Loại",
-                            style: new TextStyle(
-                              fontSize: 14.5,
-                              color: Colors.black54,
-                              fontFamily: "Roboto",
-                            ),
-                          ),
-                          Text('                      :   '),
-                          Container(
-                            width: valueWidth,
-                            child: Text(
-                              "",
-                              style: new TextStyle(
-                                fontSize: 14.5,
-                                fontFamily: "Roboto",
-                              ),
-                            ),
-                          ),
-                        ]),
                       ]),
                 ),
               ),
@@ -372,7 +364,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                     ),
                                     IconButton(
                                         icon: Icon(Icons.edit_road_rounded),
-                                        color: Colors.blue,
+                                        color: HexColor('#54D3C2'),
                                         iconSize: 25,
                                         alignment: Alignment.topRight,
                                         padding:
@@ -509,7 +501,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               ),
                               SizedBox(height: 20),
                               Text(
-                                "a",
+                                "${productCate.name}",
                                 style: new TextStyle(
                                   fontSize: 14.5,
                                   color: Colors.black,
@@ -550,7 +542,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                     icon: Icon(
                                         Icons.check_circle_outline_outlined),
                                     iconSize: 20,
-                                    color: Colors.green,
+                                    color: HexColor('#54D3C2'),
                                     onPressed: () {})
                                 : IconButton(
                                     icon: Icon(
@@ -558,13 +550,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                     iconSize: 20,
                                     color: Colors.grey,
                                     onPressed: () {}),
-                            Text(
-                              'Cho phép bán!',
-                              style: new TextStyle(
-                                  fontSize: 17,
-                                  color: Colors.black,
-                                  fontFamily: "Roboto"),
-                            ),
+                            allowSale.toString() == "true"
+                                ? Text('Cho phép bán!',
+                                    style: new TextStyle(
+                                        fontSize: 17,
+                                        color: Colors.black,
+                                        fontFamily: "Roboto"))
+                                : Text(
+                                    'Không cho phép bán!',
+                                    style: new TextStyle(
+                                        fontSize: 17,
+                                        color: Colors.black,
+                                        fontFamily: "Roboto"),
+                                  ),
                           ],
                         ),
                       ]),
@@ -589,7 +587,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                             tax.toString() == "true"
                                 ? IconButton(
                                     icon: Icon(Icons.circle),
-                                    color: Colors.green,
+                                    color: HexColor('#54D3C2'),
                                     iconSize: 20,
                                     onPressed: () {})
                                 : IconButton(
@@ -640,18 +638,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                           'idMain': idMain,
                           'barcode': barcode,
                           'weight': weight,
-                          // cate,
+                          'cate': cate,
                           'priceNhap': priceNhap,
                           'priceBuon': priceBuon,
                           'amount': amount,
                           'desc': desc,
                           'allowSale': allowSale,
-                          // tax
+                          'tax': tax,
                           'priceVon': priceVon
                         });
-                        // 'idMain': idMain
                       },
-                      color: Colors.blue,
+                      color: HexColor('#54D3C2'),
                       // ignore: missing_required_param
                       child: new IconButton(
                         icon: new Icon(
@@ -749,4 +746,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
 
     referenceList.child(idFood).remove();
   }
+
+  // Future<void> edit() async {
+  //   final Map data = ModalRoute.of(context).settings.arguments;
+  //   String _controllerAmountString;
+  //   String idFood = productCate.id.toString();
+  //   final idFoodMain = data['idMain'];
+  //   if (formKey.currentState.validate()) {
+  //     DatabaseReference referenceList = FirebaseDatabase.instance
+  //         .reference()
+  //         .child('productList')
+  //         .child(idFood)
+  //         .child('Product');
+
+  //     _controllerAmountString =
+  //         _controllerAmount.text.toString().replaceAll(",", "");
+
+  //     referenceList.child(idFoodMain).update({
+  //       "amount": _controllerAmountString.toString(),
+  //     });
+  //   }
+  // }
 }

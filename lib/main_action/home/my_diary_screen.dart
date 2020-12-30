@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main_action/ui_view/body_measurement.dart';
 import 'package:quan_ly_taiducfood/main_action/ui_view/mediterranesn_diet_view.dart';
 import 'package:quan_ly_taiducfood/main_action/ui_view/title_view.dart';
@@ -266,7 +267,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                           top: 16 - 8.0 * topBarOpacity,
                           bottom: 12 - 8.0 * topBarOpacity),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -298,7 +299,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                   ),
                                 ),
                                 Text(
-                                  '20 Dec',
+                                  '${DateFormat('dd MMM').format(DateTime.now()).toString()}',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: FitnessAppTheme.fontName,

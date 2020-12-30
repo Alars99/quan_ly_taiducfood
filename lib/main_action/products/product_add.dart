@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:quan_ly_taiducfood/main.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_cate_data.dart';
 
 import '../../constants.dart';
@@ -98,7 +99,10 @@ class _ProductAddState extends State<ProductAdd> {
     return Scaffold(
       backgroundColor: Color(0xFFF2F2F2),
       appBar: AppBar(
-        title: Text('Thêm sản phẩm'),
+        title: Text(
+          'Thêm sản phẩm',
+          style: TextStyle(color: Colors.white),
+        ),
         leading: IconButton(
           icon: Icon(Icons.close),
           onPressed: () {
@@ -377,6 +381,7 @@ class _ProductAddState extends State<ProductAdd> {
                                 )),
                                 Container(
                                     child: new Switch(
+                                        activeColor: HexColor('#54D3C2'),
                                         value: tax,
                                         onChanged: (bool s) {
                                           setState(() {
@@ -431,8 +436,8 @@ class _ProductAddState extends State<ProductAdd> {
                                 ],
                               ),
                             ),
-                            new Text(
-                                "Loại: ${productCate.name}  ----  Id : ${productCate.id}"),
+                            // new Text(
+                            //     "Loại: ${productCate.name}  ----  Id : ${productCate.id}"),
                             Container(
                               child: new TextFormField(
                                 validator: (value) {
@@ -479,6 +484,7 @@ class _ProductAddState extends State<ProductAdd> {
                                 )),
                                 Container(
                                     child: new Switch(
+                                        activeColor: HexColor('#54D3C2'),
                                         value: allowSale,
                                         onChanged: (bool s) {
                                           setState(() {
@@ -513,7 +519,7 @@ class _ProductAddState extends State<ProductAdd> {
               checkId(context);
             }
           },
-          backgroundColor: kPrimaryColor,
+          backgroundColor: HexColor('#54D3C2'),
           label: Text('Lưu'),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main_action/fintness_app_theme.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,10 @@ class MediterranesnDietView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatCurrency =
+        new NumberFormat.simpleCurrency(locale: 'vi', decimalDigits: 0);
+    int dtnInt = doanhthungay.round();
+    int dttInt = doanhthuthang.round();
     return AnimatedBuilder(
       animation: animationController,
       builder: (BuildContext context, Widget child) {
@@ -130,7 +135,9 @@ class MediterranesnDietView extends StatelessWidget {
                                                         const EdgeInsets.only(
                                                             left: 4, bottom: 3),
                                                     child: Text(
-                                                      doanhthungay.toString(),
+                                                      formatCurrency
+                                                          .format(dtnInt),
+                                                      // doanhthungay.toString(),
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -145,28 +152,28 @@ class MediterranesnDietView extends StatelessWidget {
                                                       ),
                                                     ),
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 4, bottom: 3),
-                                                    child: Text(
-                                                      'VNĐ',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            FitnessAppTheme
-                                                                .fontName,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 12,
-                                                        letterSpacing: -0.2,
-                                                        color: FitnessAppTheme
-                                                            .grey
-                                                            .withOpacity(0.5),
-                                                      ),
-                                                    ),
-                                                  ),
+                                                  // Padding(
+                                                  //   padding:
+                                                  //       const EdgeInsets.only(
+                                                  //           left: 4, bottom: 3),
+                                                  //   child: Text(
+                                                  //     'VNĐ',
+                                                  //     textAlign:
+                                                  //         TextAlign.center,
+                                                  //     style: TextStyle(
+                                                  //       fontFamily:
+                                                  //           FitnessAppTheme
+                                                  //               .fontName,
+                                                  //       fontWeight:
+                                                  //           FontWeight.w600,
+                                                  //       fontSize: 12,
+                                                  //       letterSpacing: -0.2,
+                                                  //       color: FitnessAppTheme
+                                                  //           .grey
+                                                  //           .withOpacity(0.5),
+                                                  //     ),
+                                                  //   ),
+                                                  // ),
                                                 ],
                                               )
                                             ],
@@ -231,7 +238,9 @@ class MediterranesnDietView extends StatelessWidget {
                                                         const EdgeInsets.only(
                                                             left: 4, bottom: 3),
                                                     child: Text(
-                                                      doanhthuthang.toString(),
+                                                      formatCurrency
+                                                          .format(dttInt),
+                                                      // doanhthuthang.toString(),
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -246,28 +255,28 @@ class MediterranesnDietView extends StatelessWidget {
                                                       ),
                                                     ),
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 8, bottom: 3),
-                                                    child: Text(
-                                                      'VNĐ',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            FitnessAppTheme
-                                                                .fontName,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 12,
-                                                        letterSpacing: -0.2,
-                                                        color: FitnessAppTheme
-                                                            .grey
-                                                            .withOpacity(0.5),
-                                                      ),
-                                                    ),
-                                                  ),
+                                                  // Padding(
+                                                  //   padding:
+                                                  //       const EdgeInsets.only(
+                                                  //           left: 8, bottom: 3),
+                                                  //   child: Text(
+                                                  //     'VNĐ',
+                                                  //     textAlign:
+                                                  //         TextAlign.center,
+                                                  //     style: TextStyle(
+                                                  //       fontFamily:
+                                                  //           FitnessAppTheme
+                                                  //               .fontName,
+                                                  //       fontWeight:
+                                                  //           FontWeight.w600,
+                                                  //       fontSize: 12,
+                                                  //       letterSpacing: -0.2,
+                                                  //       color: FitnessAppTheme
+                                                  //           .grey
+                                                  //           .withOpacity(0.5),
+                                                  //     ),
+                                                  //   ),
+                                                  // ),
                                                 ],
                                               )
                                             ],

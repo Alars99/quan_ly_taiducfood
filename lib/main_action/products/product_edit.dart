@@ -13,7 +13,7 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_cate_data.dart';
 
-import '../../constants.dart';
+import '../../main.dart';
 
 class ProductEdit extends StatefulWidget {
   @override
@@ -36,8 +36,8 @@ class _ProductEditState extends State<ProductEdit> {
       amount,
       desc;
   String _data = "";
-  bool tax = true;
-  bool allowSale = true;
+  bool tax = false;
+  bool allowSale = false;
 
   String _downloadImgUrl;
   File _image;
@@ -61,7 +61,7 @@ class _ProductEditState extends State<ProductEdit> {
   TextEditingController _controllerEditName = TextEditingController();
   TextEditingController _controllerEditBrand = TextEditingController();
   TextEditingController _controllerEditImage = TextEditingController();
-  TextEditingController _controllerEditBarcode = TextEditingController();
+  // TextEditingController _controllerEditBarcode = TextEditingController();
   TextEditingController _controllerEditDesc = TextEditingController();
 
   _scan() async {
@@ -70,7 +70,7 @@ class _ProductEditState extends State<ProductEdit> {
         .then((value) => setState(() => {
               if (value == "-1") {_data = '0'} else {_data = value}
             }));
-    print(_data);
+    // print(_data);
   }
 
   ProductCate productCate;
@@ -106,35 +106,54 @@ class _ProductEditState extends State<ProductEdit> {
       _controllerEditBrand.text = data['brand'];
       _controllerEditImage.text = data['image'];
       _controllerPrice.text = data['price'];
-      _controllerEditBarcode.text = data['barcode'];
+      _data = data['barcode'];
       _controllerEditDesc.text = data['desc'];
       _controllerAmount.text = data['amount'];
       _controllerPriceNhap.text = data['priceNhap'];
       _controllerPriceBuon.text = data['priceBuon'];
       _controllerPriceVon.text = data['priceVon'];
       _controllerWeight.text = data['weight'];
+      if (data['allowSale'] == 'true') {
+        allowSale = true;
+      } else {
+        allowSale = false;
+      }
+      if (data['tax'] == 'true') {
+        tax = true;
+      } else {
+        tax = false;
+      }
       int idMainInt = int.parse(data['idMain'].toString()) - 1;
       productCate = data_cate[idMainInt];
+      // print(data['image']);
+      // print(image + "  aaaaaa");
+      // print(_image.toString() + "  bbbbb");
+      // print(_downloadImgUrl + "  cccccc");
       downdloadImage();
+    });
+  }
+
+  Future getImage() async {
+    // ignore: deprecated_member_use
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+      // print(_image);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    Future getImage() async {
-      // ignore: deprecated_member_use
-      var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-      setState(() {
-        _image = image;
-        print(_image);
-      });
-    }
-
     final node = FocusScope.of(context);
     return Scaffold(
       backgroundColor: Color(0xFFF2F2F2),
       appBar: AppBar(
-        title: Text("Sửa sản phẩm"),
+        title: Text(
+          "Sửa sản phẩm",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
         leading: IconButton(
           icon: Icon(Icons.close),
           onPressed: () {
@@ -154,7 +173,7 @@ class _ProductEditState extends State<ProductEdit> {
         key: formKey,
         child: SingleChildScrollView(
           child: Container(
-            height: MediaQuery.of(context).size.height * 1.75,
+            height: MediaQuery.of(context).size.height * 1.85,
             padding: EdgeInsets.only(top: 10),
             child: Column(
               children: [
@@ -176,50 +195,26 @@ class _ProductEditState extends State<ProductEdit> {
                             child: Container(
                               width: 250,
                               height: 230,
-                              child: (_image == null && _downloadImgUrl != null)
+                              child: (_image == null)
                                   ? Image(
                                       image: new NetworkImageWithRetry(
-                                          _downloadImgUrl),
+                                          _downloadImgUrl == null
+                                              ? _controllerEditImage.text
+                                              : _downloadImgUrl),
                                       fit: BoxFit.fill,
                                     )
-                                  // Image.file(
-                                  //     _image,
-                                  //     fit: BoxFit.fill,
-                                  //   )
-                                  //  ==
-                                  // null
-                                  // ? Image(
-                                  //     image: new NetworkImageWithRetry(
-                                  //         _downloadImgUrl),
-                                  //     fit: BoxFit.fill,
-                                  //   )
-                                  // : Image(
-                                  //     image: new NetworkImageWithRetry(
-                                  //         _downloadImgUrl),
-                                  //     fit: BoxFit.fill,
-                                  //   )
-                                  : Image(
-                                      image: new NetworkImageWithRetry(
-                                          _controllerEditImage.text),
+                                  : Image.file(
+                                      _image,
                                       fit: BoxFit.fill,
                                     ),
                             ),
-                            //     Container(
-                            //   width: 250,
-                            //   height: 230,
-                            //   child: (_downloadImgUrl == null)
-                            //       ? Container()
-                            //       : Image(
-                            //           image: new NetworkImageWithRetry(
-                            //               _downloadImgUrl),
-                            //           fit: BoxFit.fill,
-                            //         ),
-                            // )
-                            //: Container(),
                           ),
                         ]),
                   ),
                 ),
+                // Text("$_image"),
+                // Text("$_downloadImgUrl"),
+                // Text(_controllerEditImage.text.toString()),
                 Padding(
                   padding: const EdgeInsets.all(7.0),
                   child: new Card(
@@ -260,6 +255,7 @@ class _ProductEditState extends State<ProductEdit> {
                                     id = value;
                                   }
                                 },
+                                enabled: false,
                                 autocorrect: true,
                                 textInputAction: TextInputAction.next,
                                 onEditingComplete: () => node.nextFocus(),
@@ -267,7 +263,6 @@ class _ProductEditState extends State<ProductEdit> {
                                   labelText: 'Mã sản phẩm',
                                 )),
                             new TextFormField(
-                                controller: _controllerEditBarcode,
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Chưa nhập Barcode sản phẩm';
@@ -277,15 +272,18 @@ class _ProductEditState extends State<ProductEdit> {
                                 },
                                 keyboardType: TextInputType.number,
                                 key: Key(_data),
-                                // initialValue: _data, // FIX CHỖ NÀY KO EDIT ĐC BARCODE
-                                //controller: _controller,
-                                //onChanged: (text) {},
+                                initialValue: _data,
                                 autocorrect: true,
                                 decoration: InputDecoration(
                                   labelText: 'Barcode',
                                   suffixIcon: IconButton(
                                       autofocus: false,
-                                      onPressed: () => _scan(),
+                                      onPressed: () {
+                                        setState(() {
+                                          _data = "0";
+                                          _scan();
+                                        });
+                                      },
                                       icon:
                                           Icon(Icons.qr_code_scanner_outlined)),
                                 )),
@@ -446,6 +444,7 @@ class _ProductEditState extends State<ProductEdit> {
                                 )),
                                 Container(
                                     child: new Switch(
+                                        activeColor: HexColor('#54D3C2'),
                                         value: tax,
                                         onChanged: (bool s) {
                                           setState(() {
@@ -558,6 +557,7 @@ class _ProductEditState extends State<ProductEdit> {
                                 )),
                                 Container(
                                     child: new Switch(
+                                        activeColor: HexColor('#54D3C2'),
                                         value: allowSale,
                                         onChanged: (bool s) {
                                           setState(() {
@@ -580,16 +580,11 @@ class _ProductEditState extends State<ProductEdit> {
         width: MediaQuery.of(context).size.width - 33,
         child: FloatingActionButton.extended(
           onPressed: () {
-            // print(_controllerEditName.text);
-            // print(_controllerPrice.text);
-            // print(_controllerEditImage.text);
-            // print(_controllerEditBrand.text);
-            // print(_controllerEditId.text);
-            // print('${productCate.name}');
-            // print('${productCate.id}');
-
             edit();
             editSearchList();
+            if (_image != null) {
+              editImg();
+            }
             Fluttertoast.showToast(
                 msg: "Sửa sản phẩm thành công",
                 toastLength: Toast.LENGTH_SHORT,
@@ -599,7 +594,7 @@ class _ProductEditState extends State<ProductEdit> {
                 fontSize: 16.0);
             Navigator.of(context).pop();
           },
-          backgroundColor: kPrimaryColor,
+          backgroundColor: HexColor('#54D3C2'),
           label: Text('Lưu'),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -609,66 +604,32 @@ class _ProductEditState extends State<ProductEdit> {
     );
   }
 
-  // checkId(BuildContext context) {
-  //   String idFood = productCate.id.toString();
-  //   DatabaseReference referenceList = FirebaseDatabase.instance
-  //       .reference()
-  //       .child('productList')
-  //       .child(idFood)
-  //       .child('Product');
-  //   referenceList.once().then((DataSnapshot snapshot) {
-  //     var keys = snapshot.value.keys;
-  //     var values = snapshot.value;
-
-  //     bool cId() {
-  //       if (formKey.currentState.validate()) {
-  //         for (var key in keys) {
-  //           if (values[key]["id"] == id) {
-  //             Fluttertoast.showToast(
-  //                 msg: "Sản phẩm đã thêm rồi",
-  //                 toastLength: Toast.LENGTH_SHORT,
-  //                 gravity: ToastGravity.BOTTOM,
-  //                 timeInSecForIosWeb: 1,
-  //                 textColor: Colors.black87,
-  //                 fontSize: 16.0);
-  //             print('a');
-  //             return true;
-  //           }
-  //         }
-  //         print('b');
-  //         return false;
-  //       }
-  //     }
-
-  //     if (cId() == false) {
-  //       print('-----------------');
-  //       print('chưa có sp thím ơi');
-  //       editImg();
-  //       editSearchList();
-  //       edit();
-  //       Navigator.pop(context);
-  //     }
-  //     if (cId() == true) {
-  //       print('-----------------');
-  //       print('có sp r thím ơi');
-  //     }
-  //   });
-  // }
-
-  // Future<void> editImg() async {
-  //   await Firebase.initializeApp();
-  //   String fileName = basename(_image.path);
-  //   Reference imgReference = FirebaseStorage.instance.ref().child(fileName);
-  //   UploadTask uploadTask = imgReference.putFile(_image);
-  //   TaskSnapshot taskSnapshot = await uploadTask;
-  //   setState(() {
-  //     print('uploaded');
-  //   });
-  // }
+  Future<void> editImg() async {
+    await Firebase.initializeApp();
+    String fileName = basename(_image.path);
+    Reference imgReference = FirebaseStorage.instance.ref().child(fileName);
+    UploadTask uploadTask = imgReference.putFile(_image);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    setState(() {
+      print('uploaded');
+    });
+  }
 
   Future<void> edit() async {
-    // String fileName = basename(_image.path);
+    String fileName;
+    if (_image != null) {
+      fileName = basename(_image.path);
+      print(fileName);
+    } else {
+      fileName = _controllerEditImage.text.toString();
+      print(fileName);
+    }
     String _controllerPriceString;
+    String _controllerPriceVonString;
+    String _controllerPriceBuonString;
+    String _controllerPriceNhapString;
+    String _controllerAmountString;
+    String _controllerWeightString;
     String idFood = productCate.id.toString();
     if (formKey.currentState.validate()) {
       DatabaseReference referenceList = FirebaseDatabase.instance
@@ -676,74 +637,74 @@ class _ProductEditState extends State<ProductEdit> {
           .child('productList')
           .child(idFood)
           .child('Product');
-      // String uploadId = reference.push().key;
-      // HashMap mapProList = new HashMap();
-
-      // weight = weight.replaceAll(",", "");
-      // price = price.replaceAll(",", "");
-      // priceBuon = priceBuon.replaceAll(",", "");
-      // priceNhap = priceNhap.replaceAll(",", "");
-      // priceVon = priceVon.replaceAll(",", "");
-      // amount = amount.replaceAll(",", "");
-
-      // mapProList["id"] = _controllerEditId.text;
-      // mapProList["brand"] = _controllerEditBrand.text;
-      // mapProList["image"] = fileName;
-      // (fileName != null)?'a':'s'
-      // mapProList["name"] = _controllerEditName.text;
-      // mapProList["price"] = _controllerPrice.text;
-      // mapProList["barcode"] = barcode;
-      // mapProList["weight"] = weight;
-      // mapProList["cate"] = productCate.id.toString();
-      // mapProList["priceNhap"] = priceNhap;
-      // mapProList["priceBuon"] = priceBuon;
-      // mapProList["priceVon"] = priceVon;
-      // mapProList["amount"] = amount;
-      // mapProList["desc"] = desc;
-      // mapProList["allowSale"] = allowSale;
-      // mapProList["tax"] = tax;
 
       _controllerPriceString =
           _controllerPrice.text.toString().replaceAll(",", "");
-      print(_controllerPriceString);
+      _controllerPriceVonString =
+          _controllerPriceVon.text.toString().replaceAll(",", "");
+      _controllerPriceNhapString =
+          _controllerPriceNhap.text.toString().replaceAll(",", "");
+      _controllerPriceBuonString =
+          _controllerPriceBuon.text.toString().replaceAll(",", "");
+      _controllerAmountString =
+          _controllerAmount.text.toString().replaceAll(",", "");
+      _controllerWeightString =
+          _controllerWeight.text.toString().replaceAll(",", "");
+
+      // print(_controllerEditName.text.toString());
+      // print(_controllerEditBrand.text.toString());
+      // print(_controllerPriceString.toString());
+      // print(allowSale);
+      // print(tax);
+      // print(_controllerWeightString.toString());
+      // print(_controllerAmountString.toString());
+      // print(_controllerPriceNhapString.toString());
+      // print(_controllerPriceBuonString.toString());
+      // print(_controllerPriceVonString.toString());
+      // print(_controllerEditDesc.text.toString());
+      // print(barcode.toString());
+
       referenceList.child(_controllerEditId.text.toString()).update({
-        // "allowSale": _controllerA.text.toString(),
         "name": _controllerEditName.text.toString(),
-        "id": _controllerEditId.text.toString(),
+        // "id": _controllerEditId.text.toString(),
         "brand": _controllerEditBrand.text.toString(),
         "price": _controllerPriceString.toString(),
-        // "image": _controllerEditImage.text.toString(),
+        "allowSale": allowSale,
+        "tax": tax,
+        "barcode": barcode.toString(),
+        "weight": _controllerWeightString.toString(),
+        "amount": _controllerAmountString.toString(),
+        "priceNhap": _controllerPriceNhapString.toString(),
+        "priceBuon": _controllerPriceBuonString.toString(),
+        "priceVon": _controllerPriceVonString.toString(),
+        "desc": _controllerEditDesc.text.toString(),
+        "image": fileName.toString(),
       });
     }
   }
 
   Future<void> editSearchList() async {
     String _controllerPriceString;
-    // String fileName = basename(_image.path);
+    String fileName;
+    if (_image != null) {
+      fileName = basename(_image.path);
+    } else {
+      fileName = _controllerEditImage.text.toString();
+    }
+
     if (formKey.currentState.validate()) {
       DatabaseReference referenceSearch =
           FirebaseDatabase.instance.reference().child('SearchList');
-
-      // HashMap mapSearch = new HashMap();
-
-      // mapSearch["id"] = id;
-      // mapSearch["image"] = fileName;
-      // mapSearch["brand"] = brand;
-      // mapSearch["name"] = name;
-      // mapSearch["price"] = price;
-      // mapSearch["idMain"] = productCate.id.toString();
-
-      // referenceSearch.child(id).set(mapSearch);
 
       _controllerPriceString =
           _controllerPrice.text.toString().replaceAll(",", "");
       print(_controllerPriceString);
       referenceSearch.child(_controllerEditId.text.toString()).update({
         "name": _controllerEditName.text.toString(),
-        "id": _controllerEditId.text.toString(),
+        // "id": _controllerEditId.text.toString(),
         "brand": _controllerEditBrand.text.toString(),
         "price": _controllerPriceString.toString(),
-        // "image": _controllerEditImage.text.toString(),
+        "image": fileName.toString(),
       });
     }
   }
