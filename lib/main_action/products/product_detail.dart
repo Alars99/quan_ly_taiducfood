@@ -2,16 +2,12 @@ import 'dart:ui';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image/network.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_cate_data.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
-import 'package:quan_ly_taiducfood/main_action/products/products_search.dart';
 
 import 'product_edit.dart';
 
@@ -34,6 +30,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   double topBarOpacity = 0.0;
 
   ProductCate productCate;
+  // ignore: non_constant_identifier_names
   List<ProductCate> data_cate = <ProductCate>[
     ProductCate(1, 'Thịt Bò Úc'),
     ProductCate(2, 'Thịt Gà'),
@@ -94,6 +91,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   }
 
   void addAllListData() {
+    // ignore: unused_local_variable
     const int count = 5;
   }
 

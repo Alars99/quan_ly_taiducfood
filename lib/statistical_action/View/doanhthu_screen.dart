@@ -1,9 +1,9 @@
-import 'dart:ffi';
-
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main.dart';
+import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
 
 import '../design_course_app_theme.dart';
 
@@ -17,76 +17,170 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
 
   final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
   int touchedGroupIndex;
-  // formatCurrency.format(a)
-  double a = 45846563;
+  DateTime startDate = DateTime.now();
+
+  double a = 900000;
+  double tong7ngay = 0.0;
 
   final Color leftBarColor = const Color(0xff53fdd7);
   final double width = 7;
 
   List<BarChartGroupData> rawBarGroups;
   List<BarChartGroupData> showingBarGroups;
+  List<OrderList> orderList = [];
+  double tong6;
+  double tong5;
+  double tong4;
+  double tong3;
+  double tong2;
+  double tong1;
+  double tongDay;
 
-  final birthdayDate = DateTime(2020, 11, 27);
-  final savedDateString = "20/11/2020";
-  final sp = DateTime(2020, 11, 21);
-  // final sp = DateTime(2020, 11, 20);
-  // final sp = DateTime(2020, 11, 27);
-  // final sp = DateTime(2021, 9, 19);
+  double day6;
+  double day5;
+  double day4;
+  double day3;
+  double day2;
+  double day1;
+  double today;
+
+  DateTime _dateTime6;
+  DateTime _dateTime5;
+  DateTime _dateTime4;
+  DateTime _dateTime3;
+  DateTime _dateTime2;
+  DateTime _dateTime1;
+  DateTime _dateTimeToday;
 
   @override
   void initState() {
     super.initState();
-    DateTime tempDate = new DateFormat("dd/MM/yyyy").parse(savedDateString);
-    print(tempDate);
-    var different = tempDate.difference(birthdayDate).inDays;
+    tong6 = 0;
+    tong5 = 0;
+    tong4 = 0;
+    tong3 = 0;
+    tong2 = 0;
+    tong1 = 0;
+    tongDay = 0;
 
-    var spdateT = sp.difference(birthdayDate).inDays;
-    var spdateS = tempDate.difference(sp).inDays;
-
-    if (different < 0) {
-      different = -different;
-    }
-    if (spdateT < 0) {
-      spdateT = -spdateT;
-    }
-    if (spdateS < 0) {
-      spdateS = -spdateS;
-    }
-    print(different);
-    print(spdateT.toString() + "      sp - birthdayDate");
-    print(spdateS.toString() + "      sp - tempDate");
-    if (spdateS <= different && spdateT <= different) {
-      print("true");
-    } else {
-      print("false");
-    }
+    day6 = 0;
+    day5 = 0;
+    day4 = 0;
+    day3 = 0;
+    day2 = 0;
+    day1 = 0;
+    today = 0;
   }
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    final barGroup1 = makeGroupData(0, a / 2.5, 12);
-    final barGroup2 = makeGroupData(1, a / 2, 12);
-    final barGroup3 = makeGroupData(2, a / 1.5, 5);
-    final barGroup4 = makeGroupData(3, a, 16);
-    final barGroup5 = makeGroupData(4, a / 1.5, 6);
-    final barGroup6 = makeGroupData(5, a / 2, 1.5);
-    final barGroup7 = makeGroupData(6, a / 2.5, 1.5);
+    DatabaseReference referenceProduct =
+        FirebaseDatabase.instance.reference().child("Order");
+    referenceProduct.once().then((DataSnapshot snapshot) {
+      orderList.clear();
+      var keys = snapshot.value.keys;
+      var values = snapshot.value;
+      for (var key in keys) {
+        OrderList order = new OrderList(
+          values[key]["idDonHang"],
+          values[key]["idGioHang"],
+          values[key]["tongTienhang"],
+          values[key]["tongSoluong"],
+          values[key]["phiGiaohang"],
+          values[key]["chietKhau"],
+          values[key]["banSiLe"],
+          values[key]["paymethod"],
+          values[key]["idKhachHang"],
+          values[key]["ngaymua"],
+          values[key]["trangthai"],
+        );
+        orderList.add(order);
+      }
+      _dateTime6 =
+          DateTime.utc(startDate.year, startDate.month, startDate.day - 6);
+      _dateTime5 =
+          DateTime.utc(startDate.year, startDate.month, startDate.day - 5);
+      _dateTime4 =
+          DateTime.utc(startDate.year, startDate.month, startDate.day - 4);
+      _dateTime3 =
+          DateTime.utc(startDate.year, startDate.month, startDate.day - 3);
+      _dateTime2 =
+          DateTime.utc(startDate.year, startDate.month, startDate.day - 2);
+      _dateTime1 =
+          DateTime.utc(startDate.year, startDate.month, startDate.day - 1);
+      _dateTimeToday =
+          DateTime.utc(startDate.year, startDate.month, startDate.day);
+      for (var sp in orderList) {
+        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime6) &&
+            sp.trangthai == "4") {
+          tong6 += double.parse(sp.tongTienhang);
+        }
+        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime5) &&
+            sp.trangthai == "4") {
+          tong5 += double.parse(sp.tongTienhang);
+        }
+        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime4) &&
+            sp.trangthai == "4") {
+          tong4 += double.parse(sp.tongTienhang);
+        }
+        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime3) &&
+            sp.trangthai == "4") {
+          tong3 += double.parse(sp.tongTienhang);
+        }
+        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime2) &&
+            sp.trangthai == "4") {
+          tong2 += double.parse(sp.tongTienhang);
+        }
+        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime1) &&
+            sp.trangthai == "4") {
+          tong1 += double.parse(sp.tongTienhang);
+        }
+        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTimeToday) &&
+            sp.trangthai == "4") {
+          tongDay += double.parse(sp.tongTienhang);
+        }
+      }
+      day6 = tong6;
+      day5 = tong5;
+      day4 = tong4;
+      day3 = tong3;
+      day2 = tong2;
+      day1 = tong1;
+      today = tongDay;
+      print(day6.toString() + " 6");
+      print(day5.toString() + " 5");
+      print(day4.toString() + " 4");
+      print(day3.toString() + " 3");
+      print(day2.toString() + " 2");
+      print(day1.toString() + " 1");
+      print(today.toString() + " today");
 
-    final items = [
-      barGroup1,
-      barGroup2,
-      barGroup3,
-      barGroup4,
-      barGroup5,
-      barGroup6,
-      barGroup7,
-    ];
+      tong7ngay = day6 + day5 + day4 + day3 + day2 + day1 + today;
 
-    rawBarGroups = items;
+      final barGroup1 = makeGroupData(0, day6, 12);
+      final barGroup2 = makeGroupData(1, day5, 12);
+      final barGroup3 = makeGroupData(2, day4, 5);
+      final barGroup4 = makeGroupData(3, day3, 16);
+      final barGroup5 = makeGroupData(4, day2, 6);
+      final barGroup6 = makeGroupData(5, day1, 1.5);
+      final barGroup7 = makeGroupData(6, today, 1.5);
 
-    showingBarGroups = rawBarGroups;
+      final items = [
+        barGroup1,
+        barGroup2,
+        barGroup3,
+        barGroup4,
+        barGroup5,
+        barGroup6,
+        barGroup7,
+      ];
+
+      rawBarGroups = items;
+
+      showingBarGroups = rawBarGroups;
+      setState(() {});
+    });
   }
 
   @override
@@ -121,12 +215,12 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
   Widget getKhoUI() {
     final formatCurrency = new NumberFormat.simpleCurrency(
         locale: 'vi', name: "VNĐ", decimalDigits: 0);
-    int dt = a.round();
+    int dt = tong7ngay.round();
     final now = DateTime.now();
     final dday = new DateTime(now.year, now.month, now.day);
-    final day7 = new DateTime(now.year, now.month, now.day - 6);
+    final day6 = new DateTime(now.year, now.month, now.day - 6);
     var d = DateFormat('dd/MM/yyyy').format(dday).toString();
-    var d7 = DateFormat('dd/MM/yyyy').format(day7).toString();
+    var d7 = DateFormat('dd/MM/yyyy').format(day6).toString();
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -252,7 +346,6 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
                             fontSize: 11),
                         margin: 20,
                         getTitles: (double value) {
-                          final now = DateTime.now();
                           final y1 =
                               new DateTime(now.year, now.month, now.day - 1);
                           final y2 =
@@ -631,7 +724,6 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
           Container(
             width: 60,
             height: 60,
-            child: Image.asset('assets/design_course/userImage.png'),
           )
         ],
       ),

@@ -3,7 +3,6 @@ import 'package:quan_ly_taiducfood/customer_action/history_customer.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
 import 'package:quan_ly_taiducfood/customer_action/update_customer.dart';
 import 'package:quan_ly_taiducfood/main.dart';
-import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_theme.dart';
 import 'design_course_app_theme.dart';
 
@@ -15,7 +14,6 @@ class DetailsCustomer extends StatefulWidget {
 }
 
 class _DetailscustomerScreen extends State<DetailsCustomer> {
-  var _customerService = CustomerService();
   var customer = Customer();
   _DetailscustomerScreen(this.customer);
 

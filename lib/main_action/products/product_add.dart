@@ -14,8 +14,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_cate_data.dart';
 
-import '../../constants.dart';
-
 class ProductAdd extends StatefulWidget {
   @override
   _ProductAddState createState() => _ProductAddState();
@@ -66,6 +64,7 @@ class _ProductAddState extends State<ProductAdd> {
   }
 
   ProductCate productCate;
+  // ignore: non_constant_identifier_names
   List<ProductCate> data_cate = <ProductCate>[
     ProductCate(1, 'Thịt Bò Úc'),
     ProductCate(2, 'Thịt Gà'),
@@ -173,6 +172,7 @@ class _ProductAddState extends State<ProductAdd> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             new TextFormField(
+                              // ignore: missing_return
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Chưa nhập Tên sản phẩm';
@@ -188,6 +188,7 @@ class _ProductAddState extends State<ProductAdd> {
                               ),
                             ),
                             new TextFormField(
+                              // ignore: missing_return
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Chưa nhập Mã sản phẩm';
@@ -203,6 +204,7 @@ class _ProductAddState extends State<ProductAdd> {
                               ),
                             ),
                             new TextFormField(
+                                // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Chưa nhập Barcode sản phẩm';
@@ -225,6 +227,7 @@ class _ProductAddState extends State<ProductAdd> {
                                           Icon(Icons.qr_code_scanner_outlined)),
                                 )),
                             new TextFormField(
+                              // ignore: missing_return
                               validator: (value) {
                                 if (value.isEmpty || value == '0') {
                                   return 'Chưa nhập Khối lượng sản phẩm';
@@ -266,6 +269,7 @@ class _ProductAddState extends State<ProductAdd> {
                                 Container(
                                   width: 140,
                                   child: new TextFormField(
+                                    // ignore: missing_return
                                     validator: (value) {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Tồn kho sản phẩm';
@@ -286,6 +290,7 @@ class _ProductAddState extends State<ProductAdd> {
                                 Container(
                                   width: 140,
                                   child: new TextFormField(
+                                    // ignore: missing_return
                                     validator: (value) {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Giá vốn sản phẩm';
@@ -311,6 +316,7 @@ class _ProductAddState extends State<ProductAdd> {
                                 Container(
                                   width: 140,
                                   child: new TextFormField(
+                                    // ignore: missing_return
                                     validator: (value) {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Giá bán lẻ sản phẩm';
@@ -331,6 +337,7 @@ class _ProductAddState extends State<ProductAdd> {
                                 Container(
                                   width: 140,
                                   child: new TextFormField(
+                                    // ignore: missing_return
                                     validator: (value) {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Giá bán buôn sản phẩm';
@@ -352,6 +359,7 @@ class _ProductAddState extends State<ProductAdd> {
                             ),
                             Container(
                               child: new TextFormField(
+                                // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty || value == '0') {
                                     return 'Chưa nhập Giá nhập sản phẩm';
@@ -440,6 +448,7 @@ class _ProductAddState extends State<ProductAdd> {
                             //     "Loại: ${productCate.name}  ----  Id : ${productCate.id}"),
                             Container(
                               child: new TextFormField(
+                                // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     brand = 'Không có thương hiệu';
@@ -457,6 +466,7 @@ class _ProductAddState extends State<ProductAdd> {
                             ),
                             Container(
                               child: new TextFormField(
+                                // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     desc = 'Không có mô tả';
@@ -540,6 +550,7 @@ class _ProductAddState extends State<ProductAdd> {
       var keys = snapshot.value.keys;
       var values = snapshot.value;
 
+      // ignore: missing_return
       bool cId() {
         if (formKey.currentState.validate()) {
           for (var key in keys) {
@@ -587,6 +598,7 @@ class _ProductAddState extends State<ProductAdd> {
     String fileName = basename(_image.path);
     Reference imgReference = FirebaseStorage.instance.ref().child(fileName);
     UploadTask uploadTask = imgReference.putFile(_image);
+    // ignore: unused_local_variable
     TaskSnapshot taskSnapshot = await uploadTask;
     setState(() {
       print('uploaded');

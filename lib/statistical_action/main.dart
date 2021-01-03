@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main.dart';
@@ -25,6 +24,7 @@ class _MainScreen extends State<MainScreen> {
   DateTime startDate;
   DateTime _dateTime;
 
+  // ignore: deprecated_member_use
   List<ProductDetail> productDetailList = List();
   getData() {
     int dem = 0;
@@ -500,7 +500,6 @@ class _MainScreen extends State<MainScreen> {
           Container(
             width: 60,
             height: 60,
-            child: Image.asset('assets/design_course/userImage.png'),
           )
         ],
       ),

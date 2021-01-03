@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main_action/ui_view/body_measurement.dart';
 import 'package:quan_ly_taiducfood/main_action/ui_view/mediterranesn_diet_view.dart';
@@ -7,7 +6,6 @@ import 'package:quan_ly_taiducfood/main_action/ui_view/title_view.dart';
 import 'package:quan_ly_taiducfood/main_action/fintness_app_theme.dart';
 import 'package:quan_ly_taiducfood/main_action/home/meals_list_view.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
-import 'package:quan_ly_taiducfood/statistical_action/Controller/statistical.dart';
 import 'package:flutter/material.dart';
 
 import 'meals_list_view.dart';
@@ -23,6 +21,7 @@ class MyDiaryScreen extends StatefulWidget {
 class _MyDiaryScreenState extends State<MyDiaryScreen>
     with TickerProviderStateMixin {
   Animation<double> topBarAnimation;
+  // ignore: deprecated_member_use
   List<OrderList> _list = List();
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();

@@ -17,6 +17,7 @@ class PopularCourseListView extends StatefulWidget {
 
 class _PopularCourseListViewState extends State<PopularCourseListView>
     with TickerProviderStateMixin {
+  // ignore: deprecated_member_use
   List<Customer> customerList = List<Customer>();
 
   var sanpham = Customer();
@@ -129,169 +130,172 @@ class CategoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: animationController,
-      builder: (BuildContext context, Widget child) {
-        return FadeTransition(
-          opacity: animation,
-          child: Transform(
-            transform: Matrix4.translationValues(
-                0.0, 50 * (1.0 - animation.value), 0.0),
-            child: InkWell(
-              splashColor: Colors.transparent,
-              onTap: () {
-                getInfoCustomer();
-              },
-              child: SizedBox(
-                height: 130,
-                child: Stack(
-                  alignment: AlignmentDirectional.bottomCenter,
-                  children: <Widget>[
-                    Container(
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: HexColor('#F8FAFB'),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(16.0)),
-                                // border: new Border.all(
-                                //     color: DesignCourseAppTheme.notWhite),
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    width: 400,
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                top: 8,
-                                                left: 8,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 17.0),
+      child: AnimatedBuilder(
+        animation: animationController,
+        builder: (BuildContext context, Widget child) {
+          return FadeTransition(
+            opacity: animation,
+            child: Transform(
+              transform: Matrix4.translationValues(
+                  0.0, 50 * (1.0 - animation.value), 0.0),
+              child: InkWell(
+                splashColor: Colors.transparent,
+                onTap: () {
+                  getInfoCustomer();
+                },
+                child: SizedBox(
+                  height: 130,
+                  child: Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: <Widget>[
+                      Container(
+                        child: Column(
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: HexColor('#F8FAFB'),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(16.0)),
+                                  // border: new Border.all(
+                                  //     color: DesignCourseAppTheme.notWhite),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      width: 400,
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                  top: 8,
+                                                  left: 8,
+                                                ),
+                                                child: Text(
+                                                  customer.name,
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 16),
+                                                ),
                                               ),
-                                              child: Text(
-                                                customer.name,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: 8, left: 150),
-                                              child: Material(
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                    Radius.circular(32.0),
-                                                  ),
-                                                  onTap: () {
-                                                    callback();
-                                                  },
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Icon(
-                                                      Icons.close,
-                                                      color: OrderAppTheme
-                                                              .buildLightTheme()
-                                                          .primaryColor,
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 8, left: 150),
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  child: InkWell(
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                      Radius.circular(32.0),
+                                                    ),
+                                                    onTap: () {
+                                                      callback();
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Icon(
+                                                        Icons.close,
+                                                        color: OrderAppTheme
+                                                                .buildLightTheme()
+                                                            .primaryColor,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Padding(
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 8, left: 8),
+                                                child: Text(
+                                                  "Số diện thoại: " +
+                                                      customer.phone,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      fontSize: 13),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 8, left: 77),
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  child: InkWell(
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                      Radius.circular(32.0),
+                                                    ),
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  DetailsCustomer(
+                                                                    customer:
+                                                                        customer,
+                                                                  )));
+
+                                                      print(customer.idCustomer);
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Icon(
+                                                        Icons.person_search,
+                                                        color: OrderAppTheme
+                                                                .buildLightTheme()
+                                                            .primaryColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          Container(
+                                            width: 320,
+                                            child: Padding(
                                               padding: EdgeInsets.only(
-                                                  top: 8, left: 8),
+                                                  top: 8, left: 8, bottom: 8),
                                               child: Text(
-                                                "Số diện thoại: " +
-                                                    customer.phone,
+                                                "Địa chỉ: " + customer.address,
                                                 style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.normal,
+                                                    fontWeight: FontWeight.normal,
                                                     fontSize: 13),
                                               ),
                                             ),
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: 8, left: 77),
-                                              child: Material(
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                    Radius.circular(32.0),
-                                                  ),
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                DetailsCustomer(
-                                                                  customer:
-                                                                      customer,
-                                                                )));
-
-                                                    print(customer.idCustomer);
-                                                  },
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Icon(
-                                                      Icons.person_search,
-                                                      color: OrderAppTheme
-                                                              .buildLightTheme()
-                                                          .primaryColor,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        Container(
-                                          width: 320,
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 8, left: 8, bottom: 8),
-                                            child: Text(
-                                              "Địa chỉ: " + customer.address,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 13),
-                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

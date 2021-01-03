@@ -352,7 +352,6 @@ class _LoiNhuanScreen extends State<LoiNhuanScreen> {
           Container(
             width: 60,
             height: 60,
-            child: Image.asset('assets/design_course/userImage.png'),
           )
         ],
       ),

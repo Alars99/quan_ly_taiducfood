@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
@@ -29,7 +28,6 @@ class _HistoryCustomerScreen extends State<HistoryCustomer> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     final Map data = ModalRoute.of(context).settings.arguments;
     var idCus = data['idCustomer'];

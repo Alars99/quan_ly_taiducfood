@@ -2,7 +2,6 @@ import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main_action/fintness_app_theme.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:flutter/material.dart';
-import 'package:quan_ly_taiducfood/statistical_action/Controller/statistical.dart';
 import 'dart:math' as math;
 
 import 'package:quan_ly_taiducfood/statistical_action/View/doanhthu_screen.dart';
@@ -451,6 +450,7 @@ class CurvePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // ignore: deprecated_member_use
     List<Color> colorsList = List<Color>();
     if (colors != null) {
       colorsList = colors;

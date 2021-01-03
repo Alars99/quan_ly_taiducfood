@@ -15,6 +15,7 @@ class DesignCourseHomeScreen extends StatefulWidget {
 class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
   var customer = Customer();
   var _customerService = CustomerService();
+  // ignore: deprecated_member_use
   List<Customer> _customerList = List();
 
   getAllCustomerList() async {

@@ -1,22 +1,18 @@
-import 'dart:ffi';
 import 'dart:collection';
 import 'dart:ui';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:quan_ly_taiducfood/customer_action/design_course_app_theme.dart';
 
 import 'package:intl/intl.dart';
 
 import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
-import 'package:quan_ly_taiducfood/customer_action/popular_course_list_view.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quan_ly_taiducfood/order_action/model/test.dart';
-import 'package:quan_ly_taiducfood/statistical_action/View/doanhthu_screen.dart';
 import 'add_food.dart';
 import 'order_list_screen.dart';
 import 'order_theme.dart';
@@ -48,8 +44,10 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
   var _orderService = OrderService();
   var _customerService = CustomerService();
 
+  // ignore: deprecated_member_use
   List<Sanpham> orderList = List<Sanpham>();
 
+  // ignore: deprecated_member_use
   List<Customer> customerList = List<Customer>();
 
   int paymethod = 0;
@@ -985,6 +983,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                         chietKhau = int.parse(value);
                       }
                     },
+                    keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     cursorHeight: 30,
                   ),

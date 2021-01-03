@@ -5,8 +5,6 @@ import 'package:quan_ly_taiducfood/components/already_have_an_account_acheck.dar
 import 'package:quan_ly_taiducfood/components/rounded_button.dart';
 import 'package:quan_ly_taiducfood/components/rounded_input_field.dart';
 import 'package:quan_ly_taiducfood/components/rounded_password_field.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:quan_ly_taiducfood/navigation_home_screen.dart';
 
 class Body extends StatelessWidget {
   const Body({
