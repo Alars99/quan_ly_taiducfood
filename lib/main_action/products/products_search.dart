@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_image/network.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quan_ly_taiducfood/main_action/custom_ui/hotel_app_theme.dart';
@@ -185,8 +182,10 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
   //   },
   // ),
 
+  // ignore: non_constant_identifier_names
   Widget ListUI(
       String id, String idMain, String name, String image, String price) {
+    // ignore: non_constant_identifier_names
     double c_width = MediaQuery.of(context).size.width * 0.6;
     return GestureDetector(
       onTap: () {
@@ -264,6 +263,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
     );
   }
 
+  // ignore: non_constant_identifier_names
   void Search(String text) {
     DatabaseReference searchRef =
         FirebaseDatabase.instance.reference().child("SearchList");

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:quan_ly_taiducfood/customer_action/update_customer.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 

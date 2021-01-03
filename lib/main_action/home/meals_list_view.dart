@@ -1,3 +1,4 @@
+import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
 import 'package:quan_ly_taiducfood/main_action/fintness_app_theme.dart';
 import 'package:quan_ly_taiducfood/main_action/models/meals_list_data.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +158,7 @@ class MealsView extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => OrderHomeScreen()));
+                                    builder: (context) => DesignCourseHomeScreen()));
                           }
                         },
                         child: Center(

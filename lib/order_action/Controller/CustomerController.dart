@@ -1,8 +1,6 @@
 import 'dart:core';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
-import 'package:quan_ly_taiducfood/customer_action/update_customer.dart';
 import 'package:quan_ly_taiducfood/order_action/Database/Repostitory.dart';
-import 'package:quan_ly_taiducfood/order_action/model/test.dart';
 
 class CustomerService {
   Repository _repository1;

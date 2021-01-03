@@ -1,21 +1,13 @@
-import 'dart:collection';
 import 'dart:ui';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
-import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quan_ly_taiducfood/order_action/model/test.dart';
-import 'add_food.dart';
-import 'order_list_screen_view.dart';
 import 'order_theme.dart';
-import 'order_list_view.dart';
-import 'package:quan_ly_taiducfood/order_action/Database/Repostitory.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   const OrderDetailScreen({Key key}) : super(key: key);
@@ -29,13 +21,23 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     with TickerProviderStateMixin {
   AnimationController animationController;
 
+  final formatCurrency = new NumberFormat.simpleCurrency(
+      locale: 'vi', name: "đ", decimalDigits: 0);
+
+  var formKey = GlobalKey<FormState>();
+
+  bool isClose = true;
+  bool changetxt = false;
+
+  String ttTxt = "";
+  int tt;
+
   List<Sanpham> orderList = [];
   List<Customer> customerList = [];
-  // var cus = Customer();
   var customerSer = CustomerService();
   String name = "";
+  String idDonHangFB;
 
-  final ScrollController _scrollController = ScrollController();
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 5));
 
@@ -44,6 +46,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     super.initState();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
+    ttTxt = "Duyệt Đơn";
+    // tt = 0;
   }
 
   getAllCustomerList(String id) async {
@@ -69,6 +73,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     String idgiohang = data['idGioHang'].toString();
     String idCustomer = data['idCustomer'].toString();
     String idcus = data['idKhachHang'].toString();
+
     if (idcus == "null") {
       idcus = idCustomer;
     }
@@ -113,6 +118,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   Widget build(BuildContext context) {
     final Map data = ModalRoute.of(context).settings.arguments;
     double mainWidth = MediaQuery.of(context).size.width * 1;
+    int tthInt = double.parse(data['tongTienhang']).round();
+    tt = int.parse(data['trangthai'].toString());
+    if (tt == 1) {
+      ttTxt = "Thanh Toán";
+    } else if (tt == 2) {
+      ttTxt = "Đóng gói và Giao hàng";
+    } else if (tt == 3) {
+      ttTxt = "Xuất Kho";
+    } else if (tt >= 4) {
+      isClose = false;
+    }
     return Theme(
       data: OrderAppTheme.buildLightTheme(),
       child: Container(
@@ -123,382 +139,442 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 children: <Widget>[
                   getAppBarUI(),
                   Expanded(
-                    child: AnimatedBuilder(
-                      animation: animationController,
-                      builder: (BuildContext context, Widget child) {
-                        return SingleChildScrollView(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              // Padding(
-                              //     padding: EdgeInsets.all(7.0),
-                              //     child: Card(
-                              //       clipBehavior: Clip.antiAlias,
-                              //       elevation: 2,
-                              //       child: Column(
-                              //         children: [
-                              //           Padding(
-                              //             padding: EdgeInsets.all(7.0),
-                              //             child: Row(
-                              //               children: [
-                              //                 Text(
-                              //                     "đặt hàng, duyệt, đóng gói, xuất kho, hoàn thành")
-                              //               ],
-                              //             ),
-                              //           ),
-                              //         ],
-                              //       ),
-                              //     )),
-                              Padding(
-                                padding: EdgeInsets.all(7.0),
-                                child: Card(
-                                  clipBehavior: Clip.antiAlias,
-                                  elevation: 2,
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(14.0),
+                    child: customerList.first.name == null
+                        ? Center(
+                            child: Text("Không có dữ liệu!"),
+                          )
+                        : AnimatedBuilder(
+                            animation: animationController,
+                            builder: (BuildContext context, Widget child) {
+                              return SingleChildScrollView(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    // Padding(
+                                    //     padding: EdgeInsets.all(7.0),
+                                    //     child: Card(
+                                    //       clipBehavior: Clip.antiAlias,
+                                    //       elevation: 2,
+                                    //       child: Column(
+                                    //         children: [
+                                    //           Padding(
+                                    //             padding: EdgeInsets.all(7.0),
+                                    //             child: Row(
+                                    //               children: [
+                                    //                 Text(
+                                    //                     "đặt hàng, duyệt, đóng gói, xuất kho, hoàn thành")
+                                    //               ],
+                                    //             ),
+                                    //           ),
+                                    //         ],
+                                    //       ),
+                                    //     )),
+                                    Padding(
+                                      padding: EdgeInsets.all(7.0),
+                                      child: Card(
+                                        clipBehavior: Clip.antiAlias,
+                                        elevation: 2,
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.max,
                                           children: [
-                                            Text(
-                                              data['tongTienhang'].toString(),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 33,
-                                              ),
-                                            ),
-                                            SizedBox(height: 10),
-                                            Text("Bán bởi Tên nhân viên"),
-                                            SizedBox(height: 10),
-                                            Text("Chi nhánh mặc định"),
-                                            SizedBox(height: 10),
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.circle,
-                                                  size: 15,
-                                                  color: Colors.blue,
-                                                ),
-                                                SizedBox(width: 5),
-                                                Text("Trạng thái đơn hàng"),
-                                              ],
-                                            ),
                                             Padding(
-                                              padding: const EdgeInsets.only(
-                                                top: 8.0,
-                                                bottom: 8.0,
-                                              ),
-                                              child: Divider(
-                                                color: Colors.black,
+                                              padding: EdgeInsets.all(14.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Text(
+                                                    formatCurrency
+                                                        .format(tthInt),
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 33,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  Text(
+                                                      "Bán bởi Tên nhân viên"),
+                                                  SizedBox(height: 10),
+                                                  Text("Chi nhánh mặc định"),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.circle,
+                                                        size: 15,
+                                                        color: Colors.blue,
+                                                      ),
+                                                      SizedBox(width: 5),
+                                                      Text(
+                                                          "Trạng thái đơn hàng"),
+                                                    ],
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      top: 8.0,
+                                                      bottom: 8.0,
+                                                    ),
+                                                    child: Divider(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Icon(Icons.person),
+                                                      SizedBox(width: 5),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                              'Tên khách hàng'),
+                                                          SizedBox(height: 5),
+                                                          Text(
+                                                            customerList
+                                                                .first.name,
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 17,
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 15),
+                                                          Text(
+                                                              'Địa chỉ giao hàng: '),
+                                                          SizedBox(height: 5),
+                                                          Text(
+                                                            customerList
+                                                                .first.address,
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 17,
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 15),
+                                                          Text(
+                                                              'Số điện thoại:'),
+                                                          SizedBox(height: 5),
+                                                          Text(
+                                                            customerList
+                                                                .first.phone,
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 18,
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 15),
+                                                          Text('Email: '),
+                                                          SizedBox(height: 5),
+                                                          Text(
+                                                            customerList
+                                                                .first.email,
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 17,
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 5),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
                                               ),
                                             ),
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Icon(Icons.person),
-                                                SizedBox(width: 5),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text('Tên khách hàng'),
-                                                    SizedBox(height: 5),
-                                                    Text(customerList
-                                                        .first.name),
-                                                    SizedBox(height: 5),
-                                                    Text(
-                                                        'Địa chỉ giao hàng: '),
-                                                    SizedBox(height: 5),
-                                                    Text(customerList
-                                                        .first.address),
-                                                    SizedBox(height: 5),
-                                                    Text('Số điện thoại:'),
-                                                    SizedBox(height: 5),
-                                                    Text(customerList
-                                                        .first.phone),
-                                                    SizedBox(height: 5),
-                                                    Text('Email: '),
-                                                    SizedBox(height: 5),
-                                                    Text(customerList
-                                                        .first.email),
-                                                    SizedBox(height: 5),
-                                                  ],
-                                                ),
-                                              ],
-                                            )
                                           ],
                                         ),
                                       ),
-                                    ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 7.0, left: 7.0, right: 7.0),
+                                      child: new Card(
+                                        clipBehavior: Clip.antiAlias,
+                                        elevation: 2,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(14.5),
+                                          child: new Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Container(
+                                                  width: mainWidth,
+                                                  child: new Text(
+                                                    "Sản phẩm (" +
+                                                        data['tongSoluong'] +
+                                                        ")",
+                                                    style: new TextStyle(
+                                                        fontSize: 17.0,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontFamily: "Roboto"),
+                                                  ),
+                                                ),
+                                              ]),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(0),
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          itemCount: orderList.length,
+                                          itemBuilder: (_, index) {
+                                            return orderUIList(
+                                              orderList[index].name,
+                                              orderList[index].count,
+                                              orderList[index].price,
+                                            );
+                                          }),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(7.0),
+                                      child: new Card(
+                                        clipBehavior: Clip.antiAlias,
+                                        elevation: 2,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(14.5),
+                                          child: new Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                new Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        "Tổng tiền hàng",
+                                                        style: new TextStyle(
+                                                          fontSize: 15,
+                                                          color: Colors.black,
+                                                          fontFamily: "Roboto",
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        '${formatCurrency.format(((double.parse(data['tongTienhang']) * 100) / int.parse(data['chietKhau']) - double.parse(data['phiGiaohang'])).round())}'
+                                                            .toString(),
+                                                        style: new TextStyle(
+                                                          fontSize: 15.5,
+                                                          fontFamily: "Roboto",
+                                                        ),
+                                                      ),
+                                                    ]),
+                                                SizedBox(height: 20),
+                                                new Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        "Chiết Khấu",
+                                                        style: new TextStyle(
+                                                          fontSize: 15,
+                                                          color: Colors.black,
+                                                          fontFamily: "Roboto",
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        data['chietKhau']
+                                                                .toString() +
+                                                            "%",
+                                                        style: new TextStyle(
+                                                          fontSize: 15.5,
+                                                          fontFamily: "Roboto",
+                                                        ),
+                                                      ),
+                                                    ]),
+                                                SizedBox(height: 20),
+                                                new Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        "Phí giao hàng",
+                                                        style: new TextStyle(
+                                                          fontSize: 15,
+                                                          color: Colors.black,
+                                                          fontFamily: "Roboto",
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        formatCurrency.format(
+                                                            double.parse(data[
+                                                                    'phiGiaohang'])
+                                                                .round()),
+                                                        style: new TextStyle(
+                                                          fontSize: 15.5,
+                                                          fontFamily: "Roboto",
+                                                        ),
+                                                      ),
+                                                    ]),
+                                                SizedBox(height: 20),
+                                                new Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        "Khách hàng phải trả",
+                                                        style: new TextStyle(
+                                                          fontSize: 15,
+                                                          color: Colors.black,
+                                                          fontFamily: "Roboto",
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        formatCurrency.format(
+                                                            double.parse(data[
+                                                                    'tongTienhang'])
+                                                                .round()),
+                                                        style: new TextStyle(
+                                                          fontSize: 15.5,
+                                                          fontFamily: "Roboto",
+                                                        ),
+                                                      ),
+                                                    ]),
+                                              ]),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                  isClose
+                      ? Positioned(
+                          bottom: MediaQuery.of(context).viewInsets.bottom,
+                          child: Container(
+                            color: Colors.white,
+                            height: 60,
+                            width: MediaQuery.of(context).size.width,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Form(
+                                  key: formKey,
+                                  child: Container(
+                                    width: 280,
+                                    //220
+                                    height: 47,
+                                    child: RaisedButton(
+                                      onPressed: () {
+                                        updateTrangthai();
+                                        setState(() {
+                                          changetxt = !changetxt;
+                                          print(changetxt);
+                                        });
+                                      },
+                                      child: changetxt
+                                          ? Text(ttTxt,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17,
+                                              ))
+                                          : Text(ttTxt,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17,
+                                              )),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 7.0, left: 7.0, right: 7.0),
-                                child: new Card(
-                                  clipBehavior: Clip.antiAlias,
-                                  elevation: 2,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(14.5),
-                                    child: new Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            width: mainWidth,
-                                            child: new Text(
-                                              "Sản phẩm (" +
-                                                  data['tongSoluong'] +
-                                                  ")",
-                                              style: new TextStyle(
-                                                  fontSize: 17.0,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: "Roboto"),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.red,
+                                  ),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) => AlertDialog(
+                                          title: Text("Chắc xóa không?"),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              onPressed: () {
+                                                deleteCart();
+                                                deleteOrder();
+                                                Fluttertoast.showToast(
+                                                    msg:
+                                                        "Xóa đơn hàng thành công",
+                                                    toastLength:
+                                                        Toast.LENGTH_SHORT,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    textColor: Colors.black87,
+                                                    fontSize: 16.0);
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("Có"),
                                             ),
-                                          ),
-                                        ]),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(0),
-                                child: ListView.builder(
-                                    scrollDirection: Axis.vertical,
-                                    shrinkWrap: true,
-                                    itemCount: orderList.length,
-                                    itemBuilder: (_, index) {
-                                      return orderUIList(
-                                        orderList[index].name,
-                                        orderList[index].count,
-                                        orderList[index].price,
+                                            FlatButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop("Không");
+                                              },
+                                              child: Text("Không"),
+                                            ),
+                                          ],
+                                        ),
                                       );
-                                    }),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(7.0),
-                                child: new Card(
-                                  clipBehavior: Clip.antiAlias,
-                                  elevation: 2,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(14.5),
-                                    child: new Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          new Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: <Widget>[
-                                                Text(
-                                                  "Tổng tiền hàng",
-                                                  style: new TextStyle(
-                                                    fontSize: 15,
-                                                    color: Colors.black,
-                                                    fontFamily: "Roboto",
-                                                  ),
-                                                ),
-                                                Text(
-                                                  '${(double.parse(data['tongTienhang']) * 100) / int.parse(data['chietKhau']) - double.parse(data['phiGiaohang'])}'
-                                                      .toString(),
-                                                  style: new TextStyle(
-                                                    fontSize: 15.5,
-                                                    fontFamily: "Roboto",
-                                                  ),
-                                                ),
-                                              ]),
-                                          SizedBox(height: 20),
-                                          new Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: <Widget>[
-                                                Text(
-                                                  "Chiết Khấu",
-                                                  style: new TextStyle(
-                                                    fontSize: 15,
-                                                    color: Colors.black,
-                                                    fontFamily: "Roboto",
-                                                  ),
-                                                ),
-                                                Text(
-                                                  data['chietKhau'].toString(),
-                                                  style: new TextStyle(
-                                                    fontSize: 15.5,
-                                                    fontFamily: "Roboto",
-                                                  ),
-                                                ),
-                                              ]),
-                                          SizedBox(height: 20),
-                                          new Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: <Widget>[
-                                                Text(
-                                                  "Phí giao hàng",
-                                                  style: new TextStyle(
-                                                    fontSize: 15,
-                                                    color: Colors.black,
-                                                    fontFamily: "Roboto",
-                                                  ),
-                                                ),
-                                                Text(
-                                                  data['phiGiaohang']
-                                                      .toString(),
-                                                  style: new TextStyle(
-                                                    fontSize: 15.5,
-                                                    fontFamily: "Roboto",
-                                                  ),
-                                                ),
-                                              ]),
-                                          SizedBox(height: 20),
-                                          new Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: <Widget>[
-                                                Text(
-                                                  "Khách hàng phải trả",
-                                                  style: new TextStyle(
-                                                    fontSize: 15,
-                                                    color: Colors.black,
-                                                    fontFamily: "Roboto",
-                                                  ),
-                                                ),
-                                                Text(
-                                                  data['tongTienhang']
-                                                      .toString(),
-                                                  style: new TextStyle(
-                                                    fontSize: 15.5,
-                                                    fontFamily: "Roboto",
-                                                  ),
-                                                ),
-                                              ]),
-                                        ]),
+                                    },
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Positioned(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                    child: Container(
-                      color: Colors.white,
-                      height: 60,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 280,
-                            //220
-                            height: 47,
-                            child: RaisedButton(
-                              onPressed: () {},
-                              child: Text("Duyệt Đơn",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                  )),
+                              ],
                             ),
                           ),
-                          // SizedBox(
-                          //   width: 10,
-                          // ),
-                          // Container(
-                          //   decoration: BoxDecoration(
-                          //     shape: BoxShape.circle,
-                          //     color: Colors.blue,
-                          //   ),
-                          //   child: IconButton(
-                          //     icon: Icon(
-                          //       Icons.edit,
-                          //       color: Colors.white,
-                          //     ),
-                          //     onPressed: () {
-                          //       print('s');
-                          //     },
-                          //   ),
-                          // ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.red,
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) => AlertDialog(
-                                    title: Text("Chắc xóa không?"),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        onPressed: () {
-                                          deleteCart();
-                                          deleteOrder();
-                                          Fluttertoast.showToast(
-                                              msg: "Xóa đơn hàng thành công",
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.BOTTOM,
-                                              timeInSecForIosWeb: 1,
-                                              textColor: Colors.black87,
-                                              fontSize: 16.0);
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Có"),
-                                      ),
-                                      FlatButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop("Không");
-                                        },
-                                        child: Text("Không"),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                        )
+                      : Container(),
                 ],
               ),
             ],
@@ -506,6 +582,24 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
         ),
       ),
     );
+  }
+
+  Future<void> updateTrangthai() async {
+    tt++;
+    final Map data = ModalRoute.of(context).settings.arguments;
+    idDonHangFB = data['idDonHang'].toString();
+    if (formKey.currentState.validate()) {
+      DatabaseReference referenceTTDH = FirebaseDatabase.instance
+          .reference()
+          .child('Order')
+          .child(idDonHangFB);
+
+      String trangthaiFB = tt.toString();
+
+      referenceTTDH.update({
+        "trangthai": trangthaiFB,
+      });
+    }
   }
 
   Future<void> deleteOrder() async {
@@ -527,6 +621,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   }
 
   Widget orderUIList(String name, int count, String price) {
+    int priceInt = double.parse(price).round();
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 3, bottom: 16),
       child: InkWell(
@@ -581,7 +676,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                         Padding(
                                           padding: EdgeInsets.only(top: 8),
                                           child: Text(
-                                            price.toString() + " vnd",
+                                            formatCurrency.format(priceInt),
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black

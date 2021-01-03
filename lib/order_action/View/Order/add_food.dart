@@ -7,7 +7,6 @@ import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart'
 import 'package:quan_ly_taiducfood/order_action/model/popular_filter_list.dart';
 import 'package:quan_ly_taiducfood/order_action/model/test.dart';
 import 'order_theme.dart';
-import 'order_screen.dart';
 
 class AddFood extends StatefulWidget {
   @override
@@ -19,6 +18,7 @@ class _AddFoodState extends State<AddFood> {
   var sanpham = Sanpham();
   var _orderService = OrderService();
   double tongTienhang;
+  // ignore: deprecated_member_use
   List<Sanpham> orderList = List<Sanpham>();
 
   @override
@@ -53,7 +53,6 @@ class _AddFoodState extends State<AddFood> {
       PopularFilterListData.popularFList;
   List<Sanpham> productList = [];
   DatabaseReference ref = FirebaseDatabase.instance.reference();
-  RangeValues _values = const RangeValues(100, 600);
   double distValue = 50.0;
 
   @override

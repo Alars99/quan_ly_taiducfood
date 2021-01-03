@@ -24,6 +24,7 @@ class RunningView extends StatelessWidget {
                   padding: const EdgeInsets.only(
                       left: 24, right: 24, top: 0, bottom: 0),
                   child: Stack(
+                    // ignore: deprecated_member_use
                     overflow: Overflow.visible,
                     children: <Widget>[
                       Padding(

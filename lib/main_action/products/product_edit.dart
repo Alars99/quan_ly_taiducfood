@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_image/network.dart';
@@ -74,6 +73,7 @@ class _ProductEditState extends State<ProductEdit> {
   }
 
   ProductCate productCate;
+  // ignore: non_constant_identifier_names
   List<ProductCate> data_cate = <ProductCate>[
     ProductCate(1, 'Thịt Bò Úc'),
     ProductCate(2, 'Thịt Gà'),
@@ -232,6 +232,7 @@ class _ProductEditState extends State<ProductEdit> {
                           children: <Widget>[
                             new TextFormField(
                               controller: _controllerEditName,
+                              // ignore: missing_return
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Chưa nhập Tên sản phẩm';
@@ -248,6 +249,7 @@ class _ProductEditState extends State<ProductEdit> {
                             ),
                             new TextFormField(
                                 controller: _controllerEditId,
+                                // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Chưa nhập Mã sản phẩm';
@@ -263,6 +265,7 @@ class _ProductEditState extends State<ProductEdit> {
                                   labelText: 'Mã sản phẩm',
                                 )),
                             new TextFormField(
+                                // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Chưa nhập Barcode sản phẩm';
@@ -288,6 +291,7 @@ class _ProductEditState extends State<ProductEdit> {
                                           Icon(Icons.qr_code_scanner_outlined)),
                                 )),
                             new TextFormField(
+                              // ignore: missing_return
                               validator: (value) {
                                 if (value.isEmpty || value == '0') {
                                   return 'Chưa nhập Khối lượng sản phẩm';
@@ -329,6 +333,7 @@ class _ProductEditState extends State<ProductEdit> {
                                 Container(
                                   width: 140,
                                   child: new TextFormField(
+                                    // ignore: missing_return
                                     validator: (value) {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Tồn kho sản phẩm';
@@ -349,6 +354,7 @@ class _ProductEditState extends State<ProductEdit> {
                                 Container(
                                   width: 140,
                                   child: new TextFormField(
+                                    // ignore: missing_return
                                     validator: (value) {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Giá vốn sản phẩm';
@@ -374,6 +380,7 @@ class _ProductEditState extends State<ProductEdit> {
                                 Container(
                                   width: 140,
                                   child: new TextFormField(
+                                    // ignore: missing_return
                                     validator: (value) {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Giá bán lẻ sản phẩm';
@@ -394,6 +401,7 @@ class _ProductEditState extends State<ProductEdit> {
                                 Container(
                                   width: 140,
                                   child: new TextFormField(
+                                    // ignore: missing_return
                                     validator: (value) {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Giá bán buôn sản phẩm';
@@ -415,6 +423,7 @@ class _ProductEditState extends State<ProductEdit> {
                             ),
                             Container(
                               child: new TextFormField(
+                                // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty || value == '0') {
                                     return 'Chưa nhập Giá nhập sản phẩm';
@@ -512,6 +521,7 @@ class _ProductEditState extends State<ProductEdit> {
                             Container(
                               child: new TextFormField(
                                 controller: _controllerEditBrand,
+                                // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     brand = 'Không có thương hiệu';
@@ -530,6 +540,7 @@ class _ProductEditState extends State<ProductEdit> {
                             Container(
                               child: new TextFormField(
                                 controller: _controllerEditDesc,
+                                // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     desc = 'Không có mô tả';
@@ -609,6 +620,7 @@ class _ProductEditState extends State<ProductEdit> {
     String fileName = basename(_image.path);
     Reference imgReference = FirebaseStorage.instance.ref().child(fileName);
     UploadTask uploadTask = imgReference.putFile(_image);
+    // ignore: unused_local_variable
     TaskSnapshot taskSnapshot = await uploadTask;
     setState(() {
       print('uploaded');

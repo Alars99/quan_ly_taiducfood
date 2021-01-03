@@ -19,6 +19,7 @@ class _CategoryListViewState extends State<CategoryListView>
 
   int sohoadon;
   double giaDoanhthu;
+  // ignore: deprecated_member_use
   List<OrderList> orderList = List();
 
   getDoanhThu() {

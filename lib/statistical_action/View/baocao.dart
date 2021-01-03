@@ -198,7 +198,6 @@ class _BaoCaoScreen extends State<BaoCaoScreen> {
           Container(
             width: 60,
             height: 60,
-            child: Image.asset('assets/design_course/userImage.png'),
           )
         ],
       ),

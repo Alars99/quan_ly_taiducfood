@@ -1,18 +1,12 @@
-import 'dart:collection';
 import 'dart:ui';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
-import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
-import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
-import 'package:quan_ly_taiducfood/order_action/model/test.dart';
-import 'add_food.dart';
-import 'order_list_screen_view.dart';
+import 'order_detail_screen.dart';
 import 'order_theme.dart';
-import 'order_list_view.dart';
 
 class OrderListScreen extends StatefulWidget {
   @override
@@ -28,11 +22,16 @@ class _OrderListScreenState extends State<OrderListScreen>
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 5));
 
-  _OrderListScreenState();
+  // _OrderListScreenState();
 
-  // var orderlist = OrderList();
+  String nameKH;
 
   List<OrderList> orderList = [];
+  static String nameStatus = "";
+
+  var customer = Customer();
+
+  List<Customer> customerList = [];
 
   @override
   void initState() {
@@ -40,14 +39,7 @@ class _OrderListScreenState extends State<OrderListScreen>
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     // getAllOrderList();
-  }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // getAllOrderList();
-    // final Map data = ModalRoute.of(context).settings.arguments;
-    // idDonHang = data['idDonHang'];
     DatabaseReference referenceProduct =
         FirebaseDatabase.instance.reference().child("Order");
     referenceProduct.once().then((DataSnapshot snapshot) {
@@ -75,16 +67,49 @@ class _OrderListScreenState extends State<OrderListScreen>
     print(orderList.length);
   }
 
-  Future<bool> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 200));
-    return true;
+  getStatus(String id) {
+    if (id == "0") {
+      nameStatus = "Chưa giao hàng";
+    }
   }
 
+  // getAllCustomerList(String id) async {
+  //   customerList.clear();
+  //   var customers = await _customerService.readCustomerList();
+  //   customers.forEach((customer) {
+  //     setState(() {
+  //       if (customer['id'] == id) {
+  //         var customerModel = new Customer();
+  //         customerModel.idCustomer = customer['id'];
+  //         customerModel.name = customer['name'];
+  //         customerModel.phone = customer['phone'];
+  //         customerModel.email = customer['email'];
+  //         customerModel.address = customer['address'];
+  //         customerList.add(customerModel);
+  //       }
+  //     });
+  //   });
+  //   print(customer.name);
+  // }
+
   @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // getAllOrderList();
+    // final Map data = ModalRoute.of(context).settings.arguments;
+    // idDonHang = data['idDonHang'];
   }
+
+  // Future<bool> getData() async {
+  //   await Future<dynamic>.delayed(const Duration(milliseconds: 200));
+  //   return true;
+  // }
+
+  // @override
+  // void dispose() {
+  //   animationController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -122,25 +147,28 @@ class _OrderListScreenState extends State<OrderListScreen>
                             shrinkWrap: true,
                             padding: const EdgeInsets.only(top: 8),
                             scrollDirection: Axis.vertical,
-                            itemBuilder: (BuildContext context, int index) {
-                              final int count =
-                                  orderList.length > 10 ? 10 : orderList.length;
-                              final Animation<double> animation =
-                                  Tween<double>(begin: 0.0, end: 1.0).animate(
-                                      CurvedAnimation(
-                                          parent: animationController,
-                                          curve: Interval(
-                                              (1 / count) * index, 1.0,
-                                              curve: Curves.fastOutSlowIn)));
-                              animationController.forward();
-                              return OrderListScreenView(
-                                callback: () {
-                                  setState(() {});
-                                },
-                                orderList: orderList[index],
-                                animation: animation,
-                                animationController: animationController,
+                            itemBuilder: (_, index) {
+                              return orderListScreenView(
+                                orderList[index].idDonHang,
+                                orderList[index].idKhachHang,
+                                orderList[index].ngaymua,
+                                orderList[index].trangthai,
+                                orderList[index].idGioHang,
+                                orderList[index].banSiLe,
+                                orderList[index].chietKhau,
+                                orderList[index].paymethod,
+                                orderList[index].phiGiaohang,
+                                orderList[index].tongSoluong,
+                                orderList[index].tongTienhang,
                               );
+                              // OrderListScreenView(
+                              //   callback: () {
+                              //     setState(() {});
+                              //   },
+                              //   orderList: orderList[index],
+                              //   animation: animation,
+                              //   animationController: animationController,
+                              // );
                             },
                           ),
                         ),
@@ -154,6 +182,190 @@ class _OrderListScreenState extends State<OrderListScreen>
         ),
       ),
     );
+  }
+
+  Widget orderListScreenView(
+      String idDonHang,
+      String idKhachHang,
+      String ngaymua,
+      String trangthai,
+      String idGioHang,
+      String banSiLe,
+      String chietKhau,
+      String paymethod,
+      String phiGiaohang,
+      String tongSoluong,
+      String tongTienhang) {
+    final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
+    int tongthInt = double.parse(tongTienhang).round();
+    getStatus(trangthai);
+    // print(customerList.first.name);
+    return
+        // AnimatedBuilder(
+        //   animation: animationController,
+        //   builder: (BuildContext context, Widget child) {
+        //     return FadeTransition(
+        //       // opacity: animation,
+        //       child: Transform(
+        //         // transform: Matrix4.translationValues(
+        //         //     0.0, 50 * (1.0 - animation.value), 0.0),
+        //         child:
+        Padding(
+      padding: const EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
+      child: InkWell(
+        splashColor: Colors.transparent,
+        onTap: () {
+          Navigator.of(context)
+              .pushNamed(OrderDetailScreen.routeName, arguments: {
+            'idGioHang': idGioHang,
+            'idDonHang': idDonHang,
+            'banSiLe': banSiLe,
+            'chietKhau': chietKhau,
+            'idKhachHang': idKhachHang,
+            'ngaymua': ngaymua,
+            'paymethod': paymethod,
+            'phiGiaohang': phiGiaohang,
+            'trangthai': trangthai,
+            'tongSoluong': tongSoluong,
+            'tongTienhang': tongTienhang,
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.6),
+                offset: const Offset(4, 4),
+                blurRadius: 16,
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+            child: Stack(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Container(
+                      color: OrderAppTheme.buildLightTheme().backgroundColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 16, top: 15, bottom: 8),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      "Mã: " + idDonHang,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 8, bottom: 8),
+                                          child: Text(
+                                            idKhachHang.toString(),
+                                            style: TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.black54),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 4,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 8),
+                                          child: Text(
+                                            ngaymua.toString(),
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black
+                                                    .withOpacity(1)),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 4,
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      // them phan so luong
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(top: 8),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  formatCurrency.format(tongthInt),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  nameStatus,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red[400],
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    //       ),
+    //     );
+    //   },
+    // );
   }
 
   Widget getAppBarUI() {
