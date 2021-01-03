@@ -19,7 +19,7 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
   int touchedGroupIndex;
   DateTime startDate = DateTime.now();
 
-  double a = 900000;
+  double a = 0.0;
   double tong7ngay = 0.0;
 
   final Color leftBarColor = const Color(0xff53fdd7);
@@ -115,30 +115,51 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
         if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime6) &&
             sp.trangthai == "4") {
           tong6 += double.parse(sp.tongTienhang);
+          if (a < tong6) {
+            a = tong6;
+          }
         }
         if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime5) &&
             sp.trangthai == "4") {
           tong5 += double.parse(sp.tongTienhang);
+          if (a < tong5) {
+            a = tong5;
+          }
         }
         if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime4) &&
             sp.trangthai == "4") {
           tong4 += double.parse(sp.tongTienhang);
+          if (a < tong4) {
+            a = tong4;
+          }
         }
         if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime3) &&
             sp.trangthai == "4") {
           tong3 += double.parse(sp.tongTienhang);
+          if (a < tong3) {
+            a = tong3;
+          }
         }
         if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime2) &&
             sp.trangthai == "4") {
           tong2 += double.parse(sp.tongTienhang);
+          if (a < tong2) {
+            a = tong2;
+          }
         }
         if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime1) &&
             sp.trangthai == "4") {
           tong1 += double.parse(sp.tongTienhang);
+          if (a < tong1) {
+            a = tong1;
+          }
         }
         if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTimeToday) &&
             sp.trangthai == "4") {
           tongDay += double.parse(sp.tongTienhang);
+          if (a < tongDay) {
+            a = tongDay;
+          }
         }
       }
       day6 = tong6;
@@ -157,7 +178,6 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
       print(today.toString() + " today");
 
       tong7ngay = day6 + day5 + day4 + day3 + day2 + day1 + today;
-
       final barGroup1 = makeGroupData(0, day6, 12);
       final barGroup2 = makeGroupData(1, day5, 12);
       final barGroup3 = makeGroupData(2, day4, 5);
