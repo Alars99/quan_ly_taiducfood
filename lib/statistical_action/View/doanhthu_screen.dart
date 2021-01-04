@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
+import 'package:quan_ly_taiducfood/statistical_action/View/bao_cao_doanh_thu.dart';
 
 import '../design_course_app_theme.dart';
 
@@ -17,7 +18,7 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
 
   final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
   int touchedGroupIndex;
-  DateTime startDate = DateTime.now();
+  DateTime now = DateTime.now();
 
   double a = 0.0;
   double tong7ngay = 0.0;
@@ -27,180 +28,111 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
 
   List<BarChartGroupData> rawBarGroups;
   List<BarChartGroupData> showingBarGroups;
+  List<BarChartGroupData> items;
+
+  BarChartGroupData barGroup1;
+  BarChartGroupData barGroup2;
+  BarChartGroupData barGroup3;
+  BarChartGroupData barGroup4;
+  BarChartGroupData barGroup5;
+  BarChartGroupData barGroup6;
+  BarChartGroupData barGroup7;
+
   List<OrderList> orderList = [];
-  double tong6;
-  double tong5;
-  double tong4;
-  double tong3;
-  double tong2;
-  double tong1;
-  double tongDay;
 
-  double day6;
-  double day5;
-  double day4;
-  double day3;
-  double day2;
-  double day1;
-  double today;
-
-  DateTime _dateTime6;
-  DateTime _dateTime5;
-  DateTime _dateTime4;
-  DateTime _dateTime3;
-  DateTime _dateTime2;
-  DateTime _dateTime1;
-  DateTime _dateTimeToday;
+  double tong;
+  double day;
+  DateTime _dateTime;
 
   @override
   void initState() {
     super.initState();
-    tong6 = 0;
-    tong5 = 0;
-    tong4 = 0;
-    tong3 = 0;
-    tong2 = 0;
-    tong1 = 0;
-    tongDay = 0;
 
-    day6 = 0;
-    day5 = 0;
-    day4 = 0;
-    day3 = 0;
-    day2 = 0;
-    day1 = 0;
-    today = 0;
+    tong = 0;
+    day = 0;
+    tong7ngay = 0.0;
+
+    DatabaseReference referenceProduct =
+        FirebaseDatabase.instance.reference().child("Order");
+    referenceProduct.once().then(
+      (DataSnapshot snapshot) {
+        orderList.clear();
+        var keys = snapshot.value.keys;
+        var values = snapshot.value;
+        for (var key in keys) {
+          OrderList order = new OrderList(
+            values[key]["idDonHang"],
+            values[key]["idGioHang"],
+            values[key]["tongTienhang"],
+            values[key]["tongSoluong"],
+            values[key]["phiGiaohang"],
+            values[key]["chietKhau"],
+            values[key]["banSiLe"],
+            values[key]["paymethod"],
+            values[key]["idKhachHang"],
+            values[key]["ngaymua"],
+            values[key]["trangthai"],
+          );
+          orderList.add(order);
+        }
+        for (int i = 0; i < 7; i++) {
+          tong = 0;
+          day = 0;
+          _dateTime = DateTime.utc(now.year, now.month, now.day - i);
+          for (var sp in orderList) {
+            if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime) &&
+                sp.trangthai == "4") {
+              tong += double.parse(sp.tongTienhang);
+              if (a < tong) {
+                a = tong;
+              }
+            }
+          }
+          day = tong;
+          tong7ngay += day;
+
+          if (i == 6) {
+            barGroup1 = makeGroupData(0, day);
+          }
+          if (i == 5) {
+            barGroup2 = makeGroupData(1, day);
+          }
+          if (i == 4) {
+            barGroup3 = makeGroupData(2, day);
+          }
+          if (i == 3) {
+            barGroup4 = makeGroupData(3, day);
+          }
+          if (i == 2) {
+            barGroup5 = makeGroupData(4, day);
+          }
+          if (i == 1) {
+            barGroup6 = makeGroupData(5, day);
+          }
+          if (i == 0) {
+            barGroup7 = makeGroupData(6, day);
+          }
+          items = [
+            barGroup1,
+            barGroup2,
+            barGroup3,
+            barGroup4,
+            barGroup5,
+            barGroup6,
+            barGroup7,
+          ];
+          rawBarGroups = items;
+
+          showingBarGroups = rawBarGroups;
+          setState(() {});
+        }
+      },
+    );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    DatabaseReference referenceProduct =
-        FirebaseDatabase.instance.reference().child("Order");
-    referenceProduct.once().then((DataSnapshot snapshot) {
-      orderList.clear();
-      var keys = snapshot.value.keys;
-      var values = snapshot.value;
-      for (var key in keys) {
-        OrderList order = new OrderList(
-          values[key]["idDonHang"],
-          values[key]["idGioHang"],
-          values[key]["tongTienhang"],
-          values[key]["tongSoluong"],
-          values[key]["phiGiaohang"],
-          values[key]["chietKhau"],
-          values[key]["banSiLe"],
-          values[key]["paymethod"],
-          values[key]["idKhachHang"],
-          values[key]["ngaymua"],
-          values[key]["trangthai"],
-        );
-        orderList.add(order);
-      }
-      _dateTime6 =
-          DateTime.utc(startDate.year, startDate.month, startDate.day - 6);
-      _dateTime5 =
-          DateTime.utc(startDate.year, startDate.month, startDate.day - 5);
-      _dateTime4 =
-          DateTime.utc(startDate.year, startDate.month, startDate.day - 4);
-      _dateTime3 =
-          DateTime.utc(startDate.year, startDate.month, startDate.day - 3);
-      _dateTime2 =
-          DateTime.utc(startDate.year, startDate.month, startDate.day - 2);
-      _dateTime1 =
-          DateTime.utc(startDate.year, startDate.month, startDate.day - 1);
-      _dateTimeToday =
-          DateTime.utc(startDate.year, startDate.month, startDate.day);
-      for (var sp in orderList) {
-        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime6) &&
-            sp.trangthai == "4") {
-          tong6 += double.parse(sp.tongTienhang);
-          if (a < tong6) {
-            a = tong6;
-          }
-        }
-        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime5) &&
-            sp.trangthai == "4") {
-          tong5 += double.parse(sp.tongTienhang);
-          if (a < tong5) {
-            a = tong5;
-          }
-        }
-        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime4) &&
-            sp.trangthai == "4") {
-          tong4 += double.parse(sp.tongTienhang);
-          if (a < tong4) {
-            a = tong4;
-          }
-        }
-        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime3) &&
-            sp.trangthai == "4") {
-          tong3 += double.parse(sp.tongTienhang);
-          if (a < tong3) {
-            a = tong3;
-          }
-        }
-        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime2) &&
-            sp.trangthai == "4") {
-          tong2 += double.parse(sp.tongTienhang);
-          if (a < tong2) {
-            a = tong2;
-          }
-        }
-        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime1) &&
-            sp.trangthai == "4") {
-          tong1 += double.parse(sp.tongTienhang);
-          if (a < tong1) {
-            a = tong1;
-          }
-        }
-        if (sp.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTimeToday) &&
-            sp.trangthai == "4") {
-          tongDay += double.parse(sp.tongTienhang);
-          if (a < tongDay) {
-            a = tongDay;
-          }
-        }
-      }
-      day6 = tong6;
-      day5 = tong5;
-      day4 = tong4;
-      day3 = tong3;
-      day2 = tong2;
-      day1 = tong1;
-      today = tongDay;
-      print(day6.toString() + " 6");
-      print(day5.toString() + " 5");
-      print(day4.toString() + " 4");
-      print(day3.toString() + " 3");
-      print(day2.toString() + " 2");
-      print(day1.toString() + " 1");
-      print(today.toString() + " today");
-
-      tong7ngay = day6 + day5 + day4 + day3 + day2 + day1 + today;
-      final barGroup1 = makeGroupData(0, day6, 12);
-      final barGroup2 = makeGroupData(1, day5, 12);
-      final barGroup3 = makeGroupData(2, day4, 5);
-      final barGroup4 = makeGroupData(3, day3, 16);
-      final barGroup5 = makeGroupData(4, day2, 6);
-      final barGroup6 = makeGroupData(5, day1, 1.5);
-      final barGroup7 = makeGroupData(6, today, 1.5);
-
-      final items = [
-        barGroup1,
-        barGroup2,
-        barGroup3,
-        barGroup4,
-        barGroup5,
-        barGroup6,
-        barGroup7,
-      ];
-
-      rawBarGroups = items;
-
-      showingBarGroups = rawBarGroups;
-      setState(() {});
-    });
   }
 
   @override
@@ -276,86 +208,9 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
             child: Column(
               children: [
                 SizedBox(height: 23),
-                // BarChart(
-                //   BarChartData(
-                //     maxY: 20,
-                //     barGroups: [
-                //       BarChartGroupData(
-                //         barsSpace: 10,
-                //         x: 0,
-                //         barRods: [
-                //           BarChartRodData(
-                //             y: 11,
-                //             width: 5,
-                //             borderRadius: BorderRadius.circular(10),
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //     titlesData: FlTitlesData(
-                //       leftTitles: SideTitles(
-                //         showTitles: true,
-                //         getTextStyles: (value) => const TextStyle(
-                //             color: Color(0xff7589a2),
-                //             fontWeight: FontWeight.bold,
-                //             fontSize: 14),
-                //         margin: 32,
-                //         reservedSize: 14,
-                //         interval: 5,
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 BarChart(
                   BarChartData(
                     maxY: a,
-                    // barTouchData: BarTouchData(
-                    //     touchTooltipData: BarTouchTooltipData(
-                    //       tooltipBgColor: Colors.grey,
-                    //       getTooltipItem: (_a, _b, _c, _d) => null,
-                    //     ),
-                    //     touchCallback: (response) {
-                    //       if (response.spot == null) {
-                    //         setState(() {
-                    //           touchedGroupIndex = -1;
-                    //           showingBarGroups = List.of(rawBarGroups);
-                    //         });
-                    //         return;
-                    //       }
-                    //       touchedGroupIndex =
-                    //           response.spot.touchedBarGroupIndex;
-                    //       setState(() {
-                    //         if (response.touchInput is FlLongPressEnd ||
-                    //             response.touchInput is FlPanEnd) {
-                    //           touchedGroupIndex = -1;
-                    //           showingBarGroups = List.of(rawBarGroups);
-                    //         } else {
-                    //           showingBarGroups = List.of(rawBarGroups);
-                    //           if (touchedGroupIndex != -1) {
-                    //             double sum = 0;
-                    //             for (BarChartRodData rod
-                    //                 in showingBarGroups[touchedGroupIndex]
-                    //                     .barRods) {
-                    //               sum += rod.y;
-                    //             }
-                    //             final avg = sum /
-                    //                 showingBarGroups[touchedGroupIndex]
-                    //                     .barRods
-                    //                     .length;
-                    //             showingBarGroups[touchedGroupIndex] =
-                    //                 showingBarGroups[touchedGroupIndex]
-                    //                     .copyWith(
-                    //               barRods: showingBarGroups[touchedGroupIndex]
-                    //                   .barRods
-                    //                   .map((rod) {
-                    //                 return rod.copyWith(y: avg);
-                    //               }).toList(),
-                    //             );
-                    //           }
-                    //         }
-                    //       });
-                    //     }),
-
                     titlesData: FlTitlesData(
                       show: true,
                       bottomTitles: SideTitles(
@@ -398,29 +253,18 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
                           }
                         },
                       ),
-                      leftTitles: SideTitles(
-                        showTitles: true,
-                        getTextStyles: (value) => const TextStyle(
-                            color: Color(0xff7589a2),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14),
-                        margin: 32,
-                        reservedSize: 14,
-                        interval: a / 4,
-                        // getTitles: (value) {
-                        //   if (value == 0) {
-                        //     return '0';
-                        //   } else if (value == 10) {
-                        //     return '5K';
-                        //   } else if (value == 19) {
-                        //     return '10K';
-                        //   } else if (value == 12) {
-                        //     return '10K';
-                        //   } else {
-                        //     return '';
-                        //   }
-                        // },
-                      ),
+                      leftTitles: a == 0
+                          ? SideTitles()
+                          : SideTitles(
+                              showTitles: true,
+                              getTextStyles: (value) => const TextStyle(
+                                  color: Color(0xff7589a2),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14),
+                              margin: 32,
+                              reservedSize: 14,
+                              interval: a / 4,
+                            ),
                     ),
                     borderData: FlBorderData(
                       show: false,
@@ -428,102 +272,6 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
                     barGroups: showingBarGroups,
                   ),
                 ),
-                // Expanded(
-                //   child: Icon(
-                //     Icons.payments,
-                //     color: Colors.green[400],
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: 15,
-                // ),
-                // Expanded(
-                //   child: Text("Tồn kho cuối kỳ"),
-                // ),
-                // Expanded(
-                //   child: Text("22/11 - 23/12"),
-                // ),
-                // Expanded(
-                //   child: Text(
-                //     "1,500,000",
-                //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                //   ),
-                // ),
-                // Expanded(
-                //   child: Text(
-                //     "SL: 15",
-                //     style: TextStyle(fontWeight: FontWeight.bold),
-                //   ),
-                // ),
-                // InkWell(
-                //   onTap: () {
-                //     print("Chi tiết");
-                //   },
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.end,
-                //     children: [
-                //       Padding(
-                //         padding: EdgeInsets.only(),
-                //         child: Text(
-                //           "Chi tiết",
-                //           style: TextStyle(color: Colors.blue[300]),
-                //         ),
-                //       ),
-                //       Icon(Icons.chevron_right)
-                //     ],
-                //   ),
-                // ),
-                // Padding(
-                //   padding: EdgeInsets.only(left: 8, right: 8),
-                //   child: Divider(
-                //     color: Colors.black87,
-                //   ),
-                // ),
-                // Row(
-                //   children: [
-                //     Column(
-                //       children: [
-                //         Container(
-                //           padding: EdgeInsets.all(8),
-                //           child: Column(
-                //             children: [
-                //               Text("Nhập trong kỳ"),
-                //               Text("3,000,000"),
-                //             ],
-                //           ),
-                //         )
-                //       ],
-                //     ),
-                //     SizedBox(
-                //       width: 60,
-                //     ),
-                //     Column(
-                //       children: [
-                //         Container(
-                //           padding: EdgeInsets.all(8),
-                //           child: Column(
-                //             children: [
-                //               Text("Xuất trong kỳ"),
-                //               Text("1,500,000"),
-                //             ],
-                //           ),
-                //         )
-                //       ],
-                //     ),
-                //   ],
-                // ),
-                // Padding(
-                //   padding: EdgeInsets.only(left: 8, right: 8),
-                //   child: Divider(
-                //     color: Colors.black87,
-                //   ),
-                // ),
-                // Expanded(
-                //   child: Text(
-                //     "Giá trị tồn kho = Số lượng * Giá vốn",
-                //     style: TextStyle(fontWeight: FontWeight.bold),
-                //   ),
-                // ),
               ],
             ),
           )
@@ -532,7 +280,7 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
     );
   }
 
-  BarChartGroupData makeGroupData(int x, double y1, double y2) {
+  BarChartGroupData makeGroupData(int x, double y1) {
     return BarChartGroupData(barsSpace: 4, x: x, barRods: [
       BarChartRodData(
         y: y1,
@@ -562,7 +310,10 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
         ),
         InkWell(
           onTap: () {
-            print("1");
+            Navigator.push(
+                context,
+                new MaterialPageRoute(
+                    builder: (context) => BaoCaoDoanhThuScreen()));
           },
           child: Container(
             width: 300,
