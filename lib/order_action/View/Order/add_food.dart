@@ -64,7 +64,7 @@ class _AddFoodState extends State<AddFood> {
         body: Column(
           children: <Widget>[
             getAppBarUI(),
-            getSearchBarUI(),
+            // getSearchBarUI(),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(

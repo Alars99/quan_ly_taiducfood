@@ -1,10 +1,14 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
+import 'package:quan_ly_taiducfood/main_action/custom_ui/hotel_app_theme.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
+import '../../../main.dart';
 import 'order_detail_screen.dart';
 import 'order_theme.dart';
 
@@ -21,6 +25,7 @@ class _OrderListScreenState extends State<OrderListScreen>
   final ScrollController _scrollController = ScrollController();
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 5));
+  var colortxt;
 
   // _OrderListScreenState();
 
@@ -69,7 +74,26 @@ class _OrderListScreenState extends State<OrderListScreen>
 
   getStatus(String id) {
     if (id == "0") {
-      nameStatus = "Chưa giao hàng";
+      nameStatus = "Chưa duyệt";
+      colortxt = Colors.blue[300];
+    } else if (id == "1") {
+      nameStatus = "Chờ xuất kho";
+      colortxt = Colors.blue[500];
+    } else if (id == "2") {
+      nameStatus = "Đang giao hàng";
+      colortxt = Colors.blue[700];
+    } else if (id == "3") {
+      nameStatus = "Chờ thanh toán";
+      colortxt = Colors.blue[900];
+    } else if (id == "4") {
+      nameStatus = "Đã thanh toán";
+      colortxt = Colors.green[600];
+    } else if (id == "5") {
+      nameStatus = "Đã trả hàng";
+      colortxt = Colors.red;
+    } else if (id == "6") {
+      nameStatus = "Đã hủy đơn";
+      colortxt = Colors.red;
     }
   }
 
@@ -111,72 +135,121 @@ class _OrderListScreenState extends State<OrderListScreen>
   //   super.dispose();
   // }
 
+  Widget search() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 0, bottom: 0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: HotelAppTheme.buildLightTheme().backgroundColor,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(12.0),
+                  ),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        offset: const Offset(0, 2),
+                        blurRadius: 4.0),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 16, right: 16, top: 4, bottom: 4),
+                  child: TextField(
+                    onChanged: (text) {
+                      Search(text.toLowerCase());
+                    },
+                    style: const TextStyle(
+                      fontSize: 18,
+                    ),
+                    cursorColor: HotelAppTheme.buildLightTheme().primaryColor,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Tên sản phẩm...',
+                      icon: Icon(FontAwesomeIcons.search,
+                          size: 20, color: HexColor('#54D3C2')),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Theme(
       data: OrderAppTheme.buildLightTheme(),
-      child: Scaffold(
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: <Widget>[
-              InkWell(
-                splashColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
-                child: Column(
-                  children: [
-                    getAppBarUI(),
-                    Container(
-                      child: SingleChildScrollView(
-                        controller: _scrollController,
-                        // headerSliverBuilder:
-                        //     (BuildContext context, bool innerBoxIsScrolled) {
-                        //   return <Widget>[];
-                        // },
-                        child: Container(
-                          height: MediaQuery.of(context).size.height - 80,
-                          color:
-                              OrderAppTheme.buildLightTheme().backgroundColor,
-                          child: ListView.builder(
-                            itemCount: orderList.length,
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.only(top: 8),
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (_, index) {
-                              return orderListScreenView(
-                                orderList[index].idDonHang,
-                                orderList[index].idKhachHang,
-                                orderList[index].ngaymua,
-                                orderList[index].trangthai,
-                                orderList[index].idGioHang,
-                                orderList[index].banSiLe,
-                                orderList[index].chietKhau,
-                                orderList[index].paymethod,
-                                orderList[index].phiGiaohang,
-                                orderList[index].tongSoluong,
-                                orderList[index].tongTienhang,
-                              );
-                              // OrderListScreenView(
-                              //   callback: () {
-                              //     setState(() {});
-                              //   },
-                              //   orderList: orderList[index],
-                              //   animation: animation,
-                              //   animationController: animationController,
-                              // );
-                            },
-                          ),
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        child: new Scaffold(
+          body: Column(
+            children: [
+              // InkWell(
+              //   splashColor: Colors.transparent,
+              //   focusColor: Colors.transparent,
+              //   highlightColor: Colors.transparent,
+              //   hoverColor: Colors.transparent,
+              //   onTap: () {
+              //     FocusScope.of(context).requestFocus(FocusNode());
+              //   },
+              //   child:
+              Expanded(
+                child: Container(
+                  height: MediaQuery.of(context).size.height - 80,
+                  child: Column(
+                    children: [
+                      getAppBarUI(),
+                      search(),
+                      // SingleChildScrollView(
+                      //   controller: _scrollController,
+
+                      //     child:
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: orderList.length,
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.only(top: 8),
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (_, index) {
+                            return orderListScreenView(
+                              orderList[index].idDonHang,
+                              orderList[index].idKhachHang,
+                              orderList[index].ngaymua,
+                              orderList[index].trangthai,
+                              orderList[index].idGioHang,
+                              orderList[index].banSiLe,
+                              orderList[index].chietKhau,
+                              orderList[index].paymethod,
+                              orderList[index].phiGiaohang,
+                              orderList[index].tongSoluong,
+                              orderList[index].tongTienhang,
+                            );
+                            // OrderListScreenView(
+                            //   callback: () {
+                            //     setState(() {});
+                            //   },
+                            //   orderList: orderList[index],
+                            //   animation: animation,
+                            //   animationController: animationController,
+                            // );
+                          },
                         ),
                       ),
-                    ),
-                  ],
+
+                      // ),
+                    ],
+                  ),
                 ),
               ),
+              // ),
             ],
           ),
         ),
@@ -344,7 +417,7 @@ class _OrderListScreenState extends State<OrderListScreen>
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.red[400],
+                                    color: colortxt,
                                     fontSize: 14,
                                   ),
                                 ),
@@ -419,6 +492,40 @@ class _OrderListScreenState extends State<OrderListScreen>
         ),
       ),
     );
+  }
+
+  void Search(String text) {
+    DatabaseReference searchRef =
+        FirebaseDatabase.instance.reference().child("Order");
+    searchRef.once().then((DataSnapshot snapshot) {
+      orderList.clear();
+      var keys = snapshot.value.keys;
+      var values = snapshot.value;
+
+      for (var key in keys) {
+        OrderList order = new OrderList(
+          values[key]["idDonHang"],
+          values[key]["idGioHang"],
+          values[key]["tongTienhang"],
+          values[key]["tongSoluong"],
+          values[key]["phiGiaohang"],
+          values[key]["chietKhau"],
+          values[key]["banSiLe"],
+          values[key]["paymethod"],
+          values[key]["idKhachHang"],
+          values[key]["ngaymua"],
+          values[key]["trangthai"],
+        );
+        if (order.idKhachHang.toLowerCase().contains(text)) {
+          orderList.add(order);
+        }
+      }
+      Timer(Duration(seconds: 1), () {
+        setState(() {
+          //
+        });
+      });
+    });
   }
 }
 
