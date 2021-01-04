@@ -28,6 +28,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
 
   bool isClose = true;
   bool changetxt = false;
+  String trangthai = "";
 
   String ttTxt = "";
   int tt;
@@ -127,8 +128,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       ttTxt = "Đóng gói và Giao hàng";
     } else if (tt == 3) {
       ttTxt = "Xuất Kho";
-    } else if (tt >= 4) {
+    } else if (tt == 4) {
+      ttTxt = "Hoàn thành / Trả hàng";
+    } else if (tt == 5) {
+      trangthai = "Đơn hàng đã trả";
       isClose = false;
+      // hồi lại số lượng hàng hóa;
+    } else if (tt == 6) {
+      isClose = false;
+      trangthai = "Đơn hàng đã hủy";
     }
 
     if (data['chietKhau'].toString() == "0") {
@@ -219,11 +227,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                       Icon(
                                                         Icons.circle,
                                                         size: 15,
-                                                        color: Colors.blue,
+                                                        color: Colors.red,
                                                       ),
                                                       SizedBox(width: 5),
-                                                      Text(
-                                                          "Trạng thái đơn hàng"),
+                                                      Text(trangthai),
                                                     ],
                                                   ),
                                                   Padding(
@@ -549,7 +556,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                         context: context,
                                         barrierDismissible: false,
                                         builder: (context) => AlertDialog(
-                                          title: Text("Chắc xóa không?"),
+                                          title: Text("Bạn có muốn hủy không?"),
                                           actions: <Widget>[
                                             FlatButton(
                                               onPressed: () {
@@ -621,7 +628,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     DatabaseReference referenceList =
         FirebaseDatabase.instance.reference().child('Order');
 
-    referenceList.child(idDonHang).remove();
+    referenceList.child(idDonHang).update({
+      "trangthai": "6",
+    });
   }
 
   Future<void> deleteCart() async {
