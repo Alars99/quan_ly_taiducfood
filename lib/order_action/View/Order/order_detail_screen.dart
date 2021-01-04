@@ -37,6 +37,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   var customerSer = CustomerService();
   String name = "";
   String idDonHangFB;
+  String ck;
 
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 5));
@@ -128,6 +129,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       ttTxt = "Xuất Kho";
     } else if (tt >= 4) {
       isClose = false;
+    }
+
+    if (data['chietKhau'].toString() == "0") {
+      ck = formatCurrency.format((double.parse(data['tongTienhang']) -
+              double.parse(data['phiGiaohang']))
+          .round());
+    } else {
+      ck = formatCurrency.format(((double.parse(data['tongTienhang']) * 100) /
+                  int.parse(data['chietKhau']) -
+              double.parse(data['phiGiaohang']))
+          .round());
     }
     return Theme(
       data: OrderAppTheme.buildLightTheme(),
@@ -380,8 +392,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                         ),
                                                       ),
                                                       Text(
-                                                        '${formatCurrency.format(((double.parse(data['tongTienhang']) * 100) / int.parse(data['chietKhau']) - double.parse(data['phiGiaohang'])).round())}'
-                                                            .toString(),
+                                                        ck.toString(),
                                                         style: new TextStyle(
                                                           fontSize: 15.5,
                                                           fontFamily: "Roboto",
@@ -500,7 +511,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                       onPressed: () {
                                         updateTrangthai();
                                         setState(() {
-                                          changetxt = !changetxt;
+                                          if (changetxt == false) {
+                                            changetxt = !changetxt;
+                                          }
                                           print(changetxt);
                                         });
                                       },

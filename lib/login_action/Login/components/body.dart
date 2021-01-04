@@ -41,10 +41,8 @@ class Body extends StatelessWidget {
               press: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return SignUpScreen();
-                    },
+                  new MaterialPageRoute(
+                    builder: (context) => SignUpScreen(),
                   ),
                 );
               },
