@@ -26,6 +26,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
+  DateTime _dateTime;
 
   int donhang,
       donhuy,
@@ -37,13 +38,11 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
 
   double doanhthuthang, doanhthungay;
 
-  void checkDonhang(String trangthai) {
-    if (trangthai == "0") {
-      chuaduyet++;
-    } else if (trangthai == "1") {}
-  }
-
   getAll() {
+    var dateNow = DateFormat("dd/MM/yyyy").format(DateTime.now());
+    var dateAfter = DateTime.now();
+    var dateBefore = DateTime.utc(DateTime.now().year, DateTime.now().month, 1);
+    var _date = dateAfter.difference(dateBefore).inDays;
     DatabaseReference referenceProduct =
         FirebaseDatabase.instance.reference().child("Order");
     referenceProduct.once().then((DataSnapshot snapshot) {
@@ -64,10 +63,48 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
           values[key]["ngaymua"],
           values[key]["trangthai"],
         );
-        checkDonhang(values[key]["trangthai"]);
+
         _list.add(order);
       }
-      donhang = _list.length;
+
+      for (var don in _list) {
+        if (dateNow == don.ngaymua && int.parse(don.trangthai) < 4) {
+          donhang++;
+        }
+        if (dateNow == don.ngaymua && don.trangthai == "4") {
+          doanhthungay += double.parse(don.tongTienhang);
+        }
+        if (don.trangthai == "0") {
+          chuaduyet++;
+        } else if (don.trangthai == "1") {
+          choxuatkhoa++;
+        } else if (don.trangthai == "2") {
+          danggiaohang++;
+        } else if (don.trangthai == "3") {
+          chothanhtoan++;
+        }
+      }
+
+      for (int i = 0; i <= _date; i++) {
+        _dateTime =
+            DateTime.utc(dateBefore.year, dateBefore.month, dateBefore.day + i);
+        for (var don in _list) {
+          if (don.ngaymua == DateFormat("dd/MM/yyyy").format(_dateTime) &&
+              don.tongTienhang != "0.0") {
+            if (don.trangthai == "6") {
+              donhuy++;
+            }
+            if (don.trangthai == "5") {
+              dontra++;
+            }
+            if (don.trangthai == "4") {
+              print(don.ngaymua);
+              print(don.tongTienhang);
+              doanhthuthang += double.parse(don.tongTienhang);
+            }
+          }
+        }
+      }
 
       setState(() {
         addAllListData();
@@ -76,6 +113,11 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   }
 
   void getDataDB() {
+    getAll();
+  }
+
+  @override
+  void initState() {
     donhang = 0;
     donhuy = 0;
     dontra = 0;
@@ -85,11 +127,6 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     danggiaohang = 0;
     doanhthungay = 0.0;
     doanhthuthang = 0.0;
-    getAll();
-  }
-
-  @override
-  void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
             parent: widget.animationController,

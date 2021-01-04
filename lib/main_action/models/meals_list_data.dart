@@ -39,7 +39,7 @@ class MealsListData {
     ),
     MealsListData(
       imagePath: 'assets/fitness_app/021-invoice.png',
-      titleTxt: 'Tạo phiếu thu chi',
+      titleTxt: 'Danh sách đơn hàng',
       uiId: 3,
     ),
     MealsListData(
