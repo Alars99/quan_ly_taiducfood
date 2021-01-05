@@ -3,6 +3,8 @@ class Sanpham {
   String id;
   String name;
   String price;
+  String priceVon;
+  String priceBuon;
   int amout;
   bool isSelected;
   String img;
@@ -13,6 +15,8 @@ class Sanpham {
     this.id = '',
     this.name = '',
     this.price = '',
+    this.priceVon = '',
+    this.priceBuon = '',
     this.amout = 5,
     this.img = '',
     this.isSelected = false,
@@ -27,6 +31,8 @@ class Sanpham {
     mapping['price'] = price;
     mapping['count'] = count;
     mapping['amout'] = amout;
+    mapping['priceVon'] = amout;
+    mapping['priceBuon'] = amout;
     return mapping;
   }
 }
