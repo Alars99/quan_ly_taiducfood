@@ -26,16 +26,11 @@ class _OrderListScreenState extends State<OrderListScreen>
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 5));
   var colortxt;
-
-  // _OrderListScreenState();
-
   String nameKH;
-
   List<OrderList> orderList = [];
+  List<OrderList> orderList2 = [];
   static String nameStatus = "";
-
   var customer = Customer();
-
   List<Customer> customerList = [];
 
   @override
@@ -69,7 +64,6 @@ class _OrderListScreenState extends State<OrderListScreen>
       }
       setState(() {});
     });
-    print(orderList.length);
   }
 
   getStatus(String id) {
@@ -115,6 +109,88 @@ class _OrderListScreenState extends State<OrderListScreen>
   //   });
   //   print(customer.name);
   // }
+
+  getLocgiatri(int i) {
+    DatabaseReference referenceProduct =
+        FirebaseDatabase.instance.reference().child("Order");
+    referenceProduct.once().then((DataSnapshot snapshot) {
+      orderList2.clear();
+      var keys = snapshot.value.keys;
+      var values = snapshot.value;
+      for (var key in keys) {
+        OrderList order = new OrderList(
+          values[key]["idDonHang"],
+          values[key]["idGioHang"],
+          values[key]["tongTienhang"],
+          values[key]["tongSoluong"],
+          values[key]["phiGiaohang"],
+          values[key]["chietKhau"],
+          values[key]["banSiLe"],
+          values[key]["paymethod"],
+          values[key]["idKhachHang"],
+          values[key]["ngaymua"],
+          values[key]["trangthai"],
+        );
+        orderList.add(order);
+        orderList2.add(order);
+      }
+      if (i == 1) {
+        print("tăng dần");
+      } else if (i == 3) {
+        orderList.clear();
+        for (var sp in orderList2) {
+          if (sp.trangthai == "0") {
+            orderList.add(sp);
+          }
+        }
+      } else if (i == 2) {
+      } else if (i == 4) {
+        orderList.clear();
+        for (var sp in orderList2) {
+          if (sp.trangthai == "1") {
+            orderList.add(sp);
+          }
+        }
+      } else if (i == 5) {
+        orderList.clear();
+        for (var sp in orderList2) {
+          if (sp.trangthai == "3") {
+            orderList.add(sp);
+          }
+        }
+      } else if (i == 6) {
+        orderList.clear();
+        for (var sp in orderList2) {
+          if (sp.trangthai == "2") {
+            orderList.add(sp);
+          }
+        }
+      } else if (i == 7) {
+        orderList.clear();
+        for (var sp in orderList2) {
+          if (sp.trangthai == "4") {
+            orderList.add(sp);
+          }
+        }
+      } else if (i == 8) {
+        orderList.clear();
+        for (var sp in orderList2) {
+          if (sp.trangthai == "5") {
+            orderList.add(sp);
+          }
+        }
+      } else if (i == 9) {
+        orderList.clear();
+        for (var sp in orderList2) {
+          if (sp.trangthai == "6") {
+            orderList.add(sp);
+          }
+        }
+      }
+
+      setState(() {});
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -488,10 +564,148 @@ class _OrderListScreenState extends State<OrderListScreen>
                 ),
               ),
             ),
+            Container(
+              alignment: Alignment.centerRight,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(32.0),
+                  ),
+                  onTap: () {
+                    showLoc(context: context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(Icons.sort_by_alpha),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void showLoc({BuildContext context}) {
+    int tienship = 0;
+    showDialog<dynamic>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Chọn phương thức lọc:"),
+            content: SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RadioListTile(
+                      title: Text("Giá tăng dần"),
+                      value: 1,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocgiatri(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Giá giảm dần"),
+                      value: 2,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocgiatri(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Đơn chưa duyệt"),
+                      value: 3,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocgiatri(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Đơn chờ thanh toán"),
+                      value: 4,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocgiatri(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Đơn chờ xuất kho"),
+                      value: 5,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocgiatri(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Đơn đang giao hàng"),
+                      value: 6,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocgiatri(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Đơn đã hoàn thành"),
+                      value: 7,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocgiatri(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Đơn đã trả hàng"),
+                      value: 8,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocgiatri(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Đơn đã hủy"),
+                      value: 9,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocgiatri(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   void Search(String text) {

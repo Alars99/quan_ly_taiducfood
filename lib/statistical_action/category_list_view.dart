@@ -19,6 +19,7 @@ class _CategoryListViewState extends State<CategoryListView>
 
   int sohoadon;
   double giaDoanhthu;
+  double loiNhuangop;
   // ignore: deprecated_member_use
   List<OrderList> orderList = List();
 
@@ -46,8 +47,10 @@ class _CategoryListViewState extends State<CategoryListView>
         orderList.add(order);
       }
       for (var sp in orderList) {
-        giaDoanhthu += double.parse(sp.tongTienhang);
-        sohoadon = orderList.length;
+        if (sp.trangthai == "4") {
+          giaDoanhthu += double.parse(sp.tongTienhang);
+          sohoadon++;
+        }
       }
       setState(() {});
     });
@@ -60,6 +63,7 @@ class _CategoryListViewState extends State<CategoryListView>
     super.initState();
     sohoadon = 0;
     giaDoanhthu = 0;
+    loiNhuangop = 0;
     getDoanhThu();
   }
 
@@ -338,7 +342,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                                             .start,
                                                     children: <Widget>[
                                                       Text(
-                                                        '1,500,000 vnd',
+                                                        loiNhuangop.toString(),
                                                         textAlign:
                                                             TextAlign.left,
                                                         style: TextStyle(
