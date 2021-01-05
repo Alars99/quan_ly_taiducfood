@@ -42,9 +42,6 @@ class _AddFoodState extends State<AddFood> {
           price: values[key]["price"],
           img: values[key]["image"],
           amout: int.parse(values[key]["amount"]),
-          priceBuon: values[key]["priceBuon"],
-          priceVon: values[key]["priceVon"],
-          count: values[key]["count"],
         );
         list.add(sanpham);
       }
