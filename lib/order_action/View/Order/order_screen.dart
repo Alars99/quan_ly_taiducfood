@@ -52,6 +52,8 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
   int paymethod = 0;
 
   double tongTienhang = 0;
+
+  double tongTienVon = 0;
   double tong = 0;
   int tongSoluong = 0;
   double phiGiaohang = 0;
@@ -60,6 +62,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
 
   getReset() {
     tongTienhang = 0;
+    tongTienVon = 0;
     tong = 0;
     tongSoluong = 0;
     phiGiaohang = 0;
@@ -88,6 +91,9 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
         orderModel.brand = sanpham['brand'];
         orderModel.price = sanpham['price'].toString();
         orderModel.count = sanpham['count'];
+        orderModel.priceVon = sanpham['priceVon'].toString();
+        orderModel.priceBuon = sanpham['priceBuon'].toString();
+        orderModel.amout = sanpham['amout'];
         orderList.add(orderModel);
       });
     });
@@ -175,6 +181,8 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
       mapCart["price"] = sanpham.price.toString();
       mapCart["count"] = sanpham.count.toString();
       mapCart["idKhachHang"] = customer.idCustomer.toString();
+      mapCart["priceVon"] = sanpham.priceVon.toString();
+      mapCart["priceBuon"] = sanpham.priceBuon.toString();
       referenceCart.child(idGioHang).child(idSanpham).set(mapCart);
       print(sanpham.name);
     }
