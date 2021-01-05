@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:quan_ly_taiducfood/main_action/fintness_app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:quan_ly_taiducfood/order_action/View/Order/order_list_screen.dart';
 
 final db = FirebaseDatabase.instance.reference().child("productList");
 
@@ -49,126 +50,138 @@ class BodyMeasurementView extends StatelessWidget {
                           blurRadius: 10.0),
                     ],
                   ),
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Chưa duyệt",
-                                    style: TextStyle(
-                                        fontFamily: FitnessAppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        color: FitnessAppTheme.grey
-                                            .withOpacity(0.8),
-                                        fontSize: 12),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 8),
-                                    child: Text(
-                                      donchuaduyet.toString(),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OrderListScreen()));
+                    },
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Chưa duyệt",
                                       style: TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14),
+                                          fontWeight: FontWeight.w500,
+                                          color: FitnessAppTheme.grey
+                                              .withOpacity(0.8),
+                                          fontSize: 12),
                                     ),
-                                  )
-                                ],
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 8),
+                                      child: Text(
+                                        donchuaduyet.toString(),
+                                        style: TextStyle(
+                                            fontFamily:
+                                                FitnessAppTheme.fontName,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Column(),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Chờ thanh toán",
-                                    style: TextStyle(
-                                        fontFamily: FitnessAppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        color: FitnessAppTheme.grey
-                                            .withOpacity(0.8),
-                                        fontSize: 12),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 8),
-                                    child: Text(
-                                      chothanhtoan.toString(),
+                              Expanded(
+                                child: Column(),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Chờ thanh toán",
                                       style: TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14),
+                                          fontWeight: FontWeight.w500,
+                                          color: FitnessAppTheme.grey
+                                              .withOpacity(0.8),
+                                          fontSize: 12),
                                     ),
-                                  )
-                                ],
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 8),
+                                      child: Text(
+                                        chothanhtoan.toString(),
+                                        style: TextStyle(
+                                            fontFamily:
+                                                FitnessAppTheme.fontName,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Chờ xuất kho",
-                                    style: TextStyle(
-                                        fontFamily: FitnessAppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        color: FitnessAppTheme.grey
-                                            .withOpacity(0.8),
-                                        fontSize: 12),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 8),
-                                    child: Text(
-                                      choxuatkho.toString(),
+                        Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Chờ xuất kho",
                                       style: TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14),
+                                          fontWeight: FontWeight.w500,
+                                          color: FitnessAppTheme.grey
+                                              .withOpacity(0.8),
+                                          fontSize: 12),
                                     ),
-                                  )
-                                ],
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 8),
+                                      child: Text(
+                                        choxuatkho.toString(),
+                                        style: TextStyle(
+                                            fontFamily:
+                                                FitnessAppTheme.fontName,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Đang giao hàng",
-                                    style: TextStyle(
-                                        fontFamily: FitnessAppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        color: FitnessAppTheme.grey
-                                            .withOpacity(0.8),
-                                        fontSize: 12),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 8),
-                                    child: Text(
-                                      danggiaohang.toString(),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Đang giao hàng",
                                       style: TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14),
+                                          fontWeight: FontWeight.w500,
+                                          color: FitnessAppTheme.grey
+                                              .withOpacity(0.8),
+                                          fontSize: 12),
                                     ),
-                                  )
-                                ],
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 8),
+                                      child: Text(
+                                        danggiaohang.toString(),
+                                        style: TextStyle(
+                                            fontFamily:
+                                                FitnessAppTheme.fontName,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

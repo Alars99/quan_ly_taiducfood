@@ -35,24 +35,13 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   Container(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      'Your FeedBack',
+                      'COMMING SOON',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: const Text(
-                      'Give your best time for this moment.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  _buildComposer(),
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: Center(
@@ -74,13 +63,13 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () {
-                              FocusScope.of(context).requestFocus(FocusNode());
+                              Navigator.pop(context);
                             },
                             child: Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Text(
-                                  'Send',
+                                  'Quay lại',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Colors.white,

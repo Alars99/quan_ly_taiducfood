@@ -4,7 +4,10 @@ import 'package:quan_ly_taiducfood/main_action/models/meals_list_data.dart';
 import 'package:flutter/material.dart';
 import 'package:quan_ly_taiducfood/main_action/products/product_add.dart';
 import 'package:quan_ly_taiducfood/main_action/products/products_search.dart';
+import 'package:quan_ly_taiducfood/order_action/View/Order/order_list_screen.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_screen.dart';
+
+import '../../feedback_screen.dart';
 
 class MealsListView extends StatefulWidget {
   const MealsListView(
@@ -139,13 +142,13 @@ class MealsView extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => OrderHomeScreen()));
+                                    builder: (context) => FeedbackScreen()));
                           }
                           if (mealsListData.uiId == 3) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => OrderHomeScreen()));
+                                    builder: (context) => OrderListScreen()));
                           }
                           if (mealsListData.uiId == 4) {
                             Navigator.push(
@@ -158,7 +161,8 @@ class MealsView extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => DesignCourseHomeScreen()));
+                                    builder: (context) =>
+                                        DesignCourseHomeScreen()));
                           }
                         },
                         child: Center(
