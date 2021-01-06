@@ -1,61 +1,98 @@
-import 'dart:async';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quan_ly_taiducfood/main_action/custom_ui/hotel_app_theme.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_search_data.dart';
-import 'package:quan_ly_taiducfood/main_action/products/product_add.dart';
 
-import '../../main.dart';
 import 'product_detail.dart';
-import 'product_out_amount.dart';
 
-class ProductSearchScreen extends StatefulWidget {
-  const ProductSearchScreen({this.app, this.animationController});
-  final FirebaseApp app;
-  final AnimationController animationController;
+class ProductOutAmount extends StatefulWidget {
   @override
-  _ProductSearchScreenState createState() => _ProductSearchScreenState();
-  static const routeName = '/product-search';
+  _ProductOutAmountState createState() => _ProductOutAmountState();
 }
 
-class _ProductSearchScreenState extends State<ProductSearchScreen>
-    with TickerProviderStateMixin {
-  Animation<double> topBarAnimation;
+class _ProductOutAmountState extends State<ProductOutAmount>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
 
-  GlobalKey<RefreshIndicatorState> refreshKey;
-
-  List<ProductSearch> productSearchList = [];
-
-  final ScrollController scrollController = ScrollController();
-  double topBarOpacity = 0.0;
+  List<ProductSearch> searchList = [];
+  List<ProductDetail> productSearchList2 = [];
+  List<ProductDetail> productSearchList3 = [];
 
   @override
   void initState() {
     super.initState();
-    DatabaseReference referenceProduct =
-        FirebaseDatabase.instance.reference().child("SearchList");
-    referenceProduct.once().then((DataSnapshot snapshot) {
-      productSearchList.clear();
-      var keys = snapshot.value.keys;
-      var values = snapshot.value;
+    _controller = AnimationController(vsync: this);
+  }
 
-      for (var key in keys) {
-        ProductSearch product = new ProductSearch(
-          values[key]["id"],
-          values[key]["idMain"],
-          values[key]["name"],
-          values[key]["image"],
-          values[key]["price"],
-        );
-        productSearchList.add(product);
-      }
-      setState(() {
-        //
+  getLocgiatri() {
+    for (int i = 1; i < 10; i++) {
+      productSearchList2.clear();
+      DatabaseReference referenceProduct = FirebaseDatabase.instance
+          .reference()
+          .child('productList')
+          .child(i.toString())
+          .child('Product');
+
+      DatabaseReference referenceSearch =
+          FirebaseDatabase.instance.reference().child("SearchList");
+      referenceSearch.once().then((DataSnapshot snapshot) {
+        searchList.clear();
+        var keys = snapshot.value.keys;
+        var values = snapshot.value;
+
+        for (var key in keys) {
+          ProductSearch product = new ProductSearch(
+            values[key]["id"],
+            values[key]["idMain"],
+            values[key]["name"],
+            values[key]["image"],
+            values[key]["price"],
+          );
+          searchList.add(product);
+        }
+
+        referenceProduct.once().then((DataSnapshot snapshot) {
+          var keys = snapshot.value.keys;
+          var values = snapshot.value;
+
+          for (var key in keys) {
+            ProductDetail productDetail = new ProductDetail(
+              values[key]["id"],
+              values[key]["brand"],
+              values[key]["name"],
+              values[key]["image"],
+              values[key]["price"],
+              values[key]["barcode"],
+              values[key]["weight"],
+              values[key]["cate"],
+              values[key]["priceNhap"],
+              values[key]["priceBuon"],
+              values[key]["amount"],
+              values[key]["desc"],
+              values[key]["allowSale"].toString(),
+              values[key]["tax"].toString(),
+              values[key]["priceVon"],
+              values[key]["ngayUp"],
+            );
+            productSearchList2.add(productDetail);
+          }
+          for (var sp in productSearchList2) {
+            if (int.parse(sp.amount) <= 3) {
+              productSearchList3.add(sp);
+              print(sp.id);
+            }
+          }
+          // setState(() {});
+        });
       });
-    });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 
   @override
@@ -101,55 +138,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
         ),
         body: Column(
           children: [
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 0, bottom: 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color:
-                              HotelAppTheme.buildLightTheme().backgroundColor,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(12.0),
-                          ),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                offset: const Offset(0, 2),
-                                blurRadius: 4.0),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, top: 4, bottom: 4),
-                          child: TextField(
-                            onChanged: (text) {
-                              Search(text.toLowerCase());
-                            },
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
-                            cursorColor:
-                                HotelAppTheme.buildLightTheme().primaryColor,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Tên sản phẩm...',
-                              icon: Icon(FontAwesomeIcons.search,
-                                  size: 20, color: HexColor('#54D3C2')),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            productSearchList.length == 0
+            productSearchList3.length == 0
                 ? Center(
                     child: Text(
                     "Không có sản phẩm",
@@ -165,14 +154,14 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
                             child: ListView.builder(
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
-                                itemCount: productSearchList.length,
+                                itemCount: productSearchList3.length,
                                 itemBuilder: (_, index) {
                                   return ListUI(
-                                    productSearchList[index].id,
-                                    productSearchList[index].idMain,
-                                    productSearchList[index].name,
-                                    productSearchList[index].image,
-                                    productSearchList[index].price,
+                                    productSearchList3[index].id,
+                                    productSearchList3[index].idMain,
+                                    productSearchList3[index].name,
+                                    productSearchList3[index].image,
+                                    productSearchList3[index].price,
                                   );
                                 }),
                           ),
@@ -185,13 +174,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
       ),
     );
   }
-  // RefreshIndicator(
-  //         key: refreshKey,
-  //         child: new
-  //   onRefresh: () async {
-  //     await refreshList();
-  //   },
-  // ),
 
   // ignore: non_constant_identifier_names
   Widget ListUI(
@@ -273,34 +255,4 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
       ),
     );
   }
-
-  // ignore: non_constant_identifier_names
-  void Search(String text) {
-    DatabaseReference searchRef =
-        FirebaseDatabase.instance.reference().child("SearchList");
-    searchRef.once().then((DataSnapshot snapshot) {
-      productSearchList.clear();
-      var keys = snapshot.value.keys;
-      var values = snapshot.value;
-
-      for (var key in keys) {
-        ProductSearch product = new ProductSearch(
-          values[key]["id"],
-          values[key]["idMain"],
-          values[key]["name"],
-          values[key]["image"],
-          values[key]["price"],
-        );
-        if (product.name.toLowerCase().contains(text)) {
-          productSearchList.add(product);
-        }
-      }
-      Timer(Duration(seconds: 1), () {
-        setState(() {
-          //
-        });
-      });
-    });
-  }
-
 }
