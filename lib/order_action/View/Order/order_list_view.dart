@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/order_action/model/test.dart';
@@ -19,6 +18,7 @@ class OrderListView extends StatelessWidget {
   final Sanpham sanpham;
   final AnimationController animationController;
   final Animation<dynamic> animation;
+
   @override
   Widget build(BuildContext context) {
     final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');

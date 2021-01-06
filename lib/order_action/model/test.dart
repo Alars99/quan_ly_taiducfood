@@ -31,8 +31,8 @@ class Sanpham {
     mapping['price'] = price;
     mapping['count'] = count;
     mapping['amout'] = amout;
-    mapping['priceVon'] = amout;
-    mapping['priceBuon'] = amout;
+    mapping['priceVon'] = priceVon;
+    mapping['priceBuon'] = priceBuon;
     return mapping;
   }
 }

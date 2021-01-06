@@ -90,7 +90,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
         orderModel.name = sanpham['name'];
         orderModel.brand = sanpham['brand'];
         orderModel.price = sanpham['price'].toString();
-        orderModel.count = sanpham['count'];
+
         orderModel.priceVon = sanpham['priceVon'].toString();
         orderModel.priceBuon = sanpham['priceBuon'].toString();
         orderModel.amout = sanpham['amout'];
@@ -129,10 +129,13 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
     tong = 0;
     tongTienhang = 0;
     tongSoluong = 0;
+    tongTienVon = 0;
     orderList.forEach((element) {
       tongSoluong += element.count;
       tong += double.parse(element.price) * element.count;
+      tongTienVon += double.parse(element.priceVon) * element.count;
     });
+    print(tongTienVon);
     if (chietKhau == 0) {
       tongTienhang = tong + phiGiaohang;
     } else {
@@ -160,7 +163,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
     mapOrder["idKhachHang"] = customer.idCustomer.toString();
     mapOrder["ngaymua"] = DateFormat('dd/MM/yyyy').format(now).toString();
     mapOrder["giomua"] = DateFormat('kk:mm:ss').format(now).toString();
-
+    mapOrder["tongGiaVon"] = tongTienVon.toString();
     mapOrder["trangthai"] = "0";
 
     reference.child(idDonHang).set(mapOrder);
@@ -183,8 +186,21 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
       mapCart["idKhachHang"] = customer.idCustomer.toString();
       mapCart["priceVon"] = sanpham.priceVon.toString();
       mapCart["priceBuon"] = sanpham.priceBuon.toString();
+      mapCart["amout"] = sanpham.amout.toString();
       referenceCart.child(idGioHang).child(idSanpham).set(mapCart);
-      print(sanpham.name);
+    }
+    for (var sanpham in orderList) {
+      for (int i = 0; i < 10; i++) {
+        DatabaseReference referenceProduct = FirebaseDatabase.instance
+            .reference()
+            .child('productList')
+            .child(i.toString())
+            .child('Product')
+            .child(sanpham.id);
+
+        referenceProduct
+            .update({'amount': (sanpham.amout - sanpham.count).toString()});
+      }
     }
   }
 
