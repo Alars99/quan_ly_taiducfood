@@ -17,6 +17,8 @@ class _MainScreen extends State<MainScreen> {
   CategoryType categoryType = CategoryType.ui;
   ProductDetail productDetail;
 
+  final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
+
   double tongTien, tiennhapky, tienxuatky;
   int soluong = 0;
 
@@ -207,7 +209,7 @@ class _MainScreen extends State<MainScreen> {
               ),
               Expanded(
                 child: Text(
-                  tongTien.toString(),
+                  formatCurrency.format(tongTien),
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
@@ -250,7 +252,7 @@ class _MainScreen extends State<MainScreen> {
                         child: Column(
                           children: [
                             Text("Nhập trong kỳ"),
-                            Text(tiennhapky.toString())
+                            Text(formatCurrency.format(tiennhapky)),
                           ],
                         ),
                       )
@@ -266,7 +268,7 @@ class _MainScreen extends State<MainScreen> {
                         child: Column(
                           children: [
                             Text("Xuất trong kỳ"),
-                            Text(tienxuatky.toString()),
+                            Text(formatCurrency.format(tienxuatky)),
                           ],
                         ),
                       )

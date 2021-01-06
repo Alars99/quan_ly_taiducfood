@@ -22,7 +22,6 @@ class _OrderListScreenState extends State<OrderListScreen>
     with TickerProviderStateMixin {
   AnimationController animationController;
 
-  final ScrollController _scrollController = ScrollController();
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 5));
   var colortxt;
@@ -59,6 +58,8 @@ class _OrderListScreenState extends State<OrderListScreen>
           values[key]["idKhachHang"],
           values[key]["ngaymua"],
           values[key]["trangthai"],
+          values[key]["giomua"],
+          values[key]["tongGiaVon"],
         );
         orderList.add(order);
       }
@@ -130,6 +131,8 @@ class _OrderListScreenState extends State<OrderListScreen>
           values[key]["idKhachHang"],
           values[key]["ngaymua"],
           values[key]["trangthai"],
+          values[key]["giomua"],
+          values[key]["tongGiaVon"],
         );
         orderList.add(order);
         orderList2.add(order);
@@ -708,6 +711,7 @@ class _OrderListScreenState extends State<OrderListScreen>
         });
   }
 
+  // ignore: non_constant_identifier_names
   void Search(String text) {
     DatabaseReference searchRef =
         FirebaseDatabase.instance.reference().child("Order");
@@ -729,6 +733,8 @@ class _OrderListScreenState extends State<OrderListScreen>
           values[key]["idKhachHang"],
           values[key]["ngaymua"],
           values[key]["trangthai"],
+          values[key]["giomua"],
+          values[key]["tongGiaVon"],
         );
         if (order.idKhachHang.toLowerCase().contains(text)) {
           orderList.add(order);

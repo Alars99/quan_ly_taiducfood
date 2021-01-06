@@ -62,6 +62,8 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
           values[key]["idKhachHang"],
           values[key]["ngaymua"],
           values[key]["trangthai"],
+          values[key]["giomua"],
+          values[key]["tongGiaVon"],
         );
         _list.add(order);
       }
