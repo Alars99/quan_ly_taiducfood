@@ -66,22 +66,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
 
       for (var key in keys) {
         ProductDetail productDetail = new ProductDetail(
-            values[key]["id"],
-            values[key]["brand"],
-            values[key]["name"],
-            values[key]["image"],
-            values[key]["price"],
-            values[key]["barcode"],
-            values[key]["weight"],
-            values[key]["cate"],
-            values[key]["priceNhap"],
-            values[key]["priceBuon"],
-            values[key]["amount"],
-            values[key]["desc"],
-            values[key]["allowSale"].toString(),
-            values[key]["tax"].toString(),
-            values[key]["priceVon"],
-            values[key]["ngayUp"]);
+          values[key]["id"],
+          values[key]["brand"],
+          values[key]["name"],
+          values[key]["image"],
+          values[key]["price"],
+          values[key]["barcode"],
+          values[key]["weight"],
+          values[key]["cate"],
+          values[key]["priceNhap"],
+          values[key]["priceBuon"],
+          values[key]["amount"],
+          values[key]["desc"],
+          values[key]["allowSale"].toString(),
+          values[key]["tax"].toString(),
+          values[key]["priceVon"],
+          values[key]["ngayUp"],
+          values[key]["daban"],
+        );
         productDetailList.add(productDetail);
       }
       setState(() {

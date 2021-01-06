@@ -27,6 +27,8 @@ class _DonhangInADayState extends State<DonhangInADay>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
+    orderListSortDate.clear();
+    tongtienAll = 0;
   }
 
   @override
@@ -34,7 +36,6 @@ class _DonhangInADayState extends State<DonhangInADay>
     super.didChangeDependencies();
     final Map data = ModalRoute.of(context).settings.arguments;
     var dateGetData = data['date'];
-
     DatabaseReference referenceProduct =
         FirebaseDatabase.instance.reference().child("Order");
     referenceProduct.once().then((DataSnapshot snapshot) {
@@ -59,6 +60,8 @@ class _DonhangInADayState extends State<DonhangInADay>
         );
         orderList.add(order);
       }
+      orderListSortDate.clear();
+      tongtienAll = 0;
       for (var order in orderList) {
         if (order.ngaymua == dateGetData.toString() && order.trangthai == "4") {
           tongtienAll += double.parse(order.tongTienhang).round();

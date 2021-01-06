@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
+import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,8 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
 
   // ignore: deprecated_member_use
   List<Customer> customerList = List<Customer>();
+
+  List<ProductDetail> productList = [];
 
   int paymethod = 0;
 
@@ -145,77 +148,117 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
 
   // ignore: non_constant_identifier_names
   Future<void> getDathang_GioHang() async {
-    DateTime now = DateTime.now();
-    DatabaseReference reference =
-        FirebaseDatabase.instance.reference().child('Order');
-    idDonHang = reference.push().key;
-    idGioHang = reference.push().key;
-    HashMap mapOrder = new HashMap();
+    if (customer.idCustomer.isEmpty) {
+      print("không có khách hàng");
+    } else {
+      DateTime now = DateTime.now();
+      DatabaseReference reference =
+          FirebaseDatabase.instance.reference().child('Order');
+      idDonHang = reference.push().key;
+      idGioHang = reference.push().key;
+      HashMap mapOrder = new HashMap();
 
-    mapOrder["idDonHang"] = idDonHang.toString();
-    mapOrder["idGioHang"] = idGioHang.toString();
-    mapOrder["tongTienhang"] = tongTienhang.toString();
-    mapOrder["tongSoluong"] = tongSoluong.toString();
-    mapOrder["phiGiaohang"] = phiGiaohang.toString();
-    mapOrder["chietKhau"] = chietKhau.toString();
-    mapOrder["banSiLe"] = giaban.toString();
-    mapOrder["paymethod"] = paymethod.toString();
-    mapOrder["idKhachHang"] = customer.idCustomer.toString();
-    mapOrder["ngaymua"] = DateFormat('dd/MM/yyyy').format(now).toString();
-    mapOrder["giomua"] = DateFormat('kk:mm:ss').format(now).toString();
-    mapOrder["tongGiaVon"] = tongTienVon.toString();
-    mapOrder["trangthai"] = "0";
+      mapOrder["idDonHang"] = idDonHang.toString();
+      mapOrder["idGioHang"] = idGioHang.toString();
+      mapOrder["tongTienhang"] = tongTienhang.toString();
+      mapOrder["tongSoluong"] = tongSoluong.toString();
+      mapOrder["phiGiaohang"] = phiGiaohang.toString();
+      mapOrder["chietKhau"] = chietKhau.toString();
+      mapOrder["banSiLe"] = giaban.toString();
+      mapOrder["paymethod"] = paymethod.toString();
+      mapOrder["idKhachHang"] = customer.idCustomer.toString();
+      mapOrder["ngaymua"] = DateFormat('dd/MM/yyyy').format(now).toString();
+      mapOrder["giomua"] = DateFormat('kk:mm:ss').format(now).toString();
+      mapOrder["tongGiaVon"] = tongTienVon.toString();
+      mapOrder["trangthai"] = "0";
 
-    reference.child(idDonHang).set(mapOrder);
+      reference.child(idDonHang).set(mapOrder);
 
-    ///////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////
 
-    DatabaseReference referenceCart =
-        FirebaseDatabase.instance.reference().child('Cart');
+      DatabaseReference referenceCart =
+          FirebaseDatabase.instance.reference().child('Cart');
 
-    print(orderList.length);
-    for (var sanpham in orderList) {
-      String idSanpham = reference.push().key;
-      HashMap mapCart = new HashMap();
-      mapCart["idGioHang"] = idGioHang.toString();
-      mapCart["id"] = sanpham.id.toString();
-      mapCart["name"] = sanpham.name.toString();
-      mapCart["brand"] = sanpham.brand.toString();
-      mapCart["price"] = sanpham.price.toString();
-      mapCart["count"] = sanpham.count.toString();
-      mapCart["idKhachHang"] = customer.idCustomer.toString();
-      mapCart["priceVon"] = sanpham.priceVon.toString();
-      mapCart["priceBuon"] = sanpham.priceBuon.toString();
-      mapCart["amout"] = sanpham.amout.toString();
-      referenceCart.child(idGioHang).child(idSanpham).set(mapCart);
-    }
-    for (var sanpham in orderList) {
-      for (int i = 0; i < 10; i++) {
-        DatabaseReference referenceProduct = FirebaseDatabase.instance
-            .reference()
-            .child('productList')
-            .child(i.toString())
-            .child('Product')
-            .child(sanpham.id);
+      print(orderList.length);
+      for (var sanpham in orderList) {
+        String idSanpham = reference.push().key;
+        HashMap mapCart = new HashMap();
+        mapCart["idGioHang"] = idGioHang.toString();
+        mapCart["id"] = sanpham.id.toString();
+        mapCart["name"] = sanpham.name.toString();
+        mapCart["brand"] = sanpham.brand.toString();
+        mapCart["price"] = sanpham.price.toString();
+        mapCart["count"] = sanpham.count.toString();
+        mapCart["idKhachHang"] = customer.idCustomer.toString();
+        mapCart["priceVon"] = sanpham.priceVon.toString();
+        mapCart["priceBuon"] = sanpham.priceBuon.toString();
+        mapCart["amout"] = sanpham.amout.toString();
+        referenceCart.child(idGioHang).child(idSanpham).set(mapCart);
+      }
+      for (var sanpham in orderList) {
+        for (int i = 0; i < 10; i++) {
+          DatabaseReference referenceProduct = FirebaseDatabase.instance
+              .reference()
+              .child('productList')
+              .child(i.toString())
+              .child('Product');
+          referenceProduct.once().then((DataSnapshot snapshot) {
+            productList.clear();
+            var keys = snapshot.value.keys;
+            var values = snapshot.value;
 
-        referenceProduct
-            .update({'amount': (sanpham.amout - sanpham.count).toString()});
+            for (var key in keys) {
+              ProductDetail productDetail = new ProductDetail(
+                values[key]["id"],
+                values[key]["brand"],
+                values[key]["name"],
+                values[key]["image"],
+                values[key]["price"],
+                values[key]["barcode"],
+                values[key]["weight"],
+                values[key]["cate"],
+                values[key]["priceNhap"],
+                values[key]["priceBuon"],
+                values[key]["amount"],
+                values[key]["desc"],
+                values[key]["allowSale"].toString(),
+                values[key]["tax"].toString(),
+                values[key]["priceVon"],
+                values[key]["ngayUp"],
+                values[key]["daban"],
+              );
+              productList.add(productDetail);
+            }
+            for (var a in productList) {
+              if (sanpham.id == a.id) {
+                print(a.id);
+                referenceProduct.child(a.id).update(
+                    {'amount': (sanpham.amout - sanpham.count).toString()});
+              }
+            }
+          });
+        }
       }
     }
   }
+
+  // if (sanpham.id.isNotEmpty) {
+  //   referenceProduct.child(sanpham.id)
+  //       .update({'amount': (sanpham.amout - sanpham.count).toString()});
+  // } else {
+  //   print("không up");
+  // }
 
   @override
   void initState() {
     super.initState();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
-    // getAllOrderList();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     getAllOrderList();
     gettAllCustomerList();
   }
@@ -1242,13 +1285,25 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
             Container(),
             RaisedButton(
               onPressed: () {
-                getDathang_GioHang();
-                print(idGioHang);
-                Navigator.of(context).pushNamed(OrderListScreen.routeName,
-                    arguments: {
-                      'idGioHang': idGioHang,
-                      'idDonHang': idDonHang
-                    });
+                if (customer.idCustomer.isEmpty || tongTienhang == 0.0) {
+                } else {
+                  getDathang_GioHang();
+                  tongSoluong = 0;
+                  tongTienhang = 0;
+                  tongTienVon = 0;
+                  tong = 0;
+                  chietKhau = 0;
+                  phiGiaohang = 0;
+
+                  Navigator.of(context).pushNamed(OrderListScreen.routeName,
+                      arguments: {
+                        'idGioHang': idGioHang,
+                        'idDonHang': idDonHang
+                      });
+
+                  _orderService.deleteOrderList();
+                  nameCustomer = "Thêm khách hàng";
+                }
               },
               textColor: Colors.black,
               padding: const EdgeInsets.all(0.0),

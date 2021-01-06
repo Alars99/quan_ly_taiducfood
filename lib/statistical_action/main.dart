@@ -61,6 +61,7 @@ class _MainScreen extends State<MainScreen> {
             values[key]["tax"].toString(),
             values[key]["priceVon"],
             values[key]["ngayUp"],
+            values[key]["daban"],
           );
           productDetailList.add(productDetail);
         }

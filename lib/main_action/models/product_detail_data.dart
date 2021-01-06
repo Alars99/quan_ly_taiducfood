@@ -14,7 +14,8 @@ class ProductDetail {
       allowSale,
       tax,
       ngayUp,
-      priceVon;
+      priceVon,
+      daban;
 
   ProductDetail(
       this.id,
@@ -32,5 +33,6 @@ class ProductDetail {
       this.allowSale,
       this.tax,
       this.priceVon,
-      this.ngayUp);
+      this.ngayUp,
+      this.daban);
 }

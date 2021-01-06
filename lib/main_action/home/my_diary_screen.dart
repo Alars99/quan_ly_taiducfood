@@ -106,15 +106,10 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
           }
         }
       }
-
       setState(() {
         addAllListData();
       });
     });
-  }
-
-  void getDataDB() {
-    getAll();
   }
 
   @override
@@ -156,12 +151,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
       }
     });
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    getDataDB();
+    getAll();
   }
 
   void addAllListData() {
