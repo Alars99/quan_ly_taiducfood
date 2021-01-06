@@ -7,6 +7,8 @@ import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
 import 'package:quan_ly_taiducfood/statistical_action/View/bao_cao_doanh_thu.dart';
 
 import '../design_course_app_theme.dart';
+import 'bao_cao_loi_nhuan.dart';
+import 'bao_cao_thanh_toan.dart';
 
 class DoanhthuScreen extends StatefulWidget {
   @override
@@ -359,7 +361,10 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
         ),
         InkWell(
           onTap: () {
-            print("2");
+            Navigator.push(
+                context,
+                new MaterialPageRoute(
+                    builder: (context) => BaoCaoLoiNhuanScreen()));
           },
           child: Container(
             width: 300,
@@ -403,7 +408,10 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
         ),
         InkWell(
           onTap: () {
-            print("3");
+            Navigator.push(
+                context,
+                new MaterialPageRoute(
+                    builder: (context) => BaoCaoThanhToanScreen()));
           },
           child: Container(
             width: 300,
