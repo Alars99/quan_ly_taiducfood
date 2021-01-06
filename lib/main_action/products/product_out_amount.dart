@@ -74,6 +74,7 @@ class _ProductOutAmountState extends State<ProductOutAmount>
               values[key]["tax"].toString(),
               values[key]["priceVon"],
               values[key]["ngayUp"],
+              values[key]["daban"],
             );
             productSearchList2.add(productDetail);
           }
@@ -115,26 +116,6 @@ class _ProductOutAmountState extends State<ProductOutAmount>
               Navigator.pop(context);
             },
           ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => ProductAdd()));
-              },
-              color: Colors.white,
-            ),
-            IconButton(
-              icon: Icon(Icons.notifications),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => ProductOutAmount()));
-              },
-              color: Colors.white,
-            ),
-          ],
         ),
         body: Column(
           children: [
@@ -158,7 +139,7 @@ class _ProductOutAmountState extends State<ProductOutAmount>
                                 itemBuilder: (_, index) {
                                   return ListUI(
                                     productSearchList3[index].id,
-                                    productSearchList3[index].idMain,
+                                    productSearchList3[index].amount,
                                     productSearchList3[index].name,
                                     productSearchList3[index].image,
                                     productSearchList3[index].price,
