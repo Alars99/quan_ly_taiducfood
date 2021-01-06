@@ -9,8 +9,10 @@ import 'package:quan_ly_taiducfood/main_action/fitness_app_home_screen.dart';
 import 'package:quan_ly_taiducfood/main_action/products/products_search.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_detail_screen.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_list_screen.dart';
+import 'package:quan_ly_taiducfood/order_action/View/Order/order_screen.dart';
 import 'main_action/products/product_detail.dart';
 import 'main_action/products/product_edit.dart';
+import 'statistical_action/View/donhang_in_a_day.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,6 +53,7 @@ class MyApp extends StatelessWidget {
           OrderListScreen.routeName: (ctxOLS) => OrderListScreen(),
           OrderDetailScreen.routeName: (ctxODS) => OrderDetailScreen(),
           HistoryCustomer.routeName: (ctxHC) => HistoryCustomer(),
+          DonhangInADay.routeName: (ctxDIAD) => DonhangInADay(),
         });
   }
 }

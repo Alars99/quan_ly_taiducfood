@@ -72,6 +72,8 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
             values[key]["idKhachHang"],
             values[key]["ngaymua"],
             values[key]["trangthai"],
+            values[key]["giomua"],
+            values[key]["tongGiaVon"],
           );
           orderList.add(order);
         }

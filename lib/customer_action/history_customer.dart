@@ -51,6 +51,8 @@ class _HistoryCustomerScreen extends State<HistoryCustomer> {
           values[key]["idKhachHang"],
           values[key]["ngaymua"],
           values[key]["trangthai"],
+          values[key]["giomua"],
+          values[key]["tongGiaVon"],
         );
         orderList.add(order);
       }

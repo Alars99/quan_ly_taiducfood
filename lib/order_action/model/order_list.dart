@@ -10,6 +10,8 @@ class OrderList {
   String idKhachHang;
   String ngaymua;
   String trangthai;
+  String giomua;
+  String tongGiaVon;
 
   OrderList(
     this.idDonHang,
@@ -23,6 +25,8 @@ class OrderList {
     this.idKhachHang,
     this.ngaymua,
     this.trangthai,
+    this.giomua,
+    this.tongGiaVon,
   );
 
   // orderMap() {

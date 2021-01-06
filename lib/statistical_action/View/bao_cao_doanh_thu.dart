@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
+import 'package:quan_ly_taiducfood/statistical_action/View/donhang_in_a_day.dart';
 import 'package:quan_ly_taiducfood/statistical_action/models/doanhthu_Days.dart';
 
 class BaoCaoDoanhThuScreen extends StatefulWidget {
@@ -60,6 +61,8 @@ class _BaoCaoDoanhThuScreenState extends State<BaoCaoDoanhThuScreen>
           values[key]["idKhachHang"],
           values[key]["ngaymua"],
           values[key]["trangthai"],
+          values[key]["giomua"],
+          values[key]["tongGiaVon"],
         );
         orderList.add(order);
       }
@@ -93,36 +96,9 @@ class _BaoCaoDoanhThuScreenState extends State<BaoCaoDoanhThuScreen>
           dl.soluong = sl;
         }
       }
-      // tongMoneyDH = 0;
-      //   sl = 0;
-      //   dem = 0;
-      //   for (var order in orderList) {
-      //     if (order.ngaymua == _dateString && order.trangthai == "4") {
-      //       tongMoneyDH += double.parse(order.tongTienhang).round();
-      //       sl++;
-
-      //       dateListSort.add(doanhThuDays);
-      //     }
-      //   }
       print(dateListSort.length);
-      // for (int i = 0; i < 32; i++) {
-      //   _dateString = DateFormat("dd/MM/yyyy").format(dateList[i]);
-      //   for (var dts in dateListSort) {
-      //     if (_dateString != dts.date && dts.soluong > 0) {
-      //       DoanhThuDays dtDaysEmpty = new DoanhThuDays(
-      //         date: _dateString,
-      //         tienAlldonhang: "0",
-      //         soluong: 0,
-      //       );
-      //       dateListSort.add(dtDaysEmpty);
-      //     }
-      //   }
-      // }
       setState(() {});
     });
-    // dateListSort.forEach((e) {
-    //   if (e.date == "0") dateListSort.remove(e);
-    // });
   }
 
   @override
@@ -228,10 +204,10 @@ class _BaoCaoDoanhThuScreenState extends State<BaoCaoDoanhThuScreen>
   }
 
   Widget datewidget(date, int tienAlldonhang, int soluong) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
-        // Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
-        //     arguments: {'id': id, 'idMain': idMain});
+        Navigator.of(context)
+            .pushNamed(DonhangInADay.routeName, arguments: {'date': date});
       },
       child: new Container(
         child: new Column(

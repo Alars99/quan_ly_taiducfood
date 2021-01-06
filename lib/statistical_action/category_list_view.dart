@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
 import 'package:quan_ly_taiducfood/statistical_action/design_course_app_theme.dart';
@@ -23,6 +24,8 @@ class _CategoryListViewState extends State<CategoryListView>
   // ignore: deprecated_member_use
   List<OrderList> orderList = List();
 
+  final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
+
   getDoanhThu() {
     DatabaseReference referenceProduct =
         FirebaseDatabase.instance.reference().child("Order");
@@ -43,6 +46,8 @@ class _CategoryListViewState extends State<CategoryListView>
           values[key]["idKhachHang"],
           values[key]["ngaymua"],
           values[key]["trangthai"],
+          values[key]["giomua"],
+          values[key]["tongGiaVon"],
         );
         orderList.add(order);
       }
@@ -158,7 +163,8 @@ class _CategoryListViewState extends State<CategoryListView>
                                                             .center,
                                                     children: <Widget>[
                                                       Text(
-                                                        sohoadon.toString(),
+                                                        formatCurrency
+                                                            .format(sohoadon),
                                                         textAlign:
                                                             TextAlign.left,
                                                         style: TextStyle(
@@ -188,7 +194,8 @@ class _CategoryListViewState extends State<CategoryListView>
                                                             .start,
                                                     children: <Widget>[
                                                       Text(
-                                                        giaDoanhthu.toString(),
+                                                        formatCurrency.format(
+                                                            giaDoanhthu),
                                                         textAlign:
                                                             TextAlign.left,
                                                         style: TextStyle(
@@ -342,7 +349,8 @@ class _CategoryListViewState extends State<CategoryListView>
                                                             .start,
                                                     children: <Widget>[
                                                       Text(
-                                                        loiNhuangop.toString(),
+                                                        formatCurrency.format(
+                                                            loiNhuangop),
                                                         textAlign:
                                                             TextAlign.left,
                                                         style: TextStyle(
@@ -496,7 +504,9 @@ class _CategoryListViewState extends State<CategoryListView>
                                                             .start,
                                                     children: <Widget>[
                                                       Text(
-                                                        '1,500,000 vnd',
+                                                        //thanh toán hóa đơn
+                                                        formatCurrency
+                                                            .format(1500000),
                                                         textAlign:
                                                             TextAlign.left,
                                                         style: TextStyle(
