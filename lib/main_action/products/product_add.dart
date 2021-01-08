@@ -641,6 +641,7 @@ class _ProductAddState extends State<ProductAdd> {
       mapProList["allowSale"] = allowSale;
       mapProList["tax"] = tax;
       mapProList["ngayUp"] = DateFormat('dd/MM/yyyy').format(now).toString();
+      mapProList["daban"] = "0";
 
       referenceList.child(id).set(mapProList);
     }
