@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main_action/custom_ui/hotel_app_theme.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_search_data.dart';
@@ -19,17 +20,32 @@ class _ProductOutAmountState extends State<ProductOutAmount>
   List<ProductSearch> searchList = [];
   List<ProductDetail> productSearchList2 = [];
   List<ProductDetail> productSearchList3 = [];
+  List thongbaoList = [];
+
+  DateTime _dateTime, startDate, endDate;
+
+  int sanphammoi, sanphamhethang, sanphamnhieuhang;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
-
-    getLocgiatri();
+    sanphamhethang = 0;
+    sanphammoi = 0;
+    sanphamnhieuhang = 0;
+    endDate = DateTime.now();
+    startDate = DateTime.utc(endDate.year, endDate.month, endDate.day - 7);
   }
 
-  getLocgiatri() {
+  @override
+  void didChangeDependencies() {
+    getLocgiatri(0);
+    super.didChangeDependencies();
+  }
+
+  getLocgiatri(int a) {
     for (int i = 1; i < 10; i++) {
+      productSearchList2.clear();
       DatabaseReference referenceProduct = FirebaseDatabase.instance
           .reference()
           .child('productList')
@@ -62,11 +78,74 @@ class _ProductOutAmountState extends State<ProductOutAmount>
           );
           productSearchList2.add(productDetail);
         }
-        productSearchList3.clear();
+        sanphamhethang = 0;
+        sanphammoi = 0;
+        sanphamnhieuhang = 0;
+        String m = "";
+        for (var sp in productSearchList2) {
+          m = "";
+          for (int i = 0; i <= 31; i++) {
+            _dateTime = DateTime.utc(
+                startDate.year, startDate.month, startDate.day + i);
+
+            if (sp.ngayUp == DateFormat("dd/MM/yyyy").format(_dateTime)) {
+              m = sp.ngayUp;
+              break;
+            }
+          }
+          if (m == "") {
+            if (int.parse(sp.amount) >= 10) {
+              sanphamnhieuhang++;
+            }
+          }
+        }
+        for (var sp in productSearchList2) {
+          for (int i = 0; i <= 8; i++) {
+            _dateTime = DateTime.utc(
+                startDate.year, startDate.month, startDate.day + i);
+
+            if (sp.ngayUp == DateFormat("dd/MM/yyyy").format(_dateTime)) {
+              sanphammoi++;
+            }
+          }
+        }
         for (var sp in productSearchList2) {
           if (int.parse(sp.amount) <= 3) {
-            productSearchList3.add(sp);
-            print(sp.id);
+            sanphamhethang++;
+          }
+        }
+        productSearchList3.clear();
+        for (var sp in productSearchList2) {
+          if (a == 0) {
+            m = "";
+            for (int i = 0; i <= 8; i++) {
+              _dateTime = DateTime.utc(
+                  startDate.year, startDate.month, startDate.day + i);
+
+              if (sp.ngayUp == DateFormat("dd/MM/yyyy").format(_dateTime)) {
+                productSearchList3.add(sp);
+              }
+            }
+          } else if (a == 1) {
+            if (int.parse(sp.amount) <= 3) {
+              productSearchList3.add(sp);
+            }
+          } else if (a == 2) {
+            m = "";
+            for (int i = 0; i <= 31; i++) {
+              _dateTime = DateTime.utc(
+                  startDate.year, startDate.month, startDate.day + i);
+
+              if (sp.ngayUp == DateFormat("dd/MM/yyyy").format(_dateTime)) {
+                m = sp.ngayUp;
+                break;
+              }
+            }
+            if (m == "") {
+              if (int.parse(sp.amount) >= 10) {
+                productSearchList3.add(sp);
+              }
+            }
           }
         }
         setState(() {});
@@ -88,7 +167,7 @@ class _ProductOutAmountState extends State<ProductOutAmount>
         backgroundColor: Colors.white,
         appBar: new AppBar(
           title: new Text(
-            'Sản Phẩm',
+            'Thông báo',
             style: TextStyle(color: Colors.white),
           ),
           leading: IconButton(
@@ -101,51 +180,76 @@ class _ProductOutAmountState extends State<ProductOutAmount>
             },
           ),
         ),
-        body: Column(
+        body: Stack(
           children: [
-            productSearchList3.length == 0
-                ? Center(
-                    child: Text(
-                    "Không có sản phẩm",
-                    style: TextStyle(fontSize: 20),
-                  ))
-                : Expanded(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height - 155,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: productSearchList3.length,
-                                itemBuilder: (_, index) {
-                                  return ListUI(
-                                    productSearchList3[index].id,
-                                    productSearchList3[index].brand,
-                                    productSearchList3[index].name,
-                                    productSearchList3[index].image,
-                                    productSearchList3[index].price,
-                                    productSearchList3[index].barcode,
-                                    productSearchList3[index].weight,
-                                    productSearchList3[index].cate,
-                                    productSearchList3[index].priceNhap,
-                                    productSearchList3[index].priceBuon,
-                                    productSearchList3[index].amount,
-                                    productSearchList3[index].desc,
-                                    productSearchList3[index].allowSale,
-                                    productSearchList3[index].tax,
-                                    productSearchList3[index].priceVon,
-                                  );
-                                }),
-                          ),
-                        ],
+            Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: thongbaoUI(context),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 160),
+              child: productSearchList3.length == 0
+                  ? Center(
+                      child: Text(
+                      "Không có sản phẩm",
+                      style: TextStyle(fontSize: 20),
+                    ))
+                  : Expanded(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height - 155,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: productSearchList3.length,
+                                  itemBuilder: (_, index) {
+                                    return ListUI(
+                                      productSearchList3[index].id,
+                                      productSearchList3[index].brand,
+                                      productSearchList3[index].name,
+                                      productSearchList3[index].image,
+                                      productSearchList3[index].price,
+                                      productSearchList3[index].barcode,
+                                      productSearchList3[index].weight,
+                                      productSearchList3[index].cate,
+                                      productSearchList3[index].priceNhap,
+                                      productSearchList3[index].priceBuon,
+                                      productSearchList3[index].amount,
+                                      productSearchList3[index].desc,
+                                      productSearchList3[index].allowSale,
+                                      productSearchList3[index].tax,
+                                      productSearchList3[index].priceVon,
+                                    );
+                                  }),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
+            )
           ],
         ),
+
+        // return ListUI(
+        //   productSearchList3[index].id,
+        //   productSearchList3[index].brand,
+        //   productSearchList3[index].name,
+        //   productSearchList3[index].image,
+        //   productSearchList3[index].price,
+        //   productSearchList3[index].barcode,
+        //   productSearchList3[index].weight,
+        //   productSearchList3[index].cate,
+        //   productSearchList3[index].priceNhap,
+        //   productSearchList3[index].priceBuon,
+        //   productSearchList3[index].amount,
+        //   productSearchList3[index].desc,
+        //   productSearchList3[index].allowSale,
+        //   productSearchList3[index].tax,
+        //   productSearchList3[index].priceVon,
+        // );
       ),
     );
   }
@@ -258,6 +362,139 @@ class _ProductOutAmountState extends State<ProductOutAmount>
           ],
         ),
       ),
+    );
+  }
+
+  Widget thongbaoUI(BuildContext context) {
+    // ignore: non_constant_identifier_names
+
+    return Container(
+      child: new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      getLocgiatri(0);
+                    },
+                    child: Container(
+                      width: 350,
+                      height: 50,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              "Sản phẩm thêm mới: ",
+                              textAlign: TextAlign.center,
+                              style: new TextStyle(
+                                  fontSize: 14.0,
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Roboto"),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              sanphammoi.toString(),
+                              style: new TextStyle(
+                                  fontSize: 15.0,
+                                  color: Colors.blueAccent[400],
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Roboto"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ]),
+            new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      getLocgiatri(1);
+                    },
+                    child: Container(
+                      width: 350,
+                      height: 50,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              "Sản phẩm sắp hết: ",
+                              textAlign: TextAlign.center,
+                              style: new TextStyle(
+                                  fontSize: 14.0,
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Roboto"),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              sanphamhethang.toString(),
+                              style: new TextStyle(
+                                  fontSize: 15.0,
+                                  color: Colors.blueAccent[400],
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Roboto"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ]),
+            new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      getLocgiatri(2);
+                    },
+                    child: Container(
+                      width: 350,
+                      height: 50,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              "Sản phẩm bán chậm: ",
+                              textAlign: TextAlign.center,
+                              style: new TextStyle(
+                                  fontSize: 14.0,
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Roboto"),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              sanphamnhieuhang.toString(),
+                              style: new TextStyle(
+                                  fontSize: 15.0,
+                                  color: Colors.blueAccent[400],
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Roboto"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ]),
+          ]),
     );
   }
 }

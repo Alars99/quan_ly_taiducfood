@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main_action/custom_ui/hotel_app_theme.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_search_data.dart';
@@ -33,12 +34,14 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
   List<ProductDetail> productSearchList2 = [];
   List<ProductDetail> productSearchList3 = [];
   int slHet;
-
+  DateTime _dateTime, startDate, endDate;
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
 
   @override
   void initState() {
+    endDate = DateTime.now();
+    startDate = DateTime.utc(endDate.year, endDate.month, endDate.day - 7);
     super.initState();
     slHet = 0;
     DatabaseReference referenceProduct =
@@ -103,11 +106,39 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
         productSearchList3.clear();
         for (var sp in productSearchList2) {
           if (int.parse(sp.amount) <= 3) {
-            productSearchList3.add(sp);
             slHet++;
-            print(sp.id);
           }
         }
+        String m = "";
+        for (var sp in productSearchList2) {
+          m = "";
+          for (int i = 0; i <= 31; i++) {
+            _dateTime = DateTime.utc(
+                startDate.year, startDate.month, startDate.day + i);
+
+            if (sp.ngayUp == DateFormat("dd/MM/yyyy").format(_dateTime)) {
+              m = sp.ngayUp;
+              break;
+            }
+          }
+          if (m == "") {
+            if (int.parse(sp.amount) >= 10) {
+              slHet++;
+            }
+          }
+        }
+
+        for (var sp in productSearchList2) {
+          for (int i = 0; i <= 8; i++) {
+            _dateTime = DateTime.utc(
+                startDate.year, startDate.month, startDate.day + i);
+
+            if (sp.ngayUp == DateFormat("dd/MM/yyyy").format(_dateTime)) {
+              slHet++;
+            }
+          }
+        }
+
         setState(() {});
       });
     }

@@ -31,7 +31,11 @@ class _MainScreen extends State<MainScreen> {
   getData() {
     int dem = 0;
     int dem1 = 0;
+    int dem2 = 0;
+
+    int dem3 = 0;
     double t = 0;
+    double test = 0;
 
     for (int i = 1; i < 10; i++) {
       DatabaseReference referenceProduct = FirebaseDatabase.instance
@@ -67,36 +71,49 @@ class _MainScreen extends State<MainScreen> {
           );
           productDetailList.add(productDetail);
         }
-        for (var sp in productDetailList) {
-          t += double.parse(sp.priceVon) * double.parse(sp.amount);
-        }
 
-        for (int i = 1; i <= 30; i++) {
-          _dateTime =
-              DateTime.utc(startDate.year, startDate.month, startDate.day + i);
-          for (var sp in productDetailList) {
+        for (var sp in productDetailList) {
+          dem1 += double.parse(sp.amount).round();
+          for (int i = 0; i <= 31; i++) {
+            _dateTime = DateTime.utc(
+                startDate.year, startDate.month, startDate.day + i);
+
             if (sp.ngayUp == DateFormat("dd/MM/yyyy").format(_dateTime)) {
+              dem2 += double.parse(sp.amount).round();
+
               tiennhapky += double.parse(sp.priceVon) * double.parse(sp.amount);
               if (sp.daban != "0") {
                 tienxuatky +=
                     double.parse(sp.priceVon) * double.parse(sp.daban);
-                print(sp.id);
-                print(sp.name);
-              }
-            } else {
-              if (int.parse(sp.amount) > 0) {
-                tondauky += double.parse(sp.priceVon) * double.parse(sp.amount);
               }
             }
           }
         }
-        ketqua = ketqua + t;
-        print("Ket qua: " + ketqua.toString());
-        print("Đếm: " + dem.toString() + " " + dem1.toString());
-        print("Tồn đầu kỳ: " + tondauky.toString());
-        print("Nhập đầu kỳ: " + tiennhapky.toString());
-        print("Xuất cuối kỳ: " + tienxuatky.toString());
-        soluong = dem;
+
+        String m = "";
+        for (var sp in productDetailList) {
+          m = "";
+          for (int i = 0; i <= 31; i++) {
+            _dateTime = DateTime.utc(
+                startDate.year, startDate.month, startDate.day + i);
+
+            if (sp.ngayUp == DateFormat("dd/MM/yyyy").format(_dateTime)) {
+              m = sp.ngayUp;
+              break;
+            }
+          }
+          if (m == "") {
+            tondauky += double.parse(sp.priceVon) * double.parse(sp.amount);
+            dem += double.parse(sp.amount).round();
+          }
+        }
+
+        ketqua = tondauky + tiennhapky - tienxuatky;
+        tongTien = ketqua;
+        soluong = dem + dem2;
+        print("tong" + dem1.toString());
+        print("tong1" + dem.toString());
+        print("tong2" + dem2.toString());
         setState(() {});
       });
     }
