@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
+import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:flutter/material.dart';
 import 'package:quan_ly_taiducfood/order_action/model/test.dart';
@@ -35,6 +36,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
 
   List<Sanpham> orderList = [];
   List<Customer> customerList = [];
+  List<ProductDetail> productList = [];
   var customerSer = CustomerService();
   String name = "";
   String idDonHangFB;
@@ -69,7 +71,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   }
 
   gettt() {
-    print("Thong tin trang thai: " + tt.toString());
     if (tt == 0) {
       ttTxt = "Duyệt Đơn";
     } else if (tt == 1) {
@@ -79,10 +80,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     } else if (tt == 3) {
       ttTxt = "Xuất kho";
     } else if (tt == 4) {
+      updateDaban();
       ttTxt = "Hoàn thành / Trả hàng";
     } else if (tt == 5) {
       trangthai = "Đơn hàng đã trả";
-
+      updateTraHang();
       isClose = false;
 
       // hồi lại số lượng hàng hóa;
@@ -91,6 +93,141 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       trangthai = "Đơn hàng đã hủy";
     }
     updateTrangthai();
+  }
+
+  updateDaban() {
+    final Map data = ModalRoute.of(context).settings.arguments;
+    String idgiohang = data['idGioHang'].toString();
+    DatabaseReference referenceProduct =
+        FirebaseDatabase.instance.reference().child("Cart").child(idgiohang);
+    referenceProduct.once().then((DataSnapshot snapshot) {
+      orderList.clear();
+      var keys = snapshot.value.keys;
+      var values = snapshot.value;
+      for (var key in keys) {
+        Sanpham sanpham = new Sanpham(
+          id: values[key]["id"],
+          name: values[key]["name"],
+          price: values[key]["price"],
+          count: int.parse(values[key]["count"]),
+        );
+        orderList.add(sanpham);
+      }
+
+      for (var sanpham in orderList) {
+        for (int i = 0; i < 10; i++) {
+          DatabaseReference referenceProduct = FirebaseDatabase.instance
+              .reference()
+              .child('productList')
+              .child(i.toString())
+              .child('Product');
+          referenceProduct.once().then((DataSnapshot snapshot) {
+            productList.clear();
+            var keys = snapshot.value.keys;
+            var values = snapshot.value;
+
+            for (var key in keys) {
+              ProductDetail productDetail = new ProductDetail(
+                values[key]["id"],
+                values[key]["brand"],
+                values[key]["name"],
+                values[key]["image"],
+                values[key]["price"],
+                values[key]["barcode"],
+                values[key]["weight"],
+                values[key]["cate"],
+                values[key]["priceNhap"],
+                values[key]["priceBuon"],
+                values[key]["amount"],
+                values[key]["desc"],
+                values[key]["allowSale"].toString(),
+                values[key]["tax"].toString(),
+                values[key]["priceVon"],
+                values[key]["ngayUp"],
+                values[key]["daban"],
+              );
+              productList.add(productDetail);
+            }
+            for (var a in productList) {
+              if (sanpham.id == a.id) {
+                referenceProduct.child(a.id).update({
+                  'amount': (sanpham.amout - sanpham.count).toString(),
+                  'daban': sanpham.count.toString()
+                });
+              }
+            }
+          });
+        }
+      }
+    });
+  }
+
+  updateTraHang() {
+    final Map data = ModalRoute.of(context).settings.arguments;
+    String idgiohang = data['idGioHang'].toString();
+    DatabaseReference referenceProduct =
+        FirebaseDatabase.instance.reference().child("Cart").child(idgiohang);
+    referenceProduct.once().then((DataSnapshot snapshot) {
+      orderList.clear();
+      var keys = snapshot.value.keys;
+      var values = snapshot.value;
+      for (var key in keys) {
+        Sanpham sanpham = new Sanpham(
+          id: values[key]["id"],
+          name: values[key]["name"],
+          price: values[key]["price"],
+          count: int.parse(values[key]["count"]),
+        );
+        orderList.add(sanpham);
+      }
+
+      for (var sanpham in orderList) {
+        for (int i = 0; i < 10; i++) {
+          DatabaseReference referenceProduct = FirebaseDatabase.instance
+              .reference()
+              .child('productList')
+              .child(i.toString())
+              .child('Product');
+          referenceProduct.once().then((DataSnapshot snapshot) {
+            productList.clear();
+            var keys = snapshot.value.keys;
+            var values = snapshot.value;
+
+            for (var key in keys) {
+              ProductDetail productDetail = new ProductDetail(
+                values[key]["id"],
+                values[key]["brand"],
+                values[key]["name"],
+                values[key]["image"],
+                values[key]["price"],
+                values[key]["barcode"],
+                values[key]["weight"],
+                values[key]["cate"],
+                values[key]["priceNhap"],
+                values[key]["priceBuon"],
+                values[key]["amount"],
+                values[key]["desc"],
+                values[key]["allowSale"].toString(),
+                values[key]["tax"].toString(),
+                values[key]["priceVon"],
+                values[key]["ngayUp"],
+                values[key]["daban"],
+              );
+              productList.add(productDetail);
+            }
+            print("a" + sanpham.count.toString());
+            for (var a in productList) {
+              if (sanpham.id == a.id) {
+                referenceProduct.child(a.id).update({
+                  'amount': (sanpham.amout + sanpham.count - 1).toString(),
+                  'daban': (int.parse(a.daban) - sanpham.count).toString()
+                });
+              }
+            }
+          });
+        }
+      }
+    });
   }
 
   getList() {
@@ -112,6 +249,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       for (var key in keys) {
         setState(() {
           Sanpham sanpham = new Sanpham(
+            id: values[key]["id"],
             name: values[key]["name"],
             price: values[key]["price"],
             count: int.parse(values[key]["count"]),

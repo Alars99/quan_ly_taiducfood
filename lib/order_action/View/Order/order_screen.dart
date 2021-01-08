@@ -195,50 +195,6 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
         mapCart["amout"] = sanpham.amout.toString();
         referenceCart.child(idGioHang).child(idSanpham).set(mapCart);
       }
-      for (var sanpham in orderList) {
-        for (int i = 0; i < 10; i++) {
-          DatabaseReference referenceProduct = FirebaseDatabase.instance
-              .reference()
-              .child('productList')
-              .child(i.toString())
-              .child('Product');
-          referenceProduct.once().then((DataSnapshot snapshot) {
-            productList.clear();
-            var keys = snapshot.value.keys;
-            var values = snapshot.value;
-
-            for (var key in keys) {
-              ProductDetail productDetail = new ProductDetail(
-                values[key]["id"],
-                values[key]["brand"],
-                values[key]["name"],
-                values[key]["image"],
-                values[key]["price"],
-                values[key]["barcode"],
-                values[key]["weight"],
-                values[key]["cate"],
-                values[key]["priceNhap"],
-                values[key]["priceBuon"],
-                values[key]["amount"],
-                values[key]["desc"],
-                values[key]["allowSale"].toString(),
-                values[key]["tax"].toString(),
-                values[key]["priceVon"],
-                values[key]["ngayUp"],
-                values[key]["daban"],
-              );
-              productList.add(productDetail);
-            }
-            for (var a in productList) {
-              if (sanpham.id == a.id) {
-                print(a.id);
-                referenceProduct.child(a.id).update(
-                    {'amount': (sanpham.amout - sanpham.count).toString()});
-              }
-            }
-          });
-        }
-      }
     }
   }
 

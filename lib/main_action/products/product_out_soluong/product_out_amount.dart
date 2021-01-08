@@ -103,7 +103,6 @@ class _ProductOutAmountState extends State<ProductOutAmount>
           for (int i = 0; i <= 8; i++) {
             _dateTime = DateTime.utc(
                 startDate.year, startDate.month, startDate.day + i);
-
             if (sp.ngayUp == DateFormat("dd/MM/yyyy").format(_dateTime)) {
               sanphammoi++;
             }
