@@ -6,13 +6,13 @@ import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.da
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_detail_screen.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
 
-class DonhangInADay extends StatefulWidget {
+class DonhangInADay1 extends StatefulWidget {
   @override
-  _DonhangInADayState createState() => _DonhangInADayState();
-  static const routeName = '/donhang-in-a-day';
+  _DonhangInADayState1 createState() => _DonhangInADayState1();
+  static const routeName = '/donhang-in-a-day1';
 }
 
-class _DonhangInADayState extends State<DonhangInADay>
+class _DonhangInADayState1 extends State<DonhangInADay1>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
 
@@ -63,13 +63,11 @@ class _DonhangInADayState extends State<DonhangInADay>
       }
       orderListSortDate.clear();
       tongtienAll = 0;
-      double tongMoney = 0;
-      double tongMoneyVon = 0;
+
       for (var order in orderList) {
         if (order.ngaymua == dateGetData.toString() && order.trangthai == "4") {
-          tongMoney += double.parse(order.tongTienhang).round();
-          tongMoneyVon += double.parse(order.tongGiaVon).round();
-          tongtienAll += (tongMoney - tongMoneyVon).round();
+          tongtienAll += double.parse(order.tongTienhang).round();
+
           OrderList orderSort = new OrderList(
             order.idDonHang,
             order.idGioHang,
@@ -201,7 +199,7 @@ class _DonhangInADayState extends State<DonhangInADay>
       String tongTienhang,
       String giomua,
       String tongGiaVon) {
-    var tong = double.parse(tongTienhang) - double.parse(tongGiaVon);
+    var tong = double.parse(tongTienhang);
     return InkWell(
       onTap: () {
         Navigator.of(context)

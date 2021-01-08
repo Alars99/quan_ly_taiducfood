@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
 import 'package:quan_ly_taiducfood/statistical_action/View/donhang_in_a_day.dart';
+import 'package:quan_ly_taiducfood/statistical_action/View/donhang_in_a_day2.dart';
 import 'package:quan_ly_taiducfood/statistical_action/models/doanhthu_Days.dart';
 
 class BaoCaoThanhToanScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ class _BaoCaoThanhToanScreenState extends State<BaoCaoThanhToanScreen>
   DateTime _date;
   String _dateString;
   int tongMoneyDH;
+  int tongMoneyDHtra;
   int sl;
   int dem;
   int tongDHtheoThang;
@@ -83,18 +85,26 @@ class _BaoCaoThanhToanScreenState extends State<BaoCaoThanhToanScreen>
 
       for (var dl in dateListSort) {
         tongMoneyDH = 0;
+        tongMoneyDHtra = 0;
+
         sl = 0;
         for (var order in orderList) {
-          if (order.ngaymua == dl.date && order.trangthai == "4") {
-            tongMoneyDH += double.parse(order.tongTienhang).round();
-            tongDHtheoThang += double.parse(order.tongTienhang).round();
-            sl++;
+          if (order.ngaymua == dl.date) {
+            if (order.trangthai == "4" || order.trangthai == "5") {
+              sl++;
+              tongMoneyDH += double.parse(order.tongTienhang).round();
+            }
+            if (order.trangthai == "5") {
+              tongMoneyDHtra += double.parse(order.tongTienhang).round();
+            }
           }
-          dl.tienAlldonhang = tongMoneyDH;
+          dl.tienAlldonhang = tongMoneyDH - tongMoneyDHtra;
+
           dl.soluong = sl;
         }
+        tongDHtheoThang += dl.tienAlldonhang;
       }
-      print(dateListSort.length);
+
       setState(() {});
     });
   }
@@ -204,8 +214,8 @@ class _BaoCaoThanhToanScreenState extends State<BaoCaoThanhToanScreen>
   Widget datewidget(date, int tienAlldonhang, int soluong) {
     return InkWell(
       onTap: () {
-        Navigator.of(context)
-            .pushNamed(DonhangInADay.routeName, arguments: {'date': date});
+        Navigator.of(context).pushNamed(DonhangInADay2.routeName,
+            arguments: {'date': date, 'name': 'Thanh toán KH'});
       },
       child: new Container(
         child: new Column(
