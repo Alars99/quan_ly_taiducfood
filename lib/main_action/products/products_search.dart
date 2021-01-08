@@ -10,7 +10,7 @@ import 'package:quan_ly_taiducfood/main_action/products/product_add.dart';
 
 import '../../main.dart';
 import 'product_detail.dart';
-import 'product_out_amount.dart';
+import 'product_out_soluong/product_out_amount.dart';
 
 class ProductSearchScreen extends StatefulWidget {
   const ProductSearchScreen({this.app, this.animationController});
@@ -29,12 +29,18 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
 
   List<ProductSearch> productSearchList = [];
 
+  List<ProductSearch> searchList = [];
+  List<ProductDetail> productSearchList2 = [];
+  List<ProductDetail> productSearchList3 = [];
+  int slHet;
+
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
 
   @override
   void initState() {
     super.initState();
+    slHet = 0;
     DatabaseReference referenceProduct =
         FirebaseDatabase.instance.reference().child("SearchList");
     referenceProduct.once().then((DataSnapshot snapshot) {
@@ -56,6 +62,55 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
         //
       });
     });
+    getLocgiatri();
+  }
+
+  getLocgiatri() {
+    for (int i = 1; i < 10; i++) {
+      DatabaseReference referenceProduct = FirebaseDatabase.instance
+          .reference()
+          .child('productList')
+          .child(i.toString())
+          .child('Product');
+
+      referenceProduct.once().then((DataSnapshot snapshot) {
+        var keys = snapshot.value.keys;
+        var values = snapshot.value;
+
+        for (var key in keys) {
+          ProductDetail productDetail = new ProductDetail(
+            values[key]["id"],
+            values[key]["brand"],
+            values[key]["name"],
+            values[key]["image"],
+            values[key]["price"],
+            values[key]["barcode"],
+            values[key]["weight"],
+            values[key]["cate"],
+            values[key]["priceNhap"],
+            values[key]["priceBuon"],
+            values[key]["amount"],
+            values[key]["desc"],
+            values[key]["allowSale"].toString(),
+            values[key]["tax"].toString(),
+            values[key]["priceVon"],
+            values[key]["ngayUp"],
+            values[key]["daban"],
+          );
+          productSearchList2.add(productDetail);
+        }
+        slHet = 0;
+        productSearchList3.clear();
+        for (var sp in productSearchList2) {
+          if (int.parse(sp.amount) <= 3) {
+            productSearchList3.add(sp);
+            slHet++;
+            print(sp.id);
+          }
+        }
+        setState(() {});
+      });
+    }
   }
 
   @override
@@ -87,15 +142,49 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
               },
               color: Colors.white,
             ),
-            IconButton(
-              icon: Icon(Icons.notifications),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => ProductOutAmount()));
-              },
-              color: Colors.white,
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Container(
+                child: new Stack(
+                  children: <Widget>[
+                    new IconButton(
+                      icon: Icon(Icons.notifications),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => ProductOutAmount()));
+                      },
+                      color: Colors.white,
+                    ),
+                    slHet == 0
+                        ? Container()
+                        : new Positioned(
+                            right: 10,
+                            top: 11,
+                            child: new Container(
+                              padding: EdgeInsets.all(3),
+                              decoration: new BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              constraints: BoxConstraints(
+                                minWidth: 11,
+                                minHeight: 11,
+                              ),
+                              child: new Text(
+                                slHet.toString(),
+                                style: new TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 8,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          )
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -302,5 +391,4 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
       });
     });
   }
-
 }
