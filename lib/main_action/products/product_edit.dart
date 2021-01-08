@@ -84,6 +84,7 @@ class _ProductEditState extends State<ProductEdit> {
     ProductCate(7, 'Thịt Trâu'),
     ProductCate(8, 'Hải Sản'),
     ProductCate(9, 'Sản Phẩm Khác'),
+    ProductCate(10, ' '),
   ];
 
   Future downdloadImage() async {
@@ -123,7 +124,10 @@ class _ProductEditState extends State<ProductEdit> {
       } else {
         tax = false;
       }
-      int idMainInt = int.parse(data['idMain'].toString()) - 1;
+      int idMainInt = int.parse(data['idMain'].toString() == "null"
+              ? "10"
+              : data['idMain'].toString()) -
+          1;
       productCate = data_cate[idMainInt];
       // print(data['image']);
       // print(image + "  aaaaaa");
@@ -482,42 +486,53 @@ class _ProductEditState extends State<ProductEdit> {
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            new Text('Loại sản phẩm'),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: Row(
-                                children: [
-                                  // new DropdownButton<ProductCate>(
-                                  //   value: productCate,
-                                  //   onChanged: (ProductCate newValue) {
-                                  //     setState(() {
-                                  //       productCate = newValue;
-                                  //       print(
-                                  //           "Loại: ${productCate.name}  ----  Id : ${productCate.id}");
-                                  //     });
-                                  //   },
-                                  //   items: data_cate.map((ProductCate pdCate) {
-                                  //     return new DropdownMenuItem<ProductCate>(
-                                  //       value: pdCate,
-                                  //       child: new Text(
-                                  //         pdCate.name,
-                                  //       ),
-                                  //     );
-                                  //   }).toList(),
-                                  // ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            new Text(
-                              "${productCate.name}",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            productCate.name == " "
+                                ? SizedBox()
+                                : new Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      new Text('Loại sản phẩm'),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Row(
+                                          children: [
+                                            // new DropdownButton<ProductCate>(
+                                            //   value: productCate,
+                                            //   onChanged: (ProductCate newValue) {
+                                            //     setState(() {
+                                            //       productCate = newValue;
+                                            //       print(
+                                            //           "Loại: ${productCate.name}  ----  Id : ${productCate.id}");
+                                            //     });
+                                            //   },
+                                            //   items: data_cate.map((ProductCate pdCate) {
+                                            //     return new DropdownMenuItem<ProductCate>(
+                                            //       value: pdCate,
+                                            //       child: new Text(
+                                            //         pdCate.name,
+                                            //       ),
+                                            //     );
+                                            //   }).toList(),
+                                            // ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      new Text(
+                                        "${productCate.name}",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                             Container(
                               child: new TextFormField(
                                 controller: _controllerEditBrand,

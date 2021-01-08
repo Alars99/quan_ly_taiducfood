@@ -4,7 +4,8 @@ import 'package:quan_ly_taiducfood/main_action/custom_ui/hotel_app_theme.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_search_data.dart';
 
-import 'product_detail.dart';
+import '../product_detail.dart';
+import 'product_detail_SL.dart';
 
 class ProductOutAmount extends StatefulWidget {
   @override
@@ -23,69 +24,52 @@ class _ProductOutAmountState extends State<ProductOutAmount>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
+
+    getLocgiatri();
   }
 
   getLocgiatri() {
     for (int i = 1; i < 10; i++) {
-      productSearchList2.clear();
       DatabaseReference referenceProduct = FirebaseDatabase.instance
           .reference()
           .child('productList')
           .child(i.toString())
           .child('Product');
 
-      DatabaseReference referenceSearch =
-          FirebaseDatabase.instance.reference().child("SearchList");
-      referenceSearch.once().then((DataSnapshot snapshot) {
-        searchList.clear();
+      referenceProduct.once().then((DataSnapshot snapshot) {
         var keys = snapshot.value.keys;
         var values = snapshot.value;
 
         for (var key in keys) {
-          ProductSearch product = new ProductSearch(
+          ProductDetail productDetail = new ProductDetail(
             values[key]["id"],
-            values[key]["idMain"],
+            values[key]["brand"],
             values[key]["name"],
             values[key]["image"],
             values[key]["price"],
+            values[key]["barcode"],
+            values[key]["weight"],
+            values[key]["cate"],
+            values[key]["priceNhap"],
+            values[key]["priceBuon"],
+            values[key]["amount"],
+            values[key]["desc"],
+            values[key]["allowSale"].toString(),
+            values[key]["tax"].toString(),
+            values[key]["priceVon"],
+            values[key]["ngayUp"],
+            values[key]["daban"],
           );
-          searchList.add(product);
+          productSearchList2.add(productDetail);
         }
-
-        referenceProduct.once().then((DataSnapshot snapshot) {
-          var keys = snapshot.value.keys;
-          var values = snapshot.value;
-
-          for (var key in keys) {
-            ProductDetail productDetail = new ProductDetail(
-              values[key]["id"],
-              values[key]["brand"],
-              values[key]["name"],
-              values[key]["image"],
-              values[key]["price"],
-              values[key]["barcode"],
-              values[key]["weight"],
-              values[key]["cate"],
-              values[key]["priceNhap"],
-              values[key]["priceBuon"],
-              values[key]["amount"],
-              values[key]["desc"],
-              values[key]["allowSale"].toString(),
-              values[key]["tax"].toString(),
-              values[key]["priceVon"],
-              values[key]["ngayUp"],
-              values[key]["daban"],
-            );
-            productSearchList2.add(productDetail);
+        productSearchList3.clear();
+        for (var sp in productSearchList2) {
+          if (int.parse(sp.amount) <= 3) {
+            productSearchList3.add(sp);
+            print(sp.id);
           }
-          for (var sp in productSearchList2) {
-            if (int.parse(sp.amount) <= 3) {
-              productSearchList3.add(sp);
-              print(sp.id);
-            }
-          }
-          // setState(() {});
-        });
+        }
+        setState(() {});
       });
     }
   }
@@ -139,10 +123,20 @@ class _ProductOutAmountState extends State<ProductOutAmount>
                                 itemBuilder: (_, index) {
                                   return ListUI(
                                     productSearchList3[index].id,
-                                    productSearchList3[index].amount,
+                                    productSearchList3[index].brand,
                                     productSearchList3[index].name,
                                     productSearchList3[index].image,
                                     productSearchList3[index].price,
+                                    productSearchList3[index].barcode,
+                                    productSearchList3[index].weight,
+                                    productSearchList3[index].cate,
+                                    productSearchList3[index].priceNhap,
+                                    productSearchList3[index].priceBuon,
+                                    productSearchList3[index].amount,
+                                    productSearchList3[index].desc,
+                                    productSearchList3[index].allowSale,
+                                    productSearchList3[index].tax,
+                                    productSearchList3[index].priceVon,
                                   );
                                 }),
                           ),
@@ -158,13 +152,43 @@ class _ProductOutAmountState extends State<ProductOutAmount>
 
   // ignore: non_constant_identifier_names
   Widget ListUI(
-      String id, String idMain, String name, String image, String price) {
+      String id,
+      String brand,
+      String name,
+      String image,
+      String price,
+      String barcode,
+      String weight,
+      String cate,
+      String priceNhap,
+      String priceBuon,
+      String amount,
+      String desc,
+      String allowSale,
+      String tax,
+      String priceVon) {
     // ignore: non_constant_identifier_names
     double c_width = MediaQuery.of(context).size.width * 0.6;
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
-            arguments: {'id': id, 'idMain': idMain});
+        Navigator.of(context)
+            .pushNamed(ProductDetailNotification.routeName, arguments: {
+          "id": id,
+          "brand": brand,
+          "name": name,
+          "image": image,
+          "price": price,
+          "barcode": barcode,
+          "weight": weight,
+          "cate": cate,
+          "priceNhap": priceNhap,
+          "priceBuon": priceBuon,
+          "amount": amount,
+          "desc": desc,
+          "allowSale": allowSale,
+          "tax": tax,
+          "priceVon": priceVon
+        });
       },
       child: new Container(
         child: new Column(

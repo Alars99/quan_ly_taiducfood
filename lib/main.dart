@@ -6,6 +6,7 @@ import 'package:quan_ly_taiducfood/customer_action/history_customer.dart';
 import 'package:quan_ly_taiducfood/login_action/Login/login_screen.dart';
 import 'package:quan_ly_taiducfood/login_action/Signup/signup_screen.dart';
 import 'package:quan_ly_taiducfood/main_action/fitness_app_home_screen.dart';
+import 'package:quan_ly_taiducfood/main_action/products/product_out_soluong/product_detail_SL.dart';
 import 'package:quan_ly_taiducfood/main_action/products/products_search.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_detail_screen.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_list_screen.dart';
@@ -56,6 +57,8 @@ class MyApp extends StatelessWidget {
           OrderDetailScreen.routeName: (ctxODS) => OrderDetailScreen(),
           HistoryCustomer.routeName: (ctxHC) => HistoryCustomer(),
           DonhangInADay.routeName: (ctxDIAD) => DonhangInADay(),
+          ProductDetailNotification.routeName: (ctxPDN) =>
+              ProductDetailNotification(),
           DonhangInADay1.routeName: (ctxDIADA) => DonhangInADay1(),
           DonhangInADay2.routeName: (ctxDIADB) => DonhangInADay2(),
         });
