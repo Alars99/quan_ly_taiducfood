@@ -19,7 +19,7 @@ class _MainScreen extends State<MainScreen> {
 
   final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
 
-  double tongTien, tiennhapky, tienxuatky;
+  double tongTien, tiennhapky, tienxuatky, tondauky, ketqua;
   int soluong = 0;
 
   DateTime endDate;
@@ -30,7 +30,9 @@ class _MainScreen extends State<MainScreen> {
   List<ProductDetail> productDetailList = List();
   getData() {
     int dem = 0;
-    double ketqua = 0;
+    int dem1 = 0;
+    double t = 0;
+
     for (int i = 1; i < 10; i++) {
       DatabaseReference referenceProduct = FirebaseDatabase.instance
           .reference()
@@ -65,19 +67,35 @@ class _MainScreen extends State<MainScreen> {
           );
           productDetailList.add(productDetail);
         }
+        for (var sp in productDetailList) {
+          t += double.parse(sp.priceVon) * double.parse(sp.amount);
+        }
 
         for (int i = 1; i <= 30; i++) {
           _dateTime =
               DateTime.utc(startDate.year, startDate.month, startDate.day + i);
           for (var sp in productDetailList) {
             if (sp.ngayUp == DateFormat("dd/MM/yyyy").format(_dateTime)) {
-              dem = dem + int.parse(sp.amount);
-              ketqua = double.parse(sp.priceVon) * double.parse(sp.amount);
-              tongTien += ketqua;
-              tiennhapky += double.parse(sp.priceNhap);
+              tiennhapky += double.parse(sp.priceVon) * double.parse(sp.amount);
+              if (sp.daban != "0") {
+                tienxuatky +=
+                    double.parse(sp.priceVon) * double.parse(sp.daban);
+                print(sp.id);
+                print(sp.name);
+              }
+            } else {
+              if (int.parse(sp.amount) > 0) {
+                tondauky += double.parse(sp.priceVon) * double.parse(sp.amount);
+              }
             }
           }
         }
+        ketqua = ketqua + t;
+        print("Ket qua: " + ketqua.toString());
+        print("Đếm: " + dem.toString() + " " + dem1.toString());
+        print("Tồn đầu kỳ: " + tondauky.toString());
+        print("Nhập đầu kỳ: " + tiennhapky.toString());
+        print("Xuất cuối kỳ: " + tienxuatky.toString());
         soluong = dem;
         setState(() {});
       });
@@ -90,6 +108,7 @@ class _MainScreen extends State<MainScreen> {
     tongTien = 0;
     tiennhapky = 0;
     tienxuatky = 0;
+    tondauky = 0;
     endDate = DateTime.now();
     startDate = DateTime.utc(endDate.year, endDate.month - 1, endDate.day);
 
@@ -465,9 +484,11 @@ class _MainScreen extends State<MainScreen> {
           Padding(
             padding: EdgeInsets.all(8),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.pop(context);
+              },
               child: Icon(
-                Icons.arrow_back_ios,
+                Icons.arrow_back,
                 size: 16,
               ),
             ),

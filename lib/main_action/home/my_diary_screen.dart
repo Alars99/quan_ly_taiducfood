@@ -39,6 +39,15 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   double doanhthuthang, doanhthungay;
 
   getAll() {
+    donhang = 0;
+    donhuy = 0;
+    dontra = 0;
+    chuaduyet = 0;
+    chothanhtoan = 0;
+    choxuatkhoa = 0;
+    danggiaohang = 0;
+    doanhthungay = 0.0;
+    doanhthuthang = 0.0;
     var dateNow = DateFormat("dd/MM/yyyy").format(DateTime.now());
     var dateAfter = DateTime.now();
     var dateBefore = DateTime.utc(DateTime.now().year, DateTime.now().month, 1);
@@ -106,6 +115,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
           }
         }
       }
+
       setState(() {
         addAllListData();
       });
@@ -151,10 +161,17 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
       }
     });
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
     getAll();
   }
 
   void addAllListData() {
+    listViews.clear();
     const int count = 9;
     listViews.add(
       TitleView(

@@ -6,13 +6,13 @@ import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.da
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_detail_screen.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
 
-class DonhangInADay extends StatefulWidget {
+class DonhangInADay2 extends StatefulWidget {
   @override
-  _DonhangInADayState createState() => _DonhangInADayState();
-  static const routeName = '/donhang-in-a-day';
+  _DonhangInADay2State createState() => _DonhangInADay2State();
+  static const routeName = '/donhang-in-a-day2';
 }
 
-class _DonhangInADayState extends State<DonhangInADay>
+class _DonhangInADay2State extends State<DonhangInADay2>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
 
@@ -66,26 +66,31 @@ class _DonhangInADayState extends State<DonhangInADay>
       double tongMoney = 0;
       double tongMoneyVon = 0;
       for (var order in orderList) {
-        if (order.ngaymua == dateGetData.toString() && order.trangthai == "4") {
-          tongMoney += double.parse(order.tongTienhang).round();
-          tongMoneyVon += double.parse(order.tongGiaVon).round();
-          tongtienAll += (tongMoney - tongMoneyVon).round();
-          OrderList orderSort = new OrderList(
-            order.idDonHang,
-            order.idGioHang,
-            order.tongTienhang,
-            order.tongSoluong,
-            order.phiGiaohang,
-            order.chietKhau,
-            order.banSiLe,
-            order.paymethod,
-            order.idKhachHang,
-            order.ngaymua,
-            order.trangthai,
-            order.giomua,
-            order.tongGiaVon,
-          );
-          orderListSortDate.add(orderSort);
+        if (order.ngaymua == dateGetData.toString()) {
+          if (order.trangthai == "4" || order.trangthai == "5") {
+            tongMoney += double.parse(order.tongTienhang).round();
+            OrderList orderSort = new OrderList(
+              order.idDonHang,
+              order.idGioHang,
+              order.tongTienhang,
+              order.tongSoluong,
+              order.phiGiaohang,
+              order.chietKhau,
+              order.banSiLe,
+              order.paymethod,
+              order.idKhachHang,
+              order.ngaymua,
+              order.trangthai,
+              order.giomua,
+              order.tongGiaVon,
+            );
+            orderListSortDate.add(orderSort);
+          }
+          if (order.trangthai == "5") {
+            tongMoneyVon += double.parse(order.tongTienhang).round();
+          }
+
+          tongtienAll = tongMoney.round() - tongMoneyVon.round();
         }
       }
       setState(() {});
@@ -201,7 +206,7 @@ class _DonhangInADayState extends State<DonhangInADay>
       String tongTienhang,
       String giomua,
       String tongGiaVon) {
-    var tong = double.parse(tongTienhang) - double.parse(tongGiaVon);
+    var tong = double.parse(tongTienhang);
     return InkWell(
       onTap: () {
         Navigator.of(context)

@@ -48,8 +48,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     super.initState();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
-    ttTxt = "Duyệt Đơn";
-    // tt = 0;
   }
 
   getAllCustomerList(String id) async {
@@ -68,6 +66,31 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
         }
       });
     });
+  }
+
+  gettt() {
+    print("Thong tin trang thai: " + tt.toString());
+    if (tt == 0) {
+      ttTxt = "Duyệt Đơn";
+    } else if (tt == 1) {
+      ttTxt = "Thanh Toán";
+    } else if (tt == 2) {
+      ttTxt = "Đóng gói và Giao hàng";
+    } else if (tt == 3) {
+      ttTxt = "Xuất kho";
+    } else if (tt == 4) {
+      ttTxt = "Hoàn thành / Trả hàng";
+    } else if (tt == 5) {
+      trangthai = "Đơn hàng đã trả";
+
+      isClose = false;
+
+      // hồi lại số lượng hàng hóa;
+    } else if (tt == 6) {
+      isClose = false;
+      trangthai = "Đơn hàng đã hủy";
+    }
+    updateTrangthai();
   }
 
   getList() {
@@ -101,7 +124,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
 
   @override
   void didChangeDependencies() {
+    final Map data = ModalRoute.of(context).settings.arguments;
+    tt = int.parse(data['trangthai'].toString());
+    gettt();
     getList();
+
     super.didChangeDependencies();
   }
 
@@ -121,23 +148,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     final Map data = ModalRoute.of(context).settings.arguments;
     double mainWidth = MediaQuery.of(context).size.width * 1;
     int tthInt = double.parse(data['tongTienhang']).round();
-    tt = int.parse(data['trangthai'].toString());
-    if (tt == 1) {
-      ttTxt = "Thanh Toán";
-    } else if (tt == 2) {
-      ttTxt = "Đóng gói và Giao hàng";
-    } else if (tt == 3) {
-      ttTxt = "Xuất Kho";
-    } else if (tt == 4) {
-      ttTxt = "Hoàn thành / Trả hàng";
-    } else if (tt == 5) {
-      trangthai = "Đơn hàng đã trả";
-      isClose = false;
-      // hồi lại số lượng hàng hóa;
-    } else if (tt == 6) {
-      isClose = false;
-      trangthai = "Đơn hàng đã hủy";
-    }
 
     if (data['chietKhau'].toString() == "0") {
       ck = formatCurrency.format((double.parse(data['tongTienhang']) -
@@ -172,25 +182,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                   mainAxisSize: MainAxisSize.max,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    // Padding(
-                                    //     padding: EdgeInsets.all(7.0),
-                                    //     child: Card(
-                                    //       clipBehavior: Clip.antiAlias,
-                                    //       elevation: 2,
-                                    //       child: Column(
-                                    //         children: [
-                                    //           Padding(
-                                    //             padding: EdgeInsets.all(7.0),
-                                    //             child: Row(
-                                    //               children: [
-                                    //                 Text(
-                                    //                     "đặt hàng, duyệt, đóng gói, xuất kho, hoàn thành")
-                                    //               ],
-                                    //             ),
-                                    //           ),
-                                    //         ],
-                                    //       ),
-                                    //     )),
                                     Padding(
                                       padding: EdgeInsets.all(7.0),
                                       child: Card(
@@ -217,8 +208,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                     ),
                                                   ),
                                                   SizedBox(height: 10),
-                                                  Text(
-                                                      "Bán bởi Tên nhân viên"),
+                                                  Text("Bán bởi Hoàng Long"),
                                                   SizedBox(height: 10),
                                                   Text("Chi nhánh mặc định"),
                                                   SizedBox(height: 10),
@@ -516,12 +506,48 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                     height: 47,
                                     child: RaisedButton(
                                       onPressed: () {
-                                        updateTrangthai();
                                         setState(() {
-                                          if (changetxt == false) {
-                                            changetxt = !changetxt;
+                                          tt++;
+                                          if (tt == 5) {
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) => AlertDialog(
+                                                title: Text(
+                                                    "Bạn có muốn trả hàng không?"),
+                                                actions: <Widget>[
+                                                  FlatButton(
+                                                    onPressed: () {
+                                                      gettt();
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Trả hàng thành công",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity: ToastGravity
+                                                              .BOTTOM,
+                                                          timeInSecForIosWeb: 1,
+                                                          textColor:
+                                                              Colors.black87,
+                                                          fontSize: 16.0);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text("Có"),
+                                                  ),
+                                                  FlatButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop("Không");
+                                                    },
+                                                    child: Text("Không"),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          } else {
+                                            gettt();
                                           }
-                                          print(changetxt);
                                         });
                                       },
                                       child: changetxt
@@ -605,7 +631,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   }
 
   Future<void> updateTrangthai() async {
-    tt++;
     final Map data = ModalRoute.of(context).settings.arguments;
     idDonHangFB = data['idDonHang'].toString();
     if (formKey.currentState.validate()) {

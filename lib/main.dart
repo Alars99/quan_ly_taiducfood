@@ -14,6 +14,8 @@ import 'package:quan_ly_taiducfood/order_action/View/Order/order_screen.dart';
 import 'main_action/products/product_detail.dart';
 import 'main_action/products/product_edit.dart';
 import 'statistical_action/View/donhang_in_a_day.dart';
+import 'statistical_action/View/donhang_in_a_day1.dart';
+import 'statistical_action/View/donhang_in_a_day2.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,6 +59,8 @@ class MyApp extends StatelessWidget {
           DonhangInADay.routeName: (ctxDIAD) => DonhangInADay(),
           ProductDetailNotification.routeName: (ctxPDN) =>
               ProductDetailNotification(),
+          DonhangInADay1.routeName: (ctxDIADA) => DonhangInADay1(),
+          DonhangInADay2.routeName: (ctxDIADB) => DonhangInADay2(),
         });
   }
 }

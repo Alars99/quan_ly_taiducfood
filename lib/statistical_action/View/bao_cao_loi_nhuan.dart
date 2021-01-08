@@ -18,7 +18,8 @@ class _BaoCaoLoiNhuanScreenState extends State<BaoCaoLoiNhuanScreen>
   DateTime endTime;
   DateTime _date;
   String _dateString;
-  int tongMoneyDH;
+  double tongMoneyDH;
+  double tongMoneyVon;
   int sl;
   int dem;
   int tongDHtheoThang;
@@ -83,18 +84,20 @@ class _BaoCaoLoiNhuanScreenState extends State<BaoCaoLoiNhuanScreen>
 
       for (var dl in dateListSort) {
         tongMoneyDH = 0;
+        tongMoneyVon = 0;
         sl = 0;
         for (var order in orderList) {
           if (order.ngaymua == dl.date && order.trangthai == "4") {
             tongMoneyDH += double.parse(order.tongTienhang).round();
-            tongDHtheoThang += double.parse(order.tongTienhang).round();
+            tongMoneyVon += double.parse(order.tongGiaVon).round();
+            tongDHtheoThang += (tongMoneyDH.round() - tongMoneyVon.round());
             sl++;
           }
-          dl.tienAlldonhang = tongMoneyDH;
+          dl.tienAlldonhang = tongMoneyDH.round() - tongMoneyVon.round();
           dl.soluong = sl;
         }
       }
-      print(dateListSort.length);
+
       setState(() {});
     });
   }
@@ -204,8 +207,8 @@ class _BaoCaoLoiNhuanScreenState extends State<BaoCaoLoiNhuanScreen>
   Widget datewidget(date, int tienAlldonhang, int soluong) {
     return InkWell(
       onTap: () {
-        Navigator.of(context)
-            .pushNamed(DonhangInADay.routeName, arguments: {'date': date});
+        Navigator.of(context).pushNamed(DonhangInADay.routeName,
+            arguments: {'date': date, 'name': "LỢI NHUẬN GỘP"});
       },
       child: new Container(
         child: new Column(

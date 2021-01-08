@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
 import 'package:quan_ly_taiducfood/statistical_action/View/donhang_in_a_day.dart';
+import 'package:quan_ly_taiducfood/statistical_action/View/donhang_in_a_day1.dart';
 import 'package:quan_ly_taiducfood/statistical_action/models/doanhthu_Days.dart';
 
 class BaoCaoDoanhThuScreen extends StatefulWidget {
@@ -92,11 +93,12 @@ class _BaoCaoDoanhThuScreenState extends State<BaoCaoDoanhThuScreen>
             tongDHtheoThang += double.parse(order.tongTienhang).round();
             sl++;
           }
+
           dl.tienAlldonhang = tongMoneyDH;
           dl.soluong = sl;
         }
       }
-      print(dateListSort.length);
+
       setState(() {});
     });
   }
@@ -206,8 +208,8 @@ class _BaoCaoDoanhThuScreenState extends State<BaoCaoDoanhThuScreen>
   Widget datewidget(date, int tienAlldonhang, int soluong) {
     return InkWell(
       onTap: () {
-        Navigator.of(context)
-            .pushNamed(DonhangInADay.routeName, arguments: {'date': date});
+        Navigator.of(context).pushNamed(DonhangInADay1.routeName,
+            arguments: {'date': date, 'name': 'DOANH THU'});
       },
       child: new Container(
         child: new Column(

@@ -38,7 +38,11 @@ class _OrderListScreenState extends State<OrderListScreen>
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     // getAllOrderList();
+    orderList.clear();
+    orderList2.clear();
+  }
 
+  getData() {
     DatabaseReference referenceProduct =
         FirebaseDatabase.instance.reference().child("Order");
     referenceProduct.once().then((DataSnapshot snapshot) {
@@ -198,9 +202,7 @@ class _OrderListScreenState extends State<OrderListScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // getAllOrderList();
-    // final Map data = ModalRoute.of(context).settings.arguments;
-    // idDonHang = data['idDonHang'];
+    getData();
   }
 
   // Future<bool> getData() async {
