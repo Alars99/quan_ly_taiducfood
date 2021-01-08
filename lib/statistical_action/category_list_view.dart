@@ -65,6 +65,15 @@ class _CategoryListViewState extends State<CategoryListView>
           producList.add(productDetail);
         }
 
+        producList.sort((a, b) {
+          var adate = int.parse(a.daban);
+          var bdate = int.parse(b.daban);
+          return bdate.compareTo(adate);
+        });
+        for (var r in producList) {
+          print(r.daban + "      AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        }
+
         // for (var sp in producList) {
         //   if (int.parse(sp.daban) > 3) {
         //     print(sp.name);
@@ -107,7 +116,7 @@ class _CategoryListViewState extends State<CategoryListView>
         }
 
         if (int.parse(sp.trangthai) == 4 || int.parse(sp.trangthai) == 5) {
-          print(sp.tongTienhang);
+          // print(sp.tongTienhang);
           thanhtoandonhang += double.parse(sp.tongTienhang);
         }
         tientrakhach = thanhtoandonhang - giaDoanhthu;
@@ -794,11 +803,12 @@ class _CategoryListViewState extends State<CategoryListView>
                                                         Row(
                                                           children: [
                                                             Container(
+                                                              width: 110,
                                                               child: Text(
                                                                 'Top 2: ' +
-                                                                    producList
-                                                                        .length
-                                                                        .toString(),
+                                                                    producList[
+                                                                            1]
+                                                                        .name,
                                                                 textAlign:
                                                                     TextAlign
                                                                         .left,
@@ -834,18 +844,25 @@ class _CategoryListViewState extends State<CategoryListView>
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: <Widget>[
-                                                        Text(
-                                                          'Top 3: ',
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontSize: 10,
-                                                            letterSpacing: 0.27,
-                                                            color:
-                                                                DesignCourseAppTheme
-                                                                    .nearlyBlue,
+                                                        Container(
+                                                          width: 110,
+                                                          child: Text(
+                                                            'Top 3: ' +
+                                                                producList[2]
+                                                                    .name,
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 10,
+                                                              letterSpacing:
+                                                                  0.27,
+                                                              color:
+                                                                  DesignCourseAppTheme
+                                                                      .nearlyBlue,
+                                                            ),
                                                           ),
                                                         ),
                                                         Container(
