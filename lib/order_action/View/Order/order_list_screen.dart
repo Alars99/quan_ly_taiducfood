@@ -48,6 +48,8 @@ class _OrderListScreenState extends State<OrderListScreen>
     // orderList.clear();
     // orderList2.clear();
     // orderListCache.clear();
+    DateTime a = DateTime.now();
+    print(a);
   }
 
   // getData() {
@@ -107,6 +109,8 @@ class _OrderListScreenState extends State<OrderListScreen>
       for (var date in orderList) {
         DateTime dateformat = new DateFormat("dd/MM/yyyy hh:mm:ss")
             .parse(date.ngaymua + " " + date.giomua.toString());
+        // print(dateformat);
+
         // DateTimeSplit dateTimeSplit = new DateTimeSplit(
         //   date: dateformat,
         //   time: date.giomua,
@@ -117,7 +121,6 @@ class _OrderListScreenState extends State<OrderListScreen>
       }
 
       for (var ds in dateList) {
-        print(ds.toString());
         var splitDate = ds.toString().split(" ");
         date = splitDate[0].trim();
         var gio = splitDate.sublist(1).join(" ").trim();
@@ -141,7 +144,6 @@ class _OrderListScreenState extends State<OrderListScreen>
         orderListCache.add(order);
       }
       for (var sort in orderListCache) {
-        // print(sort.ngaymua);
         for (var order in orderList) {
           if (sort.ngaymua == order.ngaymua && sort.giomua == order.giomua) {
             sort.idDonHang = order.idDonHang;
@@ -158,9 +160,7 @@ class _OrderListScreenState extends State<OrderListScreen>
           }
         }
       }
-      setState(() {
-        
-      });
+      setState(() {});
     });
   }
 
@@ -237,6 +237,15 @@ class _OrderListScreenState extends State<OrderListScreen>
       }
 
       if (i == 1) {
+        orderListCache.clear();
+        orderList2.sort((a, b) {
+          var adate = double.parse(a.tongTienhang).round();
+          var bdate = double.parse(b.tongTienhang).round();
+          return adate.compareTo(bdate);
+        });
+        for (var t in orderList2) {
+          orderListCache.add(t);
+        }
       } else if (i == 3) {
         // orderList.clear();
         orderListCache.clear();
@@ -247,6 +256,15 @@ class _OrderListScreenState extends State<OrderListScreen>
           }
         }
       } else if (i == 2) {
+        orderListCache.clear();
+        orderList2.sort((a, b) {
+          var adate = double.parse(a.tongTienhang).round();
+          var bdate = double.parse(b.tongTienhang).round();
+          return bdate.compareTo(adate);
+        });
+        for (var t in orderList2) {
+          orderListCache.add(t);
+        }
       } else if (i == 4) {
         // orderList.clear();
         orderListCache.clear();
@@ -311,7 +329,6 @@ class _OrderListScreenState extends State<OrderListScreen>
   void didChangeDependencies() {
     super.didChangeDependencies();
     getData();
-
   }
 
   // Future<bool> getData() async {
