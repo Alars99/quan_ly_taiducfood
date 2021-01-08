@@ -18,6 +18,9 @@ class _HistoryCustomerScreen extends State<HistoryCustomer> {
   var customer = Customer();
   var _customerService = CustomerService();
 
+  String nameStatus = "";
+  var colortxt;
+
   List<OrderList> orderList = [];
   List<Customer> customerList = [];
 
@@ -58,6 +61,31 @@ class _HistoryCustomerScreen extends State<HistoryCustomer> {
       }
       setState(() {});
     });
+  }
+
+  getStatus(String id) {
+    if (id == "0") {
+      nameStatus = "Chưa duyệt";
+      colortxt = Colors.blue[300];
+    } else if (id == "1") {
+      nameStatus = "Chờ xuất kho";
+      colortxt = Colors.blue[500];
+    } else if (id == "2") {
+      nameStatus = "Đang giao hàng";
+      colortxt = Colors.blue[700];
+    } else if (id == "3") {
+      nameStatus = "Chờ thanh toán";
+      colortxt = Colors.blue[900];
+    } else if (id == "4") {
+      nameStatus = "Đã thanh toán";
+      colortxt = Colors.green[600];
+    } else if (id == "5") {
+      nameStatus = "Đã trả hàng";
+      colortxt = Colors.red;
+    } else if (id == "6") {
+      nameStatus = "Đã hủy đơn";
+      colortxt = Colors.red;
+    }
   }
 
   getAllCustomerList(String id) async {
@@ -156,6 +184,7 @@ class _HistoryCustomerScreen extends State<HistoryCustomer> {
       String tongTienhang) {
     print(customerList.first.idCustomer + " , " + idKhachHang);
     if (customerList.first.idCustomer == idKhachHang) {
+      getStatus(trangthai);
       return GestureDetector(
         onTap: () {
           Navigator.of(context).pushNamed(
@@ -261,13 +290,25 @@ class _HistoryCustomerScreen extends State<HistoryCustomer> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
+                                // Padding(
+                                //   padding: EdgeInsets.only(right: 16, top: 8),
+                                //   child: Text(
+                                //     trangthai.toString(),
+                                //     style: TextStyle(
+                                //       fontWeight: FontWeight.bold,
+                                //       fontFamily: 'WorkSans',
+                                //     ),
+                                //   ),
+                                // )
                                 Padding(
-                                  padding: EdgeInsets.only(right: 16, top: 8),
+                                  padding: EdgeInsets.all(10),
                                   child: Text(
-                                    trangthai.toString(),
+                                    nameStatus,
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontFamily: 'WorkSans',
+                                      color: colortxt,
+                                      fontSize: 14,
                                     ),
                                   ),
                                 )
