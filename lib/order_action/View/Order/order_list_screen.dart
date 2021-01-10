@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
 import 'package:quan_ly_taiducfood/main_action/custom_ui/hotel_app_theme.dart';
-import 'package:quan_ly_taiducfood/order_action/model/datetime.dart';
+import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
 import '../../../main.dart';
 import 'order_detail_screen.dart';
@@ -29,57 +29,21 @@ class _OrderListScreenState extends State<OrderListScreen>
   String nameKH;
   List<OrderList> orderList = [];
   List<OrderList> orderList2 = [];
-  List<OrderList> orderListCache = [];
   static String nameStatus = "";
   var customer = Customer();
+  var _customerService = CustomerService();
   List<Customer> customerList = [];
-
-  String date;
-  String time;
-
-  List dateList = [];
 
   @override
   void initState() {
     super.initState();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
-    // getAllOrderList();
-    // orderList.clear();
-    // orderList2.clear();
-    // orderListCache.clear();
-    DateTime a = DateTime.now();
-    print(a);
-  }
+    orderList.clear();
+    orderList2.clear();
 
-  // getData() {
-  //   DatabaseReference referenceProduct =
-  //       FirebaseDatabase.instance.reference().child("Order");
-  //   referenceProduct.once().then((DataSnapshot snapshot) {
-  //     orderList.clear();
-  //     var keys = snapshot.value.keys;
-  //     var values = snapshot.value;
-  //     for (var key in keys) {
-  //       OrderList order = new OrderList(
-  //         values[key]["idDonHang"],
-  //         values[key]["idGioHang"],
-  //         values[key]["tongTienhang"],
-  //         values[key]["tongSoluong"],
-  //         values[key]["phiGiaohang"],
-  //         values[key]["chietKhau"],
-  //         values[key]["banSiLe"],
-  //         values[key]["paymethod"],
-  //         values[key]["idKhachHang"],
-  //         values[key]["ngaymua"],
-  //         values[key]["trangthai"],
-  //         values[key]["giomua"],
-  //         values[key]["tongGiaVon"],
-  //       );
-  //       orderList.add(order);
-  //     }
-  //     setState(() {});
-  //   });
-  // }
+    getData();
+  }
 
   getData() {
     DatabaseReference referenceProduct =
@@ -103,61 +67,16 @@ class _OrderListScreenState extends State<OrderListScreen>
           values[key]["trangthai"],
           values[key]["giomua"],
           values[key]["tongGiaVon"],
+          values[key]["datetime"],
         );
         orderList.add(order);
-      }
-      for (var date in orderList) {
-        DateTime dateformat = new DateFormat("dd/MM/yyyy hh:mm:ss")
-            .parse(date.ngaymua + " " + date.giomua.toString());
-        // print(dateformat);
-
-        // DateTimeSplit dateTimeSplit = new DateTimeSplit(
-        //   date: dateformat,
-        //   time: date.giomua,
-        // );
-        dateList.add(dateformat);
-        dateList.sort((a, b) => b.compareTo(a));
-        // orderListCache.clear();
-      }
-
-      for (var ds in dateList) {
-        var splitDate = ds.toString().split(" ");
-        date = splitDate[0].trim();
-        var gio = splitDate.sublist(1).join(" ").trim();
-        var splitTime = gio.toString().split(".");
-        time = splitTime[0].trim();
-        OrderList order = new OrderList(
-          values["idDonHang"] = "0",
-          values["idGioHang"] = "0",
-          values["tongTienhang"] = "0",
-          values["tongSoluong"] = "0",
-          values["phiGiaohang"] = "0",
-          values["chietKhau"] = "0",
-          values["banSiLe"] = "0",
-          values["paymethod"] = "0",
-          values["idKhachHang"] = "0",
-          values["ngaymua"] = DateFormat('dd/MM/yyyy').format(ds).toString(),
-          values["trangthai"] = "0",
-          values["giomua"] = time.toString(),
-          values["tongGiaVon"] = "0",
-        );
-        orderListCache.add(order);
-      }
-      for (var sort in orderListCache) {
-        for (var order in orderList) {
-          if (sort.ngaymua == order.ngaymua && sort.giomua == order.giomua) {
-            sort.idDonHang = order.idDonHang;
-            sort.idKhachHang = order.idKhachHang;
-            sort.ngaymua = order.ngaymua;
-            sort.trangthai = order.trangthai;
-            sort.idGioHang = order.idGioHang;
-            sort.banSiLe = order.banSiLe;
-            sort.chietKhau = order.chietKhau;
-            sort.paymethod = order.paymethod;
-            sort.phiGiaohang = order.phiGiaohang;
-            sort.tongSoluong = order.tongSoluong;
-            sort.tongTienhang = order.tongTienhang;
-          }
+        orderList.sort((a, b) {
+          DateTime adate = DateTime.parse(a.datetime);
+          DateTime bdate = DateTime.parse(b.datetime);
+          return bdate.compareTo(adate);
+        });
+        for (var a in orderList) {
+          print(a.datetime);
         }
       }
       setState(() {});
@@ -189,30 +108,29 @@ class _OrderListScreenState extends State<OrderListScreen>
     }
   }
 
-  // getAllCustomerList(String id) async {
-  //   customerList.clear();
-  //   var customers = await _customerService.readCustomerList();
-  //   customers.forEach((customer) {
-  //     setState(() {
-  //       if (customer['id'] == id) {
-  //         var customerModel = new Customer();
-  //         customerModel.idCustomer = customer['id'];
-  //         customerModel.name = customer['name'];
-  //         customerModel.phone = customer['phone'];
-  //         customerModel.email = customer['email'];
-  //         customerModel.address = customer['address'];
-  //         customerList.add(customerModel);
-  //       }
-  //     });
-  //   });
-  // }
+  getAllCustomerList(String id) async {
+    customerList.clear();
+    var customers = await _customerService.readCustomerList();
+    customers.forEach((customer) {
+      setState(() {
+        if (customer['id'] == id) {
+          var customerModel = new Customer();
+          customerModel.idCustomer = customer['id'];
+          customerModel.name = customer['name'];
+          customerModel.phone = customer['phone'];
+          customerModel.email = customer['email'];
+          customerModel.address = customer['address'];
+          customerList.add(customerModel);
+        }
+      });
+    });
+  }
 
   getLocgiatri(int i) {
     DatabaseReference referenceProduct =
         FirebaseDatabase.instance.reference().child("Order");
     referenceProduct.once().then((DataSnapshot snapshot) {
       orderList2.clear();
-      // orderListCache.clear();
       var keys = snapshot.value.keys;
       var values = snapshot.value;
       for (var key in keys) {
@@ -230,93 +148,121 @@ class _OrderListScreenState extends State<OrderListScreen>
           values[key]["trangthai"],
           values[key]["giomua"],
           values[key]["tongGiaVon"],
+          values[key]["datetime"],
         );
         orderList.add(order);
-        orderListCache.add(order);
         orderList2.add(order);
       }
 
       if (i == 1) {
-        orderListCache.clear();
+        orderList.clear();
         orderList2.sort((a, b) {
           var adate = double.parse(a.tongTienhang).round();
           var bdate = double.parse(b.tongTienhang).round();
           return adate.compareTo(bdate);
         });
         for (var t in orderList2) {
-          orderListCache.add(t);
+          orderList.add(t);
         }
       } else if (i == 3) {
-        // orderList.clear();
-        orderListCache.clear();
+        orderList.clear();
+
         for (var sp in orderList2) {
           if (sp.trangthai == "0") {
-            // orderList.add(sp);
-            orderListCache.add(sp);
+            orderList.add(sp);
+            orderList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.datetime);
+              DateTime bdate = DateTime.parse(b.datetime);
+              return bdate.compareTo(adate);
+            });
           }
         }
       } else if (i == 2) {
-        orderListCache.clear();
+        orderList.clear();
         orderList2.sort((a, b) {
           var adate = double.parse(a.tongTienhang).round();
           var bdate = double.parse(b.tongTienhang).round();
           return bdate.compareTo(adate);
         });
         for (var t in orderList2) {
-          orderListCache.add(t);
+          orderList.add(t);
         }
       } else if (i == 4) {
-        // orderList.clear();
-        orderListCache.clear();
+        orderList.clear();
+
         for (var sp in orderList2) {
           if (sp.trangthai == "1") {
-            // orderList.add(sp);
-            orderListCache.add(sp);
+            orderList.add(sp);
+            orderList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.datetime);
+              DateTime bdate = DateTime.parse(b.datetime);
+              return bdate.compareTo(adate);
+            });
           }
         }
       } else if (i == 5) {
-        // orderList.clear();
-        orderListCache.clear();
+        orderList.clear();
+
         for (var sp in orderList2) {
           if (sp.trangthai == "3") {
-            // orderList.add(sp);
-            orderListCache.add(sp);
+            orderList.add(sp);
+            orderList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.datetime);
+              DateTime bdate = DateTime.parse(b.datetime);
+              return bdate.compareTo(adate);
+            });
           }
         }
       } else if (i == 6) {
-        // orderList.clear();
-        orderListCache.clear();
+        orderList.clear();
+
         for (var sp in orderList2) {
           if (sp.trangthai == "2") {
-            // orderList.add(sp);
-            orderListCache.add(sp);
+            orderList.add(sp);
+            orderList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.datetime);
+              DateTime bdate = DateTime.parse(b.datetime);
+              return bdate.compareTo(adate);
+            });
           }
         }
       } else if (i == 7) {
-        // orderList.clear();
-        orderListCache.clear();
+        orderList.clear();
+
         for (var sp in orderList2) {
           if (sp.trangthai == "4") {
-            // orderList.add(sp);
-            orderListCache.add(sp);
+            orderList.add(sp);
+            orderList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.datetime);
+              DateTime bdate = DateTime.parse(b.datetime);
+              return bdate.compareTo(adate);
+            });
           }
         }
       } else if (i == 8) {
-        // orderList.clear();
-        orderListCache.clear();
+        orderList.clear();
+
         for (var sp in orderList2) {
           if (sp.trangthai == "5") {
-            // orderList.add(sp);
-            orderListCache.add(sp);
+            orderList.add(sp);
+            orderList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.datetime);
+              DateTime bdate = DateTime.parse(b.datetime);
+              return bdate.compareTo(adate);
+            });
           }
         }
       } else if (i == 9) {
-        // orderList.clear();
-        orderListCache.clear();
+        orderList.clear();
+
         for (var sp in orderList2) {
           if (sp.trangthai == "6") {
-            // orderList.add(sp);
-            orderListCache.add(sp);
+            orderList.add(sp);
+            orderList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.datetime);
+              DateTime bdate = DateTime.parse(b.datetime);
+              return bdate.compareTo(adate);
+            });
           }
         }
       }
@@ -328,7 +274,7 @@ class _OrderListScreenState extends State<OrderListScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    getData();
+    // getData();
   }
 
   // Future<bool> getData() async {
@@ -336,11 +282,11 @@ class _OrderListScreenState extends State<OrderListScreen>
   //   return true;
   // }
 
-  // @override
-  // void dispose() {
-  //   animationController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
 
   Widget search() {
     return Padding(
@@ -421,59 +367,24 @@ class _OrderListScreenState extends State<OrderListScreen>
                       //     child:
                       Expanded(
                         child: ListView.builder(
-                          itemCount: orderListCache.length,
-                          //  == null
-                          //     ? orderList.length
-                          //     : orderListCache.length,
+                          itemCount: orderList.length,
                           shrinkWrap: true,
                           padding: const EdgeInsets.only(top: 8),
                           scrollDirection: Axis.vertical,
                           itemBuilder: (_, index) {
                             return orderListScreenView(
-                              orderListCache[index].idDonHang,
-                              //  == null
-                              //     ? orderList[index].idDonHang
-                              //     : orderListCache[index].idDonHang,
-                              orderListCache[index].idKhachHang,
-                              //  == null
-                              //     ? orderList[index].idKhachHang
-                              //     : orderListCache[index].idKhachHang,
-                              orderListCache[index].ngaymua,
-                              //  == null
-                              //     ? orderList[index].ngaymua
-                              //     : orderListCache[index].ngaymua,
-                              orderListCache[index].trangthai,
-                              //  == null
-                              //     ? orderList[index].trangthai
-                              //     : orderListCache[index].trangthai,
-                              orderListCache[index].idGioHang,
-                              //  == null
-                              //     ? orderList[index].idGioHang
-                              //     : orderListCache[index].idGioHang,
-                              orderListCache[index].banSiLe,
-                              //  == null
-                              //     ? orderList[index].banSiLe
-                              //     : orderListCache[index].banSiLe,
-                              orderListCache[index].chietKhau,
-                              //  == null
-                              //     ? orderList[index].chietKhau
-                              //     : orderListCache[index].chietKhau,
-                              orderListCache[index].paymethod,
-                              //  == null
-                              //     ? orderList[index].paymethod
-                              //     : orderListCache[index].paymethod,
-                              orderListCache[index].phiGiaohang,
-                              //  == null
-                              //     ? orderList[index].phiGiaohang
-                              //     : orderListCache[index].phiGiaohang,
-                              orderListCache[index].tongSoluong,
-                              //  == null
-                              //     ? orderList[index].tongSoluong
-                              //     : orderListCache[index].tongSoluong,
-                              orderListCache[index].tongTienhang,
-                              //  == null
-                              //     ? orderList[index].tongTienhang
-                              //     : orderListCache[index].tongTienhang,
+                              orderList[index].idDonHang,
+                              orderList[index].idKhachHang,
+                              orderList[index].ngaymua,
+                              orderList[index].trangthai,
+                              orderList[index].idGioHang,
+                              orderList[index].banSiLe,
+                              orderList[index].chietKhau,
+                              orderList[index].paymethod,
+                              orderList[index].phiGiaohang,
+                              orderList[index].tongSoluong,
+                              orderList[index].tongTienhang,
+                              orderList[index].datetime,
                             );
                           },
                         ),
@@ -503,7 +414,8 @@ class _OrderListScreenState extends State<OrderListScreen>
       String paymethod,
       String phiGiaohang,
       String tongSoluong,
-      String tongTienhang) {
+      String tongTienhang,
+      String datetime) {
     final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
     int tongthInt = double.parse(tongTienhang).round();
     getStatus(trangthai);
@@ -598,7 +510,7 @@ class _OrderListScreenState extends State<OrderListScreen>
                                         ),
                                       ],
                                     ),
-                                    Row(
+                                    Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       mainAxisAlignment:
@@ -617,6 +529,16 @@ class _OrderListScreenState extends State<OrderListScreen>
                                         const SizedBox(
                                           width: 4,
                                         ),
+                                        // Padding(
+                                        //   padding: EdgeInsets.only(top: 8),
+                                        //   child: Text(
+                                        //     datetime.toString(),
+                                        //     style: TextStyle(
+                                        //         fontSize: 14,
+                                        //         color: Colors.black
+                                        //             .withOpacity(1)),
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
                                     Padding(
@@ -793,7 +715,7 @@ class _OrderListScreenState extends State<OrderListScreen>
                       },
                     ),
                     RadioListTile(
-                      title: Text("Đơn chờ thanh toán"),
+                      title: Text("Đơn chờ xuất kho"),
                       value: 4,
                       groupValue: tienship,
                       onChanged: (value) {
@@ -804,7 +726,7 @@ class _OrderListScreenState extends State<OrderListScreen>
                       },
                     ),
                     RadioListTile(
-                      title: Text("Đơn chờ xuất kho"),
+                      title: Text("Đơn chờ thanh toán"),
                       value: 5,
                       groupValue: tienship,
                       onChanged: (value) {
@@ -871,8 +793,8 @@ class _OrderListScreenState extends State<OrderListScreen>
     DatabaseReference searchRef =
         FirebaseDatabase.instance.reference().child("Order");
     searchRef.once().then((DataSnapshot snapshot) {
-      orderListCache.clear();
-      // orderList.clear();
+      orderList2.clear();
+      orderList.clear();
       var keys = snapshot.value.keys;
       var values = snapshot.value;
 
@@ -891,15 +813,19 @@ class _OrderListScreenState extends State<OrderListScreen>
           values[key]["trangthai"],
           values[key]["giomua"],
           values[key]["tongGiaVon"],
+          values[key]["datetime"],
         );
         if (order.idKhachHang.toLowerCase().contains(text)) {
-          orderListCache.add(order);
+          orderList.add(order);
+          orderList.sort((a, b) {
+            DateTime adate = DateTime.parse(a.datetime);
+            DateTime bdate = DateTime.parse(b.datetime);
+            return bdate.compareTo(adate);
+          });
         }
       }
       Timer(Duration(seconds: 1), () {
-        setState(() {
-          //
-        });
+        setState(() {});
       });
     });
   }

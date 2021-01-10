@@ -63,6 +63,7 @@ class _BaoCaoThanhToanScreenState extends State<BaoCaoThanhToanScreen>
           values[key]["trangthai"],
           values[key]["giomua"],
           values[key]["tongGiaVon"],
+          values[key]["datetime"],
         );
         orderList.add(order);
       }

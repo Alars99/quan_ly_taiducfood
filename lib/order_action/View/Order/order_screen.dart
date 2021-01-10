@@ -167,6 +167,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
       mapOrder["idKhachHang"] = customer.idCustomer.toString();
       mapOrder["ngaymua"] = DateFormat('dd/MM/yyyy').format(now).toString();
       mapOrder["giomua"] = DateFormat('kk:mm:ss').format(now).toString();
+      mapOrder["datetime"] = now.toString();
       mapOrder["tongGiaVon"] = tongTienVon.toString();
       mapOrder["trangthai"] = "0";
 
