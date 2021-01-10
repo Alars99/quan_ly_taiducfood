@@ -101,7 +101,7 @@ class _XemDonHangScreen extends State<XemDonHangScreen> {
         ),
         InkWell(
           onTap: () {
-            print("1");
+       
           },
           child: Container(
             width: 350,

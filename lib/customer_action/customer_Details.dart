@@ -329,7 +329,7 @@ class _DetailscustomerScreen extends State<DetailsCustomer> {
                                     'idCustomer': customer.idCustomer,
                                   },
                                 );
-                                print(customer.idCustomer);
+                             
                               },
                               child: Text(
                                 "Lịch sử mua hàng",

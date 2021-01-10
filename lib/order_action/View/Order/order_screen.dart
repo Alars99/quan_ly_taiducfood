@@ -121,7 +121,6 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
   }
 
   getInfoCustomer(int index) {
-    print(customerList[index].name);
     nameCustomer = customerList[index].name;
     customer.idCustomer = customerList[index].idCustomer;
     customer.address = customerList[index].address;
@@ -138,7 +137,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
       tong += double.parse(element.price) * element.count;
       tongTienVon += double.parse(element.priceVon) * element.count;
     });
-    print(tongTienVon);
+
     if (chietKhau == 0) {
       tongTienhang = tong + phiGiaohang;
     } else {
@@ -149,7 +148,6 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
   // ignore: non_constant_identifier_names
   Future<void> getDathang_GioHang() async {
     if (customer.idCustomer.isEmpty) {
-      print("không có khách hàng");
     } else {
       DateTime now = DateTime.now();
       DatabaseReference reference =
@@ -179,7 +177,6 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
       DatabaseReference referenceCart =
           FirebaseDatabase.instance.reference().child('Cart');
 
-      print(orderList.length);
       for (var sanpham in orderList) {
         String idSanpham = reference.push().key;
         HashMap mapCart = new HashMap();
@@ -202,7 +199,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
   //   referenceProduct.child(sanpham.id)
   //       .update({'amount': (sanpham.amout - sanpham.count).toString()});
   // } else {
-  //   print("không up");
+
   // }
 
   @override

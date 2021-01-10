@@ -182,7 +182,7 @@ class _HistoryCustomerScreen extends State<HistoryCustomer> {
       String phiGiaohang,
       String tongSoluong,
       String tongTienhang) {
-    print(customerList.first.idCustomer + " , " + idKhachHang);
+   
     if (customerList.first.idCustomer == idKhachHang) {
       getStatus(trangthai);
       return GestureDetector(

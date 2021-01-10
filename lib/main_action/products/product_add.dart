@@ -121,8 +121,8 @@ class _ProductAddState extends State<ProductAdd> {
         key: formKey,
         child: SingleChildScrollView(
           child: Container(
-            height: MediaQuery.of(context).size.height * 1.65,
-            padding: EdgeInsets.only(top: 10),
+            height: 1000,
+            padding: EdgeInsets.only(top: 0),
             child: Column(
               children: [
                 new Card(

@@ -71,7 +71,7 @@ class _CategoryListViewState extends State<CategoryListView>
           return bdate.compareTo(adate);
         });
         for (var r in producList) {
-          print(r.daban + "      AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      
         }
 
         // for (var sp in producList) {
@@ -762,8 +762,8 @@ class _CategoryListViewState extends State<CategoryListView>
                                                   Padding(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                      top: 16,
-                                                      right: 16,
+                                                      top: 8,
+                                                      right: 8,
                                                     ),
                                                     child: Column(
                                                       mainAxisAlignment:
@@ -790,7 +790,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                                                         FontWeight
                                                                             .w600,
                                                                     fontSize:
-                                                                        12,
+                                                                        10,
                                                                     letterSpacing:
                                                                         0.27,
                                                                     color: Colors
@@ -817,7 +817,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w600,
-                                                                  fontSize: 11,
+                                                                  fontSize: 9,
                                                                   letterSpacing:
                                                                       0.27,
                                                                   color: Colors
@@ -856,7 +856,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w600,
-                                                              fontSize: 10,
+                                                              fontSize: 8,
                                                               letterSpacing:
                                                                   0.27,
                                                               color:

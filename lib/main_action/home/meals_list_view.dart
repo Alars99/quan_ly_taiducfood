@@ -125,7 +125,7 @@ class MealsView extends StatelessWidget {
                         highlightColor: FitnessAppTheme.grey,
                         focusColor: FitnessAppTheme.grey,
                         onTap: () {
-                          print(mealsListData.uiId);
+                  
                           if (mealsListData.uiId == 0) {
                             Navigator.push(
                                 context,

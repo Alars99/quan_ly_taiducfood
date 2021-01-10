@@ -247,7 +247,7 @@ class CategoryView extends StatelessWidget {
                                                                         customer,
                                                                   )));
 
-                                                      print(customer.idCustomer);
+                                                     
                                                     },
                                                     child: Padding(
                                                       padding:

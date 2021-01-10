@@ -108,8 +108,6 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
               dontra++;
             }
             if (don.trangthai == "4") {
-              print(don.ngaymua);
-              print(don.tongTienhang);
               doanhthuthang += double.parse(don.tongTienhang);
             }
           }

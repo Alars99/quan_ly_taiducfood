@@ -100,7 +100,7 @@ class _ThanhToanDonScreen extends State<ThanhToanDonScreen> {
               ),
               InkWell(
                 onTap: () {
-                  print("Chi tiết");
+             
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,

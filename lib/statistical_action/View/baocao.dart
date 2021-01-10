@@ -101,7 +101,7 @@ class _BaoCaoScreen extends State<BaoCaoScreen> {
         ),
         InkWell(
           onTap: () {
-            print("1");
+    
           },
           child: Container(
             width: 350,

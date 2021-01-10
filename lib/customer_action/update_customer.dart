@@ -363,11 +363,6 @@ class _UpdateCustomer extends State<UpdateCustomer> {
                             padding: const EdgeInsets.only(left: 16, right: 16),
                             child: RaisedButton(
                               onPressed: () {
-                                print(customer.idCustomer +
-                                    customer.name +
-                                    customer.address +
-                                    customer.phone +
-                                    customer.email);
                                 _customerService.updateCustomer(customer);
                                 Navigator.pop(context);
                               },

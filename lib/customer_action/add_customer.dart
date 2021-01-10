@@ -378,11 +378,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
                               onPressed: () {
                                 customer.idCustomer =
                                     "cus" + Random().nextInt(100).toString();
-                                print(customer.idCustomer +
-                                    customer.name +
-                                    customer.address +
-                                    customer.phone +
-                                    customer.email);
+
                                 _customerService.saveOrderList(customer);
                                 Navigator.pop(context);
                               },

@@ -103,7 +103,7 @@ class _LoiNhuanScreen extends State<LoiNhuanScreen> {
               ),
               InkWell(
                 onTap: () {
-                  print("Chi tiết");
+       
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,

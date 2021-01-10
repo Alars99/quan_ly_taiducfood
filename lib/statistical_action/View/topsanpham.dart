@@ -150,7 +150,7 @@ class _TopSanPhamScreen extends State<TopSanPhamScreen> {
               ),
               InkWell(
                 onTap: () {
-                  print("Chi tiết");
+                 
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
