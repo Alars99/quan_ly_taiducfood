@@ -12,6 +12,7 @@ class OrderList {
   String trangthai;
   String giomua;
   String tongGiaVon;
+  String datetime;
 
   OrderList(
     this.idDonHang,
@@ -27,6 +28,7 @@ class OrderList {
     this.trangthai,
     this.giomua,
     this.tongGiaVon,
+    this.datetime,
   );
 
   // orderMap() {

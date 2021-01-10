@@ -58,6 +58,7 @@ class _DonhangInADay2State extends State<DonhangInADay2>
           values[key]["trangthai"],
           values[key]["giomua"],
           values[key]["tongGiaVon"],
+          values[key]["datetime"],
         );
         orderList.add(order);
       }
@@ -83,6 +84,7 @@ class _DonhangInADay2State extends State<DonhangInADay2>
               order.trangthai,
               order.giomua,
               order.tongGiaVon,
+              order.datetime,
             );
             orderListSortDate.add(orderSort);
           }
