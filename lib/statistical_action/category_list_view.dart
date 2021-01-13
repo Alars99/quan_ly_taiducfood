@@ -4,8 +4,13 @@ import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
+import 'package:quan_ly_taiducfood/statistical_action/View/doanhthu_screen.dart';
 import 'package:quan_ly_taiducfood/statistical_action/design_course_app_theme.dart';
 import 'package:quan_ly_taiducfood/statistical_action/models/category.dart';
+
+import 'View/bao_cao_doanh_thu.dart';
+import 'View/bao_cao_loi_nhuan.dart';
+import 'View/bao_cao_thanh_toan.dart';
 
 class CategoryListView extends StatefulWidget {
   const CategoryListView({Key key, this.callBack}) : super(key: key);
@@ -70,9 +75,7 @@ class _CategoryListViewState extends State<CategoryListView>
           var bdate = int.parse(b.daban);
           return bdate.compareTo(adate);
         });
-        for (var r in producList) {
-      
-        }
+        for (var r in producList) {}
 
         // for (var sp in producList) {
         //   if (int.parse(sp.daban) > 3) {
@@ -175,7 +178,12 @@ class _CategoryListViewState extends State<CategoryListView>
                   children: [
                     InkWell(
                       splashColor: Colors.transparent,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => BaoCaoDoanhThuScreen()));
+                      },
                       child: SizedBox(
                         width: 280,
                         child: Stack(
@@ -344,7 +352,12 @@ class _CategoryListViewState extends State<CategoryListView>
                     ),
                     InkWell(
                       splashColor: Colors.transparent,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => BaoCaoLoiNhuanScreen()));
+                      },
                       child: SizedBox(
                         width: 280,
                         child: Stack(
@@ -497,7 +510,12 @@ class _CategoryListViewState extends State<CategoryListView>
                     ),
                     InkWell(
                       splashColor: Colors.transparent,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => BaoCaoThanhToanScreen()));
+                      },
                       child: SizedBox(
                         width: 280,
                         child: Stack(

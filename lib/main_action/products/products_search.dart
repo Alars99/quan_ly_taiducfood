@@ -26,9 +26,8 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
     with TickerProviderStateMixin {
   Animation<double> topBarAnimation;
 
-  GlobalKey<RefreshIndicatorState> refreshKey;
-
   List<ProductSearch> productSearchList = [];
+  List<ProductSearch> productSearchListSort = [];
 
   List<ProductSearch> searchList = [];
   List<ProductDetail> productSearchList2 = [];
@@ -38,12 +37,27 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
 
+  GlobalKey<RefreshIndicatorState> reKey;
+
   @override
   void initState() {
+    reKey = GlobalKey<RefreshIndicatorState>();
     endDate = DateTime.now();
     startDate = DateTime.utc(endDate.year, endDate.month, endDate.day - 7);
     super.initState();
     slHet = 0;
+    getData();
+
+    getLocgiatri();
+  }
+
+  Future<Null> refreshList() async {
+    await Future.delayed(Duration(seconds: 1));
+    getData();
+    return null;
+  }
+
+  getData() {
     DatabaseReference referenceProduct =
         FirebaseDatabase.instance.reference().child("SearchList");
     referenceProduct.once().then((DataSnapshot snapshot) {
@@ -58,14 +72,19 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
           values[key]["name"],
           values[key]["image"],
           values[key]["price"],
+          values[key]["dateUp"],
         );
         productSearchList.add(product);
+        productSearchList.sort((a, b) {
+          DateTime adate = DateTime.parse(a.dateUp);
+          DateTime bdate = DateTime.parse(b.dateUp);
+          return bdate.compareTo(adate);
+        });
       }
       setState(() {
         //
       });
     });
-    getLocgiatri();
   }
 
   getLocgiatri() {
@@ -127,7 +146,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
             }
           }
         }
-
         for (var sp in productSearchList2) {
           for (int i = 0; i <= 8; i++) {
             _dateTime = DateTime.utc(
@@ -142,6 +160,194 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
         setState(() {});
       });
     }
+  }
+
+  getLocList(int i) {
+    DatabaseReference referenceProduct =
+        FirebaseDatabase.instance.reference().child("SearchList");
+    referenceProduct.once().then((DataSnapshot snapshot) {
+      productSearchList.clear();
+      productSearchListSort.clear();
+      var keys = snapshot.value.keys;
+      var values = snapshot.value;
+
+      for (var key in keys) {
+        ProductSearch product = new ProductSearch(
+          values[key]["id"],
+          values[key]["idMain"],
+          values[key]["name"],
+          values[key]["image"],
+          values[key]["price"],
+          values[key]["dateUp"],
+        );
+        productSearchList.add(product);
+        productSearchListSort.add(product);
+        // productSearchList.sort((a, b) {
+        //   DateTime adate = DateTime.parse(a.dateUp);
+        //   DateTime bdate = DateTime.parse(b.dateUp);
+        //   return bdate.compareTo(adate);
+        // });
+      }
+
+      if (i == 1) {
+        productSearchList.clear();
+        productSearchListSort.sort((a, b) {
+          var adate = int.parse(a.price);
+          var bdate = int.parse(b.price);
+          return adate.compareTo(bdate);
+        });
+        for (var t in productSearchListSort) {
+          productSearchList.add(t);
+          print(t.price);
+        }
+      } else if (i == 3) {
+        productSearchList.clear();
+
+        for (var sp in productSearchListSort) {
+          if (sp.idMain == "1") {
+            productSearchList.add(sp);
+            productSearchList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.dateUp);
+              DateTime bdate = DateTime.parse(b.dateUp);
+              return bdate.compareTo(adate);
+            });
+          }
+        }
+      } else if (i == 2) {
+        productSearchList.clear();
+        productSearchListSort.sort((a, b) {
+          var adate = int.parse(a.price);
+          var bdate = int.parse(b.price);
+          return bdate.compareTo(adate);
+        });
+        for (var t in productSearchListSort) {
+          productSearchList.add(t);
+          print(t.price);
+        }
+      } else if (i == 4) {
+        productSearchList.clear();
+
+        for (var sp in productSearchListSort) {
+          if (sp.idMain == "2") {
+            productSearchList.add(sp);
+            productSearchList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.dateUp);
+              DateTime bdate = DateTime.parse(b.dateUp);
+              return bdate.compareTo(adate);
+            });
+          }
+        }
+      } else if (i == 5) {
+        productSearchList.clear();
+
+        for (var sp in productSearchListSort) {
+          if (sp.idMain == "3") {
+            productSearchList.add(sp);
+            productSearchList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.dateUp);
+              DateTime bdate = DateTime.parse(b.dateUp);
+              return bdate.compareTo(adate);
+            });
+          }
+        }
+      } else if (i == 6) {
+        productSearchList.clear();
+
+        for (var sp in productSearchListSort) {
+          if (sp.idMain == "4") {
+            productSearchList.add(sp);
+            productSearchList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.dateUp);
+              DateTime bdate = DateTime.parse(b.dateUp);
+              return bdate.compareTo(adate);
+            });
+          }
+        }
+      } else if (i == 7) {
+        productSearchList.clear();
+
+        for (var sp in productSearchListSort) {
+          if (sp.idMain == "5") {
+            productSearchList.add(sp);
+            productSearchList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.dateUp);
+              DateTime bdate = DateTime.parse(b.dateUp);
+              return bdate.compareTo(adate);
+            });
+          }
+        }
+      } else if (i == 8) {
+        productSearchList.clear();
+
+        for (var sp in productSearchListSort) {
+          if (sp.idMain == "6") {
+            productSearchList.add(sp);
+            productSearchList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.dateUp);
+              DateTime bdate = DateTime.parse(b.dateUp);
+              return bdate.compareTo(adate);
+            });
+          }
+        }
+      } else if (i == 9) {
+        productSearchList.clear();
+
+        for (var sp in productSearchListSort) {
+          if (sp.idMain == "7") {
+            productSearchList.add(sp);
+            productSearchList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.dateUp);
+              DateTime bdate = DateTime.parse(b.dateUp);
+              return bdate.compareTo(adate);
+            });
+          }
+        }
+      } else if (i == 10) {
+        productSearchList.clear();
+
+        for (var sp in productSearchListSort) {
+          if (sp.idMain == "8") {
+            productSearchList.add(sp);
+            productSearchList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.dateUp);
+              DateTime bdate = DateTime.parse(b.dateUp);
+              return bdate.compareTo(adate);
+            });
+          }
+        }
+      } else if (i == 11) {
+        productSearchList.clear();
+
+        for (var sp in productSearchListSort) {
+          if (sp.idMain == "9") {
+            productSearchList.add(sp);
+            productSearchList.sort((a, b) {
+              DateTime adate = DateTime.parse(a.dateUp);
+              DateTime bdate = DateTime.parse(b.dateUp);
+              return bdate.compareTo(adate);
+            });
+          }
+        }
+      } else if (i == 12) {
+        productSearchList.sort((a, b) {
+          DateTime adate = DateTime.parse(a.dateUp);
+          DateTime bdate = DateTime.parse(b.dateUp);
+          return bdate.compareTo(adate);
+        });
+      } else if (i == 13) {
+        productSearchList.sort((a, b) {
+          DateTime adate = DateTime.parse(a.dateUp);
+          DateTime bdate = DateTime.parse(b.dateUp);
+          return adate.compareTo(bdate);
+        });
+      }
+      setState(() {});
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -170,6 +376,13 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
               onPressed: () {
                 Navigator.push(context,
                     new MaterialPageRoute(builder: (context) => ProductAdd()));
+              },
+              color: Colors.white,
+            ),
+            IconButton(
+              icon: Icon(Icons.sort),
+              onPressed: () {
+                showLoc(context: context);
               },
               color: Colors.white,
             ),
@@ -270,11 +483,19 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
               ),
             ),
             productSearchList.length == 0
-                ? Center(
-                    child: Text(
-                    "Không có sản phẩm",
-                    style: TextStyle(fontSize: 20),
-                  ))
+                ? Column(
+                    children: [
+                      Text(
+                        "Không có sản phẩm",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  )
+                // CircularProgressIndicator(
+                //     valueColor: AlwaysStoppedAnimation<Color>(
+                //       HexColor('#54D3C2'),
+                //     ),
+                //   )
                 : Expanded(
                     child: Container(
                       width: MediaQuery.of(context).size.width,
@@ -282,19 +503,25 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
                       child: Column(
                         children: [
                           Expanded(
-                            child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: productSearchList.length,
-                                itemBuilder: (_, index) {
-                                  return ListUI(
-                                    productSearchList[index].id,
-                                    productSearchList[index].idMain,
-                                    productSearchList[index].name,
-                                    productSearchList[index].image,
-                                    productSearchList[index].price,
-                                  );
-                                }),
+                            child: RefreshIndicator(
+                              key: reKey,
+                              onRefresh: () async {
+                                await refreshList();
+                              },
+                              child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: productSearchList.length,
+                                  itemBuilder: (_, index) {
+                                    return ListUI(
+                                      productSearchList[index].id,
+                                      productSearchList[index].idMain,
+                                      productSearchList[index].name,
+                                      productSearchList[index].image,
+                                      productSearchList[index].price,
+                                    );
+                                  }),
+                            ),
                           ),
                         ],
                       ),
@@ -394,6 +621,170 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
     );
   }
 
+  void showLoc({BuildContext context}) {
+    int tienship = 0;
+    showDialog<dynamic>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Chọn phương thức lọc:"),
+            content: SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RadioListTile(
+                      title: Text("Sản phẩm mới nhất"),
+                      value: 12,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Sản phẩm cũ nhất"),
+                      value: 13,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Giá tăng dần"),
+                      value: 1,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Giá giảm dần"),
+                      value: 2,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Thịt Bò Úc"),
+                      value: 3,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Thịt Gà"),
+                      value: 4,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Thịt Bò Mỹ"),
+                      value: 5,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Thịt Cừu"),
+                      value: 6,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Thịt Dê"),
+                      value: 7,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Thịt Heo"),
+                      value: 8,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Thịt Trâu"),
+                      value: 9,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Hải Sản"),
+                      value: 10,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Sản Phẩm Khác"),
+                      value: 11,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocList(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
   // ignore: non_constant_identifier_names
   void Search(String text) {
     DatabaseReference searchRef =
@@ -410,9 +801,15 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
           values[key]["name"],
           values[key]["image"],
           values[key]["price"],
+          values[key]["dateUp"],
         );
         if (product.name.toLowerCase().contains(text)) {
           productSearchList.add(product);
+          productSearchList.sort((a, b) {
+            DateTime adate = DateTime.parse(a.dateUp);
+            DateTime bdate = DateTime.parse(b.dateUp);
+            return bdate.compareTo(adate);
+          });
         }
       }
       Timer(Duration(seconds: 1), () {

@@ -431,9 +431,17 @@ class _AddFoodState extends State<AddFood> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Image(
-                                            image: NetworkImage(date.img),
-                                            width: 50,
+                                          // Image(
+                                          //   image: NetworkImage(date.img),
+                                          //   width: 50,
+                                          // ),
+                                          Image.network(
+                                            date.img.contains("image_picker")
+                                                ? 'https://firebasestorage.googleapis.com/v0/b/app-quan-ly-taiducfood.appspot.com/o/' +
+                                                    date.img +
+                                                    '?alt=media&token=63435cda-cb54-4b82-bec7-08edadbb049e'
+                                                : date.img,
+                                            height: 50,
                                           ),
                                           Padding(
                                             padding: EdgeInsets.zero,

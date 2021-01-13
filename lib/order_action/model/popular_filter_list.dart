@@ -50,5 +50,10 @@ class PopularFilterListData {
       id: 8,
       isSelected: false,
     ),
+    PopularFilterListData(
+      titleTxt: "Sản phẩm khác",
+      id: 9,
+      isSelected: false,
+    ),
   ];
 }

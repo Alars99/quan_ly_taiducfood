@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main_action/ui_view/body_measurement.dart';
 import 'package:quan_ly_taiducfood/main_action/ui_view/mediterranesn_diet_view.dart';
@@ -27,6 +28,8 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
   DateTime _dateTime;
+
+  GlobalKey<RefreshIndicatorState> reKey;
 
   int donhang,
       donhuy,
@@ -123,6 +126,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
 
   @override
   void initState() {
+    reKey = GlobalKey<RefreshIndicatorState>();
     donhang = 0;
     donhuy = 0;
     dontra = 0;
@@ -230,20 +234,32 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     return true;
   }
 
+  Future<Null> refreshList() async {
+    await Future.delayed(Duration(seconds: 1));
+    getAll();
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: FitnessAppTheme.background,
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(
-          children: <Widget>[
-            getMainListViewUI(),
-            getAppBarUI(),
-            SizedBox(
-              height: MediaQuery.of(context).padding.bottom,
-            )
-          ],
+        body: RefreshIndicator(
+          key: reKey,
+          onRefresh: () async {
+            await refreshList();
+          },
+          child: Stack(
+            children: <Widget>[
+              getMainListViewUI(),
+              getAppBarUI(),
+              SizedBox(
+                height: MediaQuery.of(context).padding.bottom,
+              )
+            ],
+          ),
         ),
       ),
     );

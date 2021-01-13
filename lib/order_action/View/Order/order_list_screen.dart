@@ -34,15 +34,26 @@ class _OrderListScreenState extends State<OrderListScreen>
   var _customerService = CustomerService();
   List<Customer> customerList = [];
 
+  GlobalKey<RefreshIndicatorState> reKey;
+
+  String text;
+
   @override
   void initState() {
     super.initState();
+    reKey = GlobalKey<RefreshIndicatorState>();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     orderList.clear();
     orderList2.clear();
 
     getData();
+  }
+
+  Future<Null> refreshList() async {
+    await Future.delayed(Duration(seconds: 1));
+    getData();
+    return null;
   }
 
   getData() {
@@ -265,6 +276,28 @@ class _OrderListScreenState extends State<OrderListScreen>
             });
           }
         }
+      } else if (i == 10) {
+        orderList.clear();
+
+        for (var sp in orderList2) {
+          orderList.add(sp);
+          orderList.sort((a, b) {
+            DateTime adate = DateTime.parse(a.datetime);
+            DateTime bdate = DateTime.parse(b.datetime);
+            return bdate.compareTo(adate);
+          });
+        }
+      } else if (i == 11) {
+        orderList.clear();
+
+        for (var sp in orderList2) {
+          orderList.add(sp);
+          orderList.sort((a, b) {
+            DateTime adate = DateTime.parse(a.datetime);
+            DateTime bdate = DateTime.parse(b.datetime);
+            return adate.compareTo(bdate);
+          });
+        }
       }
 
       setState(() {});
@@ -274,7 +307,6 @@ class _OrderListScreenState extends State<OrderListScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // getData();
   }
 
   // Future<bool> getData() async {
@@ -366,27 +398,33 @@ class _OrderListScreenState extends State<OrderListScreen>
 
                       //     child:
                       Expanded(
-                        child: ListView.builder(
-                          itemCount: orderList.length,
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.only(top: 8),
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (_, index) {
-                            return orderListScreenView(
-                              orderList[index].idDonHang,
-                              orderList[index].idKhachHang,
-                              orderList[index].ngaymua,
-                              orderList[index].trangthai,
-                              orderList[index].idGioHang,
-                              orderList[index].banSiLe,
-                              orderList[index].chietKhau,
-                              orderList[index].paymethod,
-                              orderList[index].phiGiaohang,
-                              orderList[index].tongSoluong,
-                              orderList[index].tongTienhang,
-                              orderList[index].datetime,
-                            );
+                        child: RefreshIndicator(
+                          key: reKey,
+                          onRefresh: () async {
+                            await refreshList();
                           },
+                          child: ListView.builder(
+                            itemCount: orderList.length,
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.only(top: 8),
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (_, index) {
+                              return orderListScreenView(
+                                orderList[index].idDonHang,
+                                orderList[index].idKhachHang,
+                                orderList[index].ngaymua,
+                                orderList[index].trangthai,
+                                orderList[index].idGioHang,
+                                orderList[index].banSiLe,
+                                orderList[index].chietKhau,
+                                orderList[index].paymethod,
+                                orderList[index].phiGiaohang,
+                                orderList[index].tongSoluong,
+                                orderList[index].tongTienhang,
+                                orderList[index].datetime,
+                              );
+                            },
+                          ),
                         ),
                       ),
 
@@ -682,6 +720,28 @@ class _OrderListScreenState extends State<OrderListScreen>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     RadioListTile(
+                      title: Text("Đơn hàng mới nhất"),
+                      value: 10,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocgiatri(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: Text("Đơn hàng cũ nhất"),
+                      value: 11,
+                      groupValue: tienship,
+                      onChanged: (value) {
+                        setState(() {
+                          getLocgiatri(value);
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    RadioListTile(
                       title: Text("Giá tăng dần"),
                       value: 1,
                       groupValue: tienship,
@@ -789,7 +849,7 @@ class _OrderListScreenState extends State<OrderListScreen>
   }
 
   // ignore: non_constant_identifier_names
-  void Search(String text) {
+  void Search(text) {
     DatabaseReference searchRef =
         FirebaseDatabase.instance.reference().child("Order");
     searchRef.once().then((DataSnapshot snapshot) {
