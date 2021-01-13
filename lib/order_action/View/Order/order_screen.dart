@@ -138,11 +138,13 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
       tongTienVon += double.parse(element.priceVon) * element.count;
     });
 
-    if (chietKhau == 0) {
-      tongTienhang = tong + phiGiaohang;
-    } else {
-      tongTienhang = (tong + phiGiaohang) * chietKhau / 100;
-    }
+    // if (chietKhau == 0) {
+    //   tongTienhang = tong + phiGiaohang;
+    // } else {
+    //   tongTienhang = (tong + phiGiaohang) * chietKhau / 100;
+    // }
+
+    tongTienhang = tong - (tong * chietKhau / 100) + phiGiaohang;
   }
 
   // ignore: non_constant_identifier_names

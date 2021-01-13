@@ -649,6 +649,7 @@ class _ProductAddState extends State<ProductAdd> {
 
   Future<void> uploadSearchList() async {
     String fileName = basename(_image.path);
+    DateTime now = DateTime.now();
     if (formKey.currentState.validate()) {
       DatabaseReference referenceSearch =
           FirebaseDatabase.instance.reference().child('SearchList');
@@ -663,6 +664,7 @@ class _ProductAddState extends State<ProductAdd> {
       mapSearch["name"] = name;
       mapSearch["price"] = price;
       mapSearch["idMain"] = productCate.id.toString();
+      mapSearch["dateUp"] = now.toString();
 
       referenceSearch.child(id).set(mapSearch);
     }

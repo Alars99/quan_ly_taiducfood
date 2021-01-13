@@ -25,6 +25,8 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
   double a = 0.0;
   double tong7ngay = 0.0;
 
+  GlobalKey<RefreshIndicatorState> reKey;
+
   final Color leftBarColor = const Color(0xff53fdd7);
   final double width = 7;
 
@@ -49,7 +51,11 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
   @override
   void initState() {
     super.initState();
+    reKey = GlobalKey<RefreshIndicatorState>();
+    getData();
+  }
 
+  getData() {
     tong = 0;
     day = 0;
     tong7ngay = 0.0;
@@ -135,6 +141,12 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
     );
   }
 
+  Future<Null> refreshList() async {
+    await Future.delayed(Duration(seconds: 1));
+    getData();
+    return null;
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -154,12 +166,21 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
             ),
             getAppBarUI(),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    getKhoUI(),
-                    getBaoCai(),
-                  ],
+              child: RefreshIndicator(
+                key: reKey,
+                onRefresh: () async {
+                  await refreshList();
+                },
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      getKhoUI(),
+                      getBaoCai(),
+                      SizedBox(
+                        height: 50,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -24,17 +24,31 @@ class _ProductOutAmountState extends State<ProductOutAmount>
 
   DateTime _dateTime, startDate, endDate;
 
+  GlobalKey<RefreshIndicatorState> reKey;
+
   int sanphammoi, sanphamhethang, sanphamnhieuhang;
 
   @override
   void initState() {
     super.initState();
+    reKey = GlobalKey<RefreshIndicatorState>();
     _controller = AnimationController(vsync: this);
     sanphamhethang = 0;
     sanphammoi = 0;
     sanphamnhieuhang = 0;
     endDate = DateTime.now();
     startDate = DateTime.utc(endDate.year, endDate.month, endDate.day - 7);
+  }
+
+  Future<Null> refreshList() async {
+    await Future.delayed(Duration(seconds: 1));
+    sanphamhethang = 0;
+    sanphammoi = 0;
+    sanphamnhieuhang = 0;
+    endDate = DateTime.now();
+    startDate = DateTime.utc(endDate.year, endDate.month, endDate.day - 7);
+    getLocgiatri(0);
+    return null;
   }
 
   @override
@@ -179,7 +193,14 @@ class _ProductOutAmountState extends State<ProductOutAmount>
             },
           ),
         ),
-        body: Stack(
+        body:
+            //  RefreshIndicator(
+            // key: reKey,
+            // onRefresh: () async {
+            //   await refreshList();
+            // },
+            // child:
+            Stack(
           children: [
             Padding(
               padding: EdgeInsets.only(top: 8),
@@ -231,6 +252,7 @@ class _ProductOutAmountState extends State<ProductOutAmount>
             )
           ],
         ),
+        // ),
 
         // return ListUI(
         //   productSearchList3[index].id,

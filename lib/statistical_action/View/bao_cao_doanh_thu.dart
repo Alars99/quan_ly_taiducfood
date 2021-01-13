@@ -15,6 +15,8 @@ class _BaoCaoDoanhThuScreenState extends State<BaoCaoDoanhThuScreen>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
 
+  GlobalKey<RefreshIndicatorState> reKey;
+
   DateTime startTime;
   DateTime endTime;
   DateTime _date;
@@ -35,11 +37,21 @@ class _BaoCaoDoanhThuScreenState extends State<BaoCaoDoanhThuScreen>
   @override
   void initState() {
     super.initState();
+    reKey = GlobalKey<RefreshIndicatorState>();
     _controller = AnimationController(vsync: this);
     endTime = DateTime.now();
     startTime = DateTime.utc(endTime.year, endTime.month - 1, endTime.day);
     tongDHtheoThang = 0;
     getdata();
+  }
+
+  Future<Null> refreshList() async {
+    await Future.delayed(Duration(seconds: 1));
+    // endTime = DateTime.now();
+    // startTime = DateTime.utc(endTime.year, endTime.month - 1, endTime.day);
+    // tongDHtheoThang = 0;
+    // getdata();
+    return null;
   }
 
   getdata() {
@@ -136,69 +148,75 @@ class _BaoCaoDoanhThuScreenState extends State<BaoCaoDoanhThuScreen>
               color: Colors.white,
             ),
           ),
-          body: Container(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16, top: 12, bottom: 12, right: 7),
-                      child: Icon(Icons.calendar_today),
-                    ),
-                    Text(
-                      "${DateFormat("dd/MM/yyyy").format(startTime)} - ${DateFormat("dd/MM/yyyy").format(endTime)}",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+          body: RefreshIndicator(
+            key: reKey,
+            onRefresh: () async {
+              await refreshList();
+            },
+            child: Container(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16, top: 12, bottom: 12, right: 7),
+                        child: Icon(Icons.calendar_today),
+                      ),
+                      Text(
+                        "${DateFormat("dd/MM/yyyy").format(startTime)} - ${DateFormat("dd/MM/yyyy").format(endTime)}",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    elevation: 4,
+                    margin: EdgeInsets.all(10),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "DOANH THU",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            formatCurrency.format(tongDHtheoThang),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  elevation: 4,
-                  margin: EdgeInsets.all(10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "DOANH THU",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          formatCurrency.format(tongDHtheoThang),
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: dateListSort.length,
-                      itemBuilder: (_, index) {
-                        return datewidget(
-                          dateListSort[index].date,
-                          dateListSort[index].tienAlldonhang,
-                          dateListSort[index].soluong,
-                        );
-                      }),
-                ),
-              ],
+                  Expanded(
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: dateListSort.length,
+                        itemBuilder: (_, index) {
+                          return datewidget(
+                            dateListSort[index].date,
+                            dateListSort[index].tienAlldonhang,
+                            dateListSort[index].soluong,
+                          );
+                        }),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -31,6 +31,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   bool changetxt = false;
   String trangthai = "";
 
+  var colortxt;
+  String nameStatus = "";
+
   String ttTxt = "";
   int tt;
 
@@ -50,6 +53,31 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     super.initState();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
+  }
+
+  getStatus(String id) {
+    if (id == "0") {
+      nameStatus = "Chưa duyệt";
+      colortxt = Colors.blue[300];
+    } else if (id == "1") {
+      nameStatus = "Chờ xuất kho";
+      colortxt = Colors.blue[500];
+    } else if (id == "2") {
+      nameStatus = "Đang giao hàng";
+      colortxt = Colors.blue[700];
+    } else if (id == "3") {
+      nameStatus = "Chờ thanh toán";
+      colortxt = Colors.blue[900];
+    } else if (id == "4") {
+      nameStatus = "Đã thanh toán";
+      colortxt = Colors.green[600];
+    } else if (id == "5") {
+      nameStatus = "Đã trả hàng";
+      colortxt = Colors.red;
+    } else if (id == "6") {
+      nameStatus = "Đã hủy đơn";
+      colortxt = Colors.red;
+    }
   }
 
   getAllCustomerList(String id) async {
@@ -283,20 +311,30 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    getStatus(tt.toString());
     final Map data = ModalRoute.of(context).settings.arguments;
     double mainWidth = MediaQuery.of(context).size.width * 1;
     int tthInt = double.parse(data['tongTienhang']).round();
 
-    if (data['chietKhau'].toString() == "0") {
-      ck = formatCurrency.format((double.parse(data['tongTienhang']) -
-              double.parse(data['phiGiaohang']))
-          .round());
-    } else {
-      ck = formatCurrency.format(((double.parse(data['tongTienhang']) * 100) /
-                  int.parse(data['chietKhau']) -
-              double.parse(data['phiGiaohang']))
-          .round());
-    }
+    // if (data['chietKhau'].toString() == "0") {
+    //   ck = formatCurrency.format((double.parse(data['tongTienhang']) -
+    //           double.parse(data['phiGiaohang']))
+    //       .round());
+    // } else {
+    //   ck = formatCurrency.format(((double.parse(data['tongTienhang']) -
+    //               double.parse(data['phiGiaohang'])) /
+    //           (1 - int.parse(data['chietKhau']) * 100))
+    //       .round());
+    // }
+    int a = ((double.parse(data['tongTienhang']) -
+                double.parse(data['phiGiaohang'])) /
+            (1 - int.parse(data['chietKhau']) / 100))
+        .round();
+    // if (a < 0) {
+    //   a = 0;
+    // }
+    ck = formatCurrency.format(a);
+    print(ck);
     return Theme(
       data: OrderAppTheme.buildLightTheme(),
       child: Container(
@@ -346,7 +384,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                     ),
                                                   ),
                                                   SizedBox(height: 10),
-                                                  Text("Bán bởi Hoàng Long"),
+                                                  Text(
+                                                      "Bán bởi Nhân viên quản lý"),
                                                   SizedBox(height: 10),
                                                   Text("Chi nhánh mặc định"),
                                                   SizedBox(height: 10),
@@ -355,10 +394,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                       Icon(
                                                         Icons.circle,
                                                         size: 15,
-                                                        color: Colors.red,
+                                                        color: colortxt,
                                                       ),
                                                       SizedBox(width: 5),
-                                                      Text(trangthai),
+                                                      Text(nameStatus),
                                                     ],
                                                   ),
                                                   Padding(
@@ -453,7 +492,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 7.0, left: 7.0, right: 7.0),
+                                          top: 0, left: 7.0, right: 7.0),
                                       child: new Card(
                                         clipBehavior: Clip.antiAlias,
                                         elevation: 2,
@@ -529,7 +568,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                       Text(
                                                         ck.toString(),
                                                         style: new TextStyle(
-                                                          fontSize: 15.5,
+                                                          color:
+                                                              Colors.blue[600],
+                                                          fontSize: 17.5,
                                                           fontFamily: "Roboto",
                                                         ),
                                                       ),
@@ -609,7 +650,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                                     'tongTienhang'])
                                                                 .round()),
                                                         style: new TextStyle(
-                                                          fontSize: 15.5,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              Colors.blue[900],
+                                                          fontSize: 18.5,
                                                           fontFamily: "Roboto",
                                                         ),
                                                       ),
@@ -675,6 +720,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                   ),
                                                   FlatButton(
                                                     onPressed: () {
+                                                      tt--;
                                                       Navigator.of(context)
                                                           .pop("Không");
                                                     },
@@ -724,7 +770,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                           actions: <Widget>[
                                             FlatButton(
                                               onPressed: () {
-                                                deleteCart();
+                                                // deleteCart();
                                                 deleteOrder();
                                                 Fluttertoast.showToast(
                                                     msg:
@@ -796,19 +842,19 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     });
   }
 
-  Future<void> deleteCart() async {
-    final Map data = ModalRoute.of(context).settings.arguments;
-    final idGioHang = data['idGioHang'];
-    DatabaseReference referenceList =
-        FirebaseDatabase.instance.reference().child('Cart');
+  // Future<void> deleteCart() async {
+  //   final Map data = ModalRoute.of(context).settings.arguments;
+  //   final idGioHang = data['idGioHang'];
+  //   DatabaseReference referenceList =
+  //       FirebaseDatabase.instance.reference().child('Cart');
 
-    referenceList.child(idGioHang).remove();
-  }
+  //   referenceList.child(idGioHang).remove();
+  // }
 
   Widget orderUIList(String name, int count, String price) {
     int priceInt = double.parse(price).round();
     return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 3, bottom: 16),
+      padding: const EdgeInsets.only(left: 24, right: 24, top: 0, bottom: 8),
       child: InkWell(
         splashColor: Colors.transparent,
         onTap: () {},

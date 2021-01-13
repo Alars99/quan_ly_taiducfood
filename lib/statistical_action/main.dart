@@ -26,12 +26,17 @@ class _MainScreen extends State<MainScreen> {
   DateTime startDate;
   DateTime _dateTime;
 
+  GlobalKey<RefreshIndicatorState> reKey;
+
   // ignore: deprecated_member_use
   List<ProductDetail> productDetailList = List();
   getData() {
     int dem = 0;
     int dem1 = 0;
     int dem2 = 0;
+    tiennhapky = 0;
+    tienxuatky = 0;
+    tondauky = 0;
 
     int dem3 = 0;
     double t = 0;
@@ -121,6 +126,7 @@ class _MainScreen extends State<MainScreen> {
 
   @override
   void initState() {
+    reKey = GlobalKey<RefreshIndicatorState>();
     soluong = 0;
     tongTien = 0;
     tiennhapky = 0;
@@ -130,6 +136,12 @@ class _MainScreen extends State<MainScreen> {
     startDate = DateTime.utc(endDate.year, endDate.month - 1, endDate.day);
 
     super.initState();
+  }
+
+  Future<Null> refreshList() async {
+    await Future.delayed(Duration(seconds: 1));
+    getData();
+    return null;
   }
 
   @override
@@ -151,14 +163,20 @@ class _MainScreen extends State<MainScreen> {
             ),
             getAppBarUI(),
             Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                    children: <Widget>[
-                      getBanHangUI(),
-                      getKhoUI(),
-                    ],
+              child: RefreshIndicator(
+                key: reKey,
+                onRefresh: () async {
+                  await refreshList();
+                },
+                child: SingleChildScrollView(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(
+                      children: <Widget>[
+                        getBanHangUI(),
+                        getKhoUI(),
+                      ],
+                    ),
                   ),
                 ),
               ),
