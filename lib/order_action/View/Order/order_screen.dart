@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
+import 'package:quan_ly_taiducfood/customer_action/models/quan.dart';
 import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart';
@@ -46,6 +47,8 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
 
   // ignore: deprecated_member_use
   List<Sanpham> orderList = List<Sanpham>();
+
+  List<Quan> quanList = Quan.quanList;
 
   // ignore: deprecated_member_use
   List<Customer> customerList = List<Customer>();
@@ -114,7 +117,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
         customerModel.phone = customer['phone'];
         customerModel.email = customer['email'];
         customerModel.address = customer['address'];
-
+        customerModel.idship = customer['idShip'];
         customerList.add(customerModel);
       });
     });
@@ -125,6 +128,14 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
     customer.idCustomer = customerList[index].idCustomer;
     customer.address = customerList[index].address;
     customer.phone = customerList[index].phone;
+    customer.idship = customerList[index].idship;
+    print(customer.idship);
+    for (var q in quanList) {
+      print(q.price);
+      if (customer.idship == q.id.toString()) {
+        phiGiaohang = double.parse(q.price);
+      }
+    }
   }
 
   getTong() async {

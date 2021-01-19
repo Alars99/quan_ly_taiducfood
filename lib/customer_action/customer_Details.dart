@@ -158,17 +158,20 @@ class _DetailscustomerScreen extends State<DetailsCustomer> {
                             padding: const EdgeInsets.only(left: 0, right: 8),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 8, right: 16),
-                          child: Container(
-                            padding: EdgeInsets.zero,
-                            child: Text(
-                              customer.address,
-                              style: TextStyle(
-                                fontFamily: 'WorkSans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
-                                color: DesignCourseAppTheme.nearlyBlue,
+                        Container(
+                          width: 280,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 8, right: 32),
+                            child: Container(
+                              padding: EdgeInsets.zero,
+                              child: Text(
+                                customer.address,
+                                style: TextStyle(
+                                  fontFamily: 'WorkSans',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: DesignCourseAppTheme.nearlyBlue,
+                                ),
                               ),
                             ),
                           ),
@@ -329,7 +332,6 @@ class _DetailscustomerScreen extends State<DetailsCustomer> {
                                     'idCustomer': customer.idCustomer,
                                   },
                                 );
-                             
                               },
                               child: Text(
                                 "Lịch sử mua hàng",

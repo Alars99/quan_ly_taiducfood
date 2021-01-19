@@ -6,6 +6,7 @@ class Customer {
     this.phone = '',
     this.address = '',
     this.email = '',
+    this.idship = '',
   });
 
   String idCustomer;
@@ -14,6 +15,7 @@ class Customer {
   String phone;
   String address;
   String email;
+  String idship;
 
   customerMap() {
     var mapping = Map<String, dynamic>();
@@ -23,6 +25,7 @@ class Customer {
     mapping['email'] = email;
     mapping['phone'] = phone;
     mapping['address'] = address;
+    mapping['idShip'] = idship;
     return mapping;
   }
 }

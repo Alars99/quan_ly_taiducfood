@@ -236,7 +236,7 @@ class _MainScreen extends State<MainScreen> {
           padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
         ),
         Container(
-          width: 300,
+          width: 400,
           height: 250,
           decoration: BoxDecoration(
               color: HexColor('#F8FAFB'),
@@ -306,6 +306,22 @@ class _MainScreen extends State<MainScreen> {
                         padding: EdgeInsets.all(8),
                         child: Column(
                           children: [
+                            Text("Tồn đầu kỳ"),
+                            Text(formatCurrency.format(tondauky)),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    width: 60,
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          children: [
                             Text("Nhập trong kỳ"),
                             Text(formatCurrency.format(tiennhapky)),
                           ],
@@ -314,7 +330,7 @@ class _MainScreen extends State<MainScreen> {
                     ],
                   ),
                   SizedBox(
-                    width: 60,
+                    width: 40,
                   ),
                   Column(
                     children: [

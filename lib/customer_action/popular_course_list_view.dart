@@ -49,7 +49,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
         customerModel.phone = customer['phone'];
         customerModel.email = customer['email'];
         customerModel.address = customer['address'];
-
+        customerModel.idship = customer['idShip'];
         customerList.add(customerModel);
       });
     });
@@ -146,7 +146,7 @@ class CategoryView extends StatelessWidget {
                   getInfoCustomer();
                 },
                 child: SizedBox(
-                  height: 130,
+                  height: 150,
                   child: Stack(
                     alignment: AlignmentDirectional.bottomCenter,
                     children: <Widget>[
@@ -172,21 +172,23 @@ class CategoryView extends StatelessWidget {
                                         children: [
                                           Row(
                                             children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  top: 8,
-                                                  left: 8,
-                                                ),
-                                                child: Text(
-                                                  customer.name,
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 16),
+                                              Expanded(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 16.0, left: 16),
+                                                  child: Text(
+                                                    customer.name,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16),
+                                                  ),
                                                 ),
                                               ),
                                               Padding(
                                                 padding: EdgeInsets.only(
-                                                    top: 8, left: 150),
+                                                    top: 8, right: 16),
                                                 child: Material(
                                                   color: Colors.transparent,
                                                   child: InkWell(
@@ -215,21 +217,24 @@ class CategoryView extends StatelessWidget {
                                           ),
                                           Row(
                                             children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: 8, left: 8),
-                                                child: Text(
-                                                  "Số diện thoại: " +
-                                                      customer.phone,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      fontSize: 13),
+                                              Expanded(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 8.0, left: 16),
+                                                  child: Text(
+                                                    "Số diện thoại: " +
+                                                        customer.phone,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontSize: 13),
+                                                  ),
                                                 ),
                                               ),
                                               Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: 8, left: 77),
+                                                padding:
+                                                    EdgeInsets.only(right: 16),
                                                 child: Material(
                                                   color: Colors.transparent,
                                                   child: InkWell(
@@ -246,8 +251,6 @@ class CategoryView extends StatelessWidget {
                                                                     customer:
                                                                         customer,
                                                                   )));
-
-                                                     
                                                     },
                                                     child: Padding(
                                                       padding:
@@ -266,14 +269,15 @@ class CategoryView extends StatelessWidget {
                                             ],
                                           ),
                                           Container(
-                                            width: 320,
+                                            width: 345,
                                             child: Padding(
                                               padding: EdgeInsets.only(
-                                                  top: 8, left: 8, bottom: 8),
+                                                  top: 8, left: 16, bottom: 8),
                                               child: Text(
                                                 "Địa chỉ: " + customer.address,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.normal,
+                                                    fontWeight:
+                                                        FontWeight.normal,
                                                     fontSize: 13),
                                               ),
                                             ),

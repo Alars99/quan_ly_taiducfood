@@ -29,6 +29,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
         customerModel.phone = customer['phone'];
         customerModel.email = customer['email'];
         customerModel.address = customer['address'];
+        customerModel.idship = customer['idShip'];
         _customerList.add(customerModel);
       });
     });
