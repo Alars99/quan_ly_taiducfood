@@ -99,10 +99,10 @@ class _OrderListScreenState extends State<OrderListScreen>
       nameStatus = "Chưa duyệt";
       colortxt = Colors.blue[300];
     } else if (id == "1") {
-      nameStatus = "Chờ xuất kho";
+      nameStatus = "Chờ đóng gói";
       colortxt = Colors.blue[500];
     } else if (id == "2") {
-      nameStatus = "Đang giao hàng";
+      nameStatus = "Chờ xuất kho";
       colortxt = Colors.blue[700];
     } else if (id == "3") {
       nameStatus = "Chờ thanh toán";
@@ -775,7 +775,7 @@ class _OrderListScreenState extends State<OrderListScreen>
                       },
                     ),
                     RadioListTile(
-                      title: Text("Đơn chờ xuất kho"),
+                      title: Text("Đơn chờ đóng gói"),
                       value: 4,
                       groupValue: tienship,
                       onChanged: (value) {

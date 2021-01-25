@@ -21,7 +21,7 @@ class Quan {
     Quan(id: 9, name: "Quận 9", price: "60000"),
     Quan(id: 10, name: "Quận 10", price: "50000"),
     Quan(id: 11, name: "Quận 11", price: "60000"),
-    Quan(id: 12, name: "Quận 12", price: "700000"),
+    Quan(id: 12, name: "Quận 12", price: "70000"),
     Quan(id: 13, name: "Quận Bình Thạnh", price: "15000"),
     Quan(id: 14, name: "Quận Bình Tân", price: "70000"),
     Quan(id: 15, name: "Quận Phú Nhuận", price: "30000"),

@@ -200,6 +200,7 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
     var d = DateFormat('dd/MM/yyyy').format(dday).toString();
     var d7 = DateFormat('dd/MM/yyyy').format(day6).toString();
     return Container(
+      
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,8 +227,8 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
             padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
           ),
           Container(
-            width: 320,
-            height: 280,
+            width: 350,
+ 
             decoration: BoxDecoration(
                 color: HexColor('#F8FAFB'),
                 borderRadius: BorderRadius.all(Radius.circular(16))),
@@ -325,11 +326,11 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
           padding: const EdgeInsets.only(top: 8.0, right: 16),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 8),
+          padding: EdgeInsets.only(top: 16),
           child: Text("Xem báo cáo chi tiết"),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
+          padding: const EdgeInsets.only(left: 18, right: 16),
         ),
         SizedBox(
           height: 8,

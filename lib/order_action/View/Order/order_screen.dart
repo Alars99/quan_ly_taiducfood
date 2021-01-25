@@ -32,6 +32,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
 
   String idGioHang;
   String idDonHang;
+  String trangthaithanhtoan = "Chọn phương thức thanh toán";
 
   final ScrollController _scrollController = ScrollController();
   DateTime startDate = DateTime.now();
@@ -702,6 +703,35 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
     );
   }
 
+  void showPTTT({BuildContext context}) {
+    showDialog<dynamic>(
+        context: context,
+        builder: (_) => CupertinoAlertDialog(
+              title: Text("Phương thức thanh toán"),
+              content: Text("Chọn phương thức thanh toán"),
+              actions: [
+                CupertinoDialogAction(
+                  child: Text("Thanh toán khi nhận hàng COD"),
+                  onPressed: () {
+                    setState(() {
+                      trangthaithanhtoan = "Thanh toán khi nhận hàng COD";
+                      Navigator.pop(context);
+                    });
+                  },
+                ),
+                CupertinoDialogAction(
+                  child: Text("Chuyển khoản qua ngân hàng"),
+                  onPressed: () {
+                    setState(() {
+                      trangthaithanhtoan = "Chuyển khoản qua ngân hàng";
+                      Navigator.pop(context);
+                    });
+                  },
+                )
+              ],
+            ));
+  }
+
   Widget getThanhToanGhichuUI() {
     return Padding(
       padding: const EdgeInsets.only(left: 18, bottom: 16),
@@ -721,10 +751,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                       Radius.circular(4.0),
                     ),
                     onTap: () {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      // setState(() {
-                      //   isDatePopupOpen = true;
-                      // });
+                      showPTTT(context: context);
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -737,7 +764,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                             height: 8,
                           ),
                           Text(
-                            'Chọn phương thức thanh toán',
+                            trangthaithanhtoan,
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,

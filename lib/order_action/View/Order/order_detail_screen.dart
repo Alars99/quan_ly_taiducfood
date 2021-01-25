@@ -60,13 +60,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       nameStatus = "Chưa duyệt";
       colortxt = Colors.blue[300];
     } else if (id == "1") {
-      nameStatus = "Chờ xuất kho";
+      nameStatus = "Chờ đóng gói";
       colortxt = Colors.blue[500];
     } else if (id == "2") {
-      nameStatus = "Đang giao hàng";
+      nameStatus = "Đã đóng gói";
       colortxt = Colors.blue[700];
     } else if (id == "3") {
-      nameStatus = "Chờ thanh toán";
+      nameStatus = "Đã Xuất kho";
       colortxt = Colors.blue[900];
     } else if (id == "4") {
       nameStatus = "Đã thanh toán";
@@ -102,17 +102,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     if (tt == 0) {
       ttTxt = "Duyệt Đơn";
     } else if (tt == 1) {
-      ttTxt = "Thanh Toán";
-    } else if (tt == 2) {
       ttTxt = "Đóng gói và Giao hàng";
-    } else if (tt == 3) {
+    } else if (tt == 2) {
       ttTxt = "Xuất kho";
+    } else if (tt == 3) {
+      ttTxt = "Thanh Toán";
     } else if (tt == 4) {
       updateDaban();
       ttTxt = "Hoàn thành / Trả hàng";
     } else if (tt == 5) {
       trangthai = "Đơn hàng đã trả";
-      updateTraHang();
       isClose = false;
 
       // hồi lại số lượng hàng hóa;
@@ -247,7 +246,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             for (var a in productList) {
               if (sanpham.id == a.id) {
                 referenceProduct.child(a.id).update({
-                  'amount': (sanpham.amout + sanpham.count - 1).toString(),
+                  'amount': (int.parse(a.amount) + sanpham.count).toString(),
                   'daban': (int.parse(a.daban) - sanpham.count).toString()
                 });
               }
@@ -441,14 +440,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                           Text(
                                                               'Địa chỉ giao hàng: '),
                                                           SizedBox(height: 5),
-                                                          Text(
-                                                            customerList
-                                                                .first.address,
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 17,
+                                                          Container(
+                                                            width: 280,
+                                                            child: Text(
+                                                              customerList.first
+                                                                  .address,
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontSize: 17,
+                                                              ),
                                                             ),
                                                           ),
                                                           SizedBox(height: 15),
@@ -701,6 +703,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                 actions: <Widget>[
                                                   FlatButton(
                                                     onPressed: () {
+                                                      updateTraHang();
                                                       gettt();
                                                       Fluttertoast.showToast(
                                                           msg:
@@ -713,16 +716,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                           textColor:
                                                               Colors.black87,
                                                           fontSize: 16.0);
-                                                      Navigator.pop(context);
+                                                      setState(() {});
                                                       Navigator.pop(context);
                                                     },
                                                     child: Text("Có"),
                                                   ),
                                                   FlatButton(
                                                     onPressed: () {
-                                                      tt--;
+                                                      setState(() {
+                                                        tt--;
+                                                        gettt();
+                                                      });
+
                                                       Navigator.of(context)
-                                                          .pop("Không");
+                                                          .pop();
                                                     },
                                                     child: Text("Không"),
                                                   ),

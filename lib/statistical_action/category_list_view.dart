@@ -781,7 +781,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                                   Padding(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                      top: 8,
+                                                      top: 5,
                                                       right: 8,
                                                     ),
                                                     child: Column(
@@ -795,7 +795,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                                         Row(
                                                           children: [
                                                             Container(
-                                                              width: 120,
+                                                              width: 150,
                                                               child: Text(
                                                                 'Top 1: ' +
                                                                     producList[
@@ -864,7 +864,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                                               .start,
                                                       children: <Widget>[
                                                         Container(
-                                                          width: 110,
+                                                          width: 120,
                                                           child: Text(
                                                             'Top 3: ' +
                                                                 producList[2]
@@ -884,30 +884,6 @@ class _CategoryListViewState extends State<CategoryListView>
                                                             ),
                                                           ),
                                                         ),
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color:
-                                                                DesignCourseAppTheme
-                                                                    .nearlyBlue,
-                                                            borderRadius:
-                                                                const BorderRadius
-                                                                        .all(
-                                                                    Radius.circular(
-                                                                        8.0)),
-                                                          ),
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(4.0),
-                                                            child: Icon(
-                                                              Icons
-                                                                  .keyboard_arrow_right,
-                                                              color: DesignCourseAppTheme
-                                                                  .nearlyWhite,
-                                                            ),
-                                                          ),
-                                                        )
                                                       ],
                                                     ),
                                                   ),
