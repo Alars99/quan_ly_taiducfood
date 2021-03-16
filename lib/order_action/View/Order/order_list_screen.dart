@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
-import 'package:quan_ly_taiducfood/main_action/custom_ui/hotel_app_theme.dart';
+import 'package:quan_ly_taiducfood/products_action/theme/order&pro_theme.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
 import '../../../main.dart';
@@ -330,7 +330,7 @@ class _OrderListScreenState extends State<OrderListScreen>
               padding: const EdgeInsets.only(top: 0, bottom: 0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: HotelAppTheme.buildLightTheme().backgroundColor,
+                  color: OrderProductTheme.buildLightTheme().backgroundColor,
                   borderRadius: const BorderRadius.all(
                     Radius.circular(12.0),
                   ),
@@ -351,7 +351,8 @@ class _OrderListScreenState extends State<OrderListScreen>
                     style: const TextStyle(
                       fontSize: 18,
                     ),
-                    cursorColor: HotelAppTheme.buildLightTheme().primaryColor,
+                    cursorColor:
+                        OrderProductTheme.buildLightTheme().primaryColor,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Tên sản phẩm...',

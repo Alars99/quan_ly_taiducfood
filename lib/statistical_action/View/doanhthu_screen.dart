@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:quan_ly_taiducfood/order_action/model/order_list.dart';
-import 'package:quan_ly_taiducfood/statistical_action/View/bao_cao_doanh_thu.dart';
+import 'package:quan_ly_taiducfood/statistical_action/View/bao_cao_chi_tiet/bao_cao_doanh_thu.dart';
 
-import '../design_course_app_theme.dart';
-import 'bao_cao_loi_nhuan.dart';
-import 'bao_cao_thanh_toan.dart';
+import 'package:quan_ly_taiducfood/statistical_action/theme/stat&cus_theme.dart';
+import 'bao_cao_chi_tiet/bao_cao_loi_nhuan.dart';
+import 'bao_cao_chi_tiet/bao_cao_thanh_toan.dart';
 
 class DoanhthuScreen extends StatefulWidget {
   @override
@@ -200,7 +200,6 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
     var d = DateFormat('dd/MM/yyyy').format(dday).toString();
     var d7 = DateFormat('dd/MM/yyyy').format(day6).toString();
     return Container(
-      
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,7 +227,6 @@ class _DoanhthuScreen extends State<DoanhthuScreen> {
           ),
           Container(
             width: 350,
- 
             decoration: BoxDecoration(
                 color: HexColor('#F8FAFB'),
                 borderRadius: BorderRadius.all(Radius.circular(16))),

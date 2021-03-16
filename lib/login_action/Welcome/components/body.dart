@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:quan_ly_taiducfood/login_action/Login/login_screen.dart';
 import 'package:quan_ly_taiducfood/login_action/Signup/signup_screen.dart';
 import 'package:quan_ly_taiducfood/login_action/Welcome/components/background.dart';
-import 'package:quan_ly_taiducfood/components/rounded_button.dart';
-import 'package:quan_ly_taiducfood/constants.dart';
+import 'package:quan_ly_taiducfood/login_action/components/rounded_button.dart';
+import 'package:quan_ly_taiducfood/login_action/theme/login_theme.dart';
 
 class Body extends StatelessWidget {
   @override

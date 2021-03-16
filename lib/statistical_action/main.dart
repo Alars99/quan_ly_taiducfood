@@ -2,11 +2,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/main.dart';
-import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
-import 'package:quan_ly_taiducfood/statistical_action/category_list_view.dart';
-import 'package:quan_ly_taiducfood/statistical_action/course_info_screen.dart';
-import 'package:quan_ly_taiducfood/statistical_action/popular_course_list_view.dart';
-import 'design_course_app_theme.dart';
+import 'package:quan_ly_taiducfood/products_action/models/product_detail_data.dart';
+import 'package:quan_ly_taiducfood/statistical_action/View/category_list_view.dart';
+import 'package:quan_ly_taiducfood/statistical_action/theme/stat&cus_theme.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -363,44 +361,6 @@ class _MainScreen extends State<MainScreen> {
           ),
         )
       ],
-    );
-  }
-
-  Widget getPopularCourseUI() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Popular Course',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 22,
-              letterSpacing: 0.27,
-              color: DesignCourseAppTheme.darkerText,
-            ),
-          ),
-          Flexible(
-            child: PopularCourseListView(
-              callBack: () {
-                moveTo();
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  void moveTo() {
-    Navigator.push<dynamic>(
-      context,
-      MaterialPageRoute<dynamic>(
-        builder: (BuildContext context) => CourseInfoScreen(),
-      ),
     );
   }
 

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
-import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
+import 'package:quan_ly_taiducfood/products_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:flutter/material.dart';
 import 'package:quan_ly_taiducfood/order_action/model/test.dart';

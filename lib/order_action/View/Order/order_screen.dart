@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:intl/intl.dart';
 
-import 'package:quan_ly_taiducfood/customer_action/home_design_course.dart';
+import 'package:quan_ly_taiducfood/customer_action/view/customer_screen.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/quan.dart';
-import 'package:quan_ly_taiducfood/main_action/models/product_detail_data.dart';
+import 'package:quan_ly_taiducfood/products_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +19,12 @@ import 'order_list_screen.dart';
 import 'order_theme.dart';
 import 'order_list_view.dart';
 
-class OrderHomeScreen extends StatefulWidget {
+class OrderScreen extends StatefulWidget {
   @override
-  _OrderHomeScreenState createState() => _OrderHomeScreenState();
+  _OrderScreenState createState() => _OrderScreenState();
 }
 
-class _OrderHomeScreenState extends State<OrderHomeScreen>
+class _OrderScreenState extends State<OrderScreen>
     with TickerProviderStateMixin {
   AnimationController animationController;
 
@@ -621,7 +621,7 @@ class _OrderHomeScreenState extends State<OrderHomeScreen>
                       final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => DesignCourseHomeScreen()),
+                            builder: (context) => CustomerScreen()),
                       );
 
                       setState(() {

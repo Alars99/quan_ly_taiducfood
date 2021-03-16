@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quan_ly_taiducfood/constants.dart';
+import 'package:quan_ly_taiducfood/login_action/theme/login_theme.dart';
 
 class OrDivider extends StatelessWidget {
   @override
