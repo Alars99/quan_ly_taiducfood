@@ -4,13 +4,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:quan_ly_taiducfood/models/api_repository.dart';
+import 'package:quan_ly_taiducfood/models/product.dart';
 import 'package:quan_ly_taiducfood/products_action/theme/order&pro_theme.dart';
 import 'package:quan_ly_taiducfood/products_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/products_action/models/product_search_data.dart';
 import 'package:quan_ly_taiducfood/products_action/View/product_add.dart';
-
+import 'package:quan_ly_taiducfood/repositories/product_repository.dart';
 import '../../main.dart';
-import 'product_detail.dart';
 import 'product_out_soluong/product_out_amount.dart';
 
 class ProductSearchScreen extends StatefulWidget {
@@ -25,66 +26,50 @@ class ProductSearchScreen extends StatefulWidget {
 class _ProductSearchScreenState extends State<ProductSearchScreen>
     with TickerProviderStateMixin {
   Animation<double> topBarAnimation;
-
   List<ProductSearch> productSearchList = [];
   List<ProductSearch> productSearchListSort = [];
-
   List<ProductSearch> searchList = [];
   List<ProductDetail> productSearchList2 = [];
   List<ProductDetail> productSearchList3 = [];
+  List<Product> productList = [];
   int slHet;
   DateTime _dateTime, startDate, endDate;
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
-
   GlobalKey<RefreshIndicatorState> reKey;
+
+  //new
+  APIResponse<List<Product>> _apiResponse;
+  bool isLoading = false;
+  ProductRespository service = ProductRespository();
 
   @override
   void initState() {
     reKey = GlobalKey<RefreshIndicatorState>();
     endDate = DateTime.now();
     startDate = DateTime.utc(endDate.year, endDate.month, endDate.day - 7);
-    super.initState();
     slHet = 0;
-    getData();
-
+    _fetchProducts();
     getLocgiatri();
+    super.initState();
+  }
+
+  _fetchProducts() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    _apiResponse = await service.getProductsList();
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<Null> refreshList() async {
     await Future.delayed(Duration(seconds: 1));
-    getData();
+
     return null;
-  }
-
-  getData() {
-    DatabaseReference referenceProduct =
-        FirebaseDatabase.instance.reference().child("SearchList");
-    referenceProduct.once().then((DataSnapshot snapshot) {
-      productSearchList.clear();
-      var keys = snapshot.value.keys;
-      var values = snapshot.value;
-
-      for (var key in keys) {
-        ProductSearch product = new ProductSearch(
-          values[key]["id"],
-          values[key]["idMain"],
-          values[key]["name"],
-          values[key]["image"],
-          values[key]["price"],
-          values[key]["dateUp"],
-        );
-        productSearchList.add(product);
-        productSearchList.sort((a, b) {
-          DateTime adate = DateTime.parse(a.dateUp);
-          DateTime bdate = DateTime.parse(b.dateUp);
-          return bdate.compareTo(adate);
-        });
-      }
-      setState(() {
-        //
-      });
-    });
   }
 
   getLocgiatri() {
@@ -346,11 +331,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
@@ -432,103 +412,106 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
             ),
           ],
         ),
-        body: Column(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 0, bottom: 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: OrderProductTheme.buildLightTheme()
-                              .backgroundColor,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(12.0),
+        body: Builder(builder: (_) {
+          if (isLoading) {
+            return CircularProgressIndicator();
+          }
+          if (_apiResponse.error) {
+            return Center(
+              child: Text("Error"),
+            );
+          }
+
+          return Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0, bottom: 0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: OrderProductTheme.buildLightTheme()
+                                .backgroundColor,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(12.0),
+                            ),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  offset: const Offset(0, 2),
+                                  blurRadius: 4.0),
+                            ],
                           ),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                offset: const Offset(0, 2),
-                                blurRadius: 4.0),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16, right: 16, top: 4, bottom: 4),
+                            child: TextField(
+                              onChanged: (text) {
+                                Search(text.toLowerCase());
+                              },
+                              style: const TextStyle(
+                                fontSize: 18,
+                              ),
+                              cursorColor: OrderProductTheme.buildLightTheme()
+                                  .primaryColor,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Tên sản phẩm...',
+                                icon: Icon(FontAwesomeIcons.search,
+                                    size: 20, color: HexColor('#54D3C2')),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _apiResponse.data.length == 0
+                  ? Column(
+                      children: [
+                        Text(
+                          "Không có sản phẩm",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    )
+                  : Expanded(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height - 155,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: RefreshIndicator(
+                                key: reKey,
+                                onRefresh: () async {
+                                  await refreshList();
+                                },
+                                child: isLoading
+                                    ? CircularProgressIndicator()
+                                    : ListView.builder(
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        itemCount: _apiResponse.data.length,
+                                        itemBuilder: (context, index) {
+                                          return listUI(
+                                              _apiResponse.data[index]);
+                                        }),
+                              ),
+                            ),
                           ],
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, top: 4, bottom: 4),
-                          child: TextField(
-                            onChanged: (text) {
-                              Search(text.toLowerCase());
-                            },
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
-                            cursorColor: OrderProductTheme.buildLightTheme()
-                                .primaryColor,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Tên sản phẩm...',
-                              icon: Icon(FontAwesomeIcons.search,
-                                  size: 20, color: HexColor('#54D3C2')),
-                            ),
-                          ),
-                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            productSearchList.length == 0
-                ? Column(
-                    children: [
-                      Text(
-                        "Không có sản phẩm",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ],
-                  )
-                // CircularProgressIndicator(
-                //     valueColor: AlwaysStoppedAnimation<Color>(
-                //       HexColor('#54D3C2'),
-                //     ),
-                //   )
-                : Expanded(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height - 155,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: RefreshIndicator(
-                              key: reKey,
-                              onRefresh: () async {
-                                await refreshList();
-                              },
-                              child: ListView.builder(
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemCount: productSearchList.length,
-                                  itemBuilder: (_, index) {
-                                    return ListUI(
-                                      productSearchList[index].id,
-                                      productSearchList[index].idMain,
-                                      productSearchList[index].name,
-                                      productSearchList[index].image,
-                                      productSearchList[index].price,
-                                    );
-                                  }),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-          ],
-        ),
+            ],
+          );
+        }),
       ),
     );
   }
@@ -540,84 +523,12 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
   //   },
   // ),
 
-  // ignore: non_constant_identifier_names
-  Widget ListUI(
-      String id, String idMain, String name, String image, String price) {
-    // ignore: non_constant_identifier_names
-    double c_width = MediaQuery.of(context).size.width * 0.6;
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
-            arguments: {'id': id, 'idMain': idMain});
-      },
-      child: new Container(
-        child: new Column(
-          children: <Widget>[
-            new Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  new Container(
-                    color: Colors.white,
-                    child: new Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          new Container(
-                            child: new Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  new Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Container(
-                                          padding: EdgeInsets.all(15),
-                                          width: 100,
-                                          height: 100,
-                                          child: Image.network(image
-                                                  .contains("image_picker")
-                                              ? 'https://firebasestorage.googleapis.com/v0/b/app-quan-ly-taiducfood.appspot.com/o/' +
-                                                  image +
-                                                  '?alt=media&token=63435cda-cb54-4b82-bec7-08edadbb049e'
-                                              : image),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                          width: c_width,
-                                          child: new Text(
-                                            "" + name.toUpperCase(),
-                                            style: new TextStyle(
-                                                fontSize: 14.0,
-                                                color: Colors.black54,
-                                                fontWeight: FontWeight.bold,
-                                                fontFamily: "Roboto"),
-                                          ),
-                                        ),
-                                      ]),
-                                ]),
-                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            alignment: Alignment.center,
-                          ),
-                          new Divider(
-                            color: Colors.black38,
-                          ),
-                        ]),
-                  ),
-                ]),
-          ],
-        ),
-      ),
+  Widget listUI(Product product) {
+    return ListTile(
+      onTap: () {},
+      subtitle: Text(product.id),
+      leading: Icon(Icons.phone),
+      title: Text(product.name),
     );
   }
 

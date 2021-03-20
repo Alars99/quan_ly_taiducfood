@@ -74,18 +74,7 @@ class _ProductEditState extends State<ProductEdit> {
 
   ProductCate productCate;
   // ignore: non_constant_identifier_names
-  List<ProductCate> data_cate = <ProductCate>[
-    ProductCate(1, 'Thịt Bò Úc'),
-    ProductCate(2, 'Thịt Gà'),
-    ProductCate(3, 'Thịt Bò Mỹ'),
-    ProductCate(4, 'Thịt Cừu'),
-    ProductCate(5, 'Thịt Dê'),
-    ProductCate(6, 'Thịt Heo'),
-    ProductCate(7, 'Thịt Trâu'),
-    ProductCate(8, 'Hải Sản'),
-    ProductCate(9, 'Sản Phẩm Khác'),
-    ProductCate(10, ' '),
-  ];
+  List<ProductCate> data_cate = ProductCate.listProductCate;
 
   Future downdloadImage() async {
     await Firebase.initializeApp();
@@ -657,7 +646,7 @@ class _ProductEditState extends State<ProductEdit> {
     String _controllerPriceNhapString;
     String _controllerAmountString;
     String _controllerWeightString;
-    String idFood = productCate.id.toString();
+    String idFood = productCate.categoryId.toString();
     if (formKey.currentState.validate()) {
       DatabaseReference referenceList = FirebaseDatabase.instance
           .reference()

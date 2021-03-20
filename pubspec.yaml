@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -37,13 +37,13 @@ dependencies:
 
   flutter_masked_text: any
 
-  firebase_storage : any
+  firebase_storage: any
 
   firebase_analytics: ^5.0.6
 
   fluttertoast: ^7.1.5
 
-  image_picker : any
+  image_picker: any
 
   fl_chart: ^0.12.2
 
@@ -56,6 +56,7 @@ dependencies:
   font_awesome_flutter: ^8.8.1
   smooth_star_rating: ^1.1.1
   intl: ^0.16.0
+  get_it: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -66,7 +67,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -110,7 +110,6 @@ flutter:
   #       - asset: assets/fonts/Roboto-Medium.ttf
   #         weight: 400
 
-  
   # fonts:
   #   - family: Schyler
   #     fonts:

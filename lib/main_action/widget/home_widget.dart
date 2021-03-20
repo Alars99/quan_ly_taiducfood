@@ -1,4 +1,3 @@
-import 'package:quan_ly_taiducfood/main_action/models/tabIcon_data.dart';
 import 'package:flutter/material.dart';
 import '../theme/home_theme.dart';
 import '../view/home_screen.dart';
@@ -11,19 +10,12 @@ class HomeWidget extends StatefulWidget {
 class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   AnimationController animationController;
 
-  List<TabIconData> tabIconsList = TabIconData.tabIconsList;
-
   Widget tabBody = Container(
     color: HomeTheme.background,
   );
 
   @override
   void initState() {
-    tabIconsList.forEach((TabIconData tab) {
-      tab.isSelected = false;
-    });
-    tabIconsList[0].isSelected = true;
-
     animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
     tabBody = HomeScreen(animationController: animationController);

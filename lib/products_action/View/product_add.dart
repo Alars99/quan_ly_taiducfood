@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
+
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -12,6 +12,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quan_ly_taiducfood/main.dart';
+import 'package:quan_ly_taiducfood/models/product.dart';
 import 'package:quan_ly_taiducfood/products_action/models/product_cate_data.dart';
 
 class ProductAdd extends StatefulWidget {
@@ -20,22 +21,9 @@ class ProductAdd extends StatefulWidget {
 }
 
 class _ProductAddState extends State<ProductAdd> {
-  String id,
-      brand,
-      name,
-      image,
-      price,
-      barcode,
-      weight,
-      cate,
-      priceNhap,
-      priceBuon,
-      priceVon,
-      amount,
-      desc;
-  String _data = "";
+  Product _product = Product();
   bool tax = false;
-  bool allowSale = false;
+  String _data = "";
 
   File _image;
 
@@ -65,17 +53,7 @@ class _ProductAddState extends State<ProductAdd> {
 
   ProductCate productCate;
   // ignore: non_constant_identifier_names
-  List<ProductCate> data_cate = <ProductCate>[
-    ProductCate(1, 'Thịt Bò Úc'),
-    ProductCate(2, 'Thịt Gà'),
-    ProductCate(3, 'Thịt Bò Mỹ'),
-    ProductCate(4, 'Thịt Cừu'),
-    ProductCate(5, 'Thịt Dê'),
-    ProductCate(6, 'Thịt Heo'),
-    ProductCate(7, 'Thịt Trâu'),
-    ProductCate(8, 'Hải Sản'),
-    ProductCate(9, 'Sản Phẩm Khác'),
-  ];
+  List<ProductCate> data_cate = ProductCate.listProductCate;
 
   @override
   void initState() {
@@ -177,7 +155,7 @@ class _ProductAddState extends State<ProductAdd> {
                                 if (value.isEmpty) {
                                   return 'Chưa nhập Tên sản phẩm';
                                 } else {
-                                  name = value;
+                                  _product.name = value;
                                 }
                               },
                               autocorrect: true,
@@ -193,7 +171,7 @@ class _ProductAddState extends State<ProductAdd> {
                                 if (value.isEmpty) {
                                   return 'Chưa nhập Mã sản phẩm';
                                 } else {
-                                  id = value;
+                                  _product.id = value;
                                 }
                               },
                               autocorrect: true,
@@ -209,7 +187,7 @@ class _ProductAddState extends State<ProductAdd> {
                                   if (value.isEmpty) {
                                     return 'Chưa nhập Barcode sản phẩm';
                                   } else {
-                                    barcode = value;
+                                    _product.barcode = value;
                                   }
                                 },
                                 keyboardType: TextInputType.number,
@@ -226,24 +204,6 @@ class _ProductAddState extends State<ProductAdd> {
                                       icon:
                                           Icon(Icons.qr_code_scanner_outlined)),
                                 )),
-                            new TextFormField(
-                              // ignore: missing_return
-                              validator: (value) {
-                                if (value.isEmpty || value == '0') {
-                                  return 'Chưa nhập Khối lượng sản phẩm';
-                                } else {
-                                  weight = value;
-                                }
-                              },
-                              controller: _controllerWeight,
-                              autocorrect: true,
-                              keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.next,
-                              onEditingComplete: () => node.nextFocus(),
-                              decoration: InputDecoration(
-                                labelText: 'Khối lượng (g)',
-                              ),
-                            ),
                           ]),
                     ),
                   ),
@@ -274,7 +234,7 @@ class _ProductAddState extends State<ProductAdd> {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Tồn kho sản phẩm';
                                       } else {
-                                        amount = value;
+                                        _product.amout = value as int;
                                       }
                                     },
                                     controller: _controllerAmount,
@@ -295,7 +255,7 @@ class _ProductAddState extends State<ProductAdd> {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Giá vốn sản phẩm';
                                       } else {
-                                        priceVon = value;
+                                        _product.costPrice = value as double;
                                       }
                                     },
                                     controller: _controllerPriceVon,
@@ -321,7 +281,7 @@ class _ProductAddState extends State<ProductAdd> {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Giá bán lẻ sản phẩm';
                                       } else {
-                                        price = value;
+                                        _product.price = value as double;
                                       }
                                     },
                                     controller: _controllerPrice,
@@ -342,7 +302,7 @@ class _ProductAddState extends State<ProductAdd> {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Giá bán buôn sản phẩm';
                                       } else {
-                                        priceBuon = value;
+                                        _product.costPrice = value as double;
                                       }
                                     },
                                     controller: _controllerPriceBuon,
@@ -364,7 +324,7 @@ class _ProductAddState extends State<ProductAdd> {
                                   if (value.isEmpty || value == '0') {
                                     return 'Chưa nhập Giá nhập sản phẩm';
                                   } else {
-                                    priceNhap = value;
+                                    _product.importPrice = value as double;
                                   }
                                 },
                                 controller: _controllerPriceNhap,
@@ -429,7 +389,7 @@ class _ProductAddState extends State<ProductAdd> {
                                       setState(() {
                                         productCate = newValue;
                                         print(
-                                            "Loại: ${productCate.name}  ----  Id : ${productCate.id}");
+                                            "Loại: ${productCate.name}  ----  Id : ${productCate.categoryId}");
                                       });
                                     },
                                     items: data_cate.map((ProductCate pdCate) {
@@ -451,9 +411,10 @@ class _ProductAddState extends State<ProductAdd> {
                                 // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty) {
-                                    brand = 'Không có thương hiệu';
+                                    _product.categoryId =
+                                        'Không có thương hiệu';
                                   } else {
-                                    brand = value;
+                                    _product.categoryId = value;
                                   }
                                 },
                                 decoration: InputDecoration(
@@ -469,9 +430,9 @@ class _ProductAddState extends State<ProductAdd> {
                                 // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty) {
-                                    desc = 'Không có mô tả';
+                                    _product.desc = 'Không có mô tả';
                                   } else {
-                                    desc = value;
+                                    _product.desc = value;
                                   }
                                 },
                                 decoration: InputDecoration(
@@ -481,28 +442,6 @@ class _ProductAddState extends State<ProductAdd> {
                                 textInputAction: TextInputAction.next,
                                 onEditingComplete: () => node.nextFocus(),
                               ),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Container(
-                                    child: new Text(
-                                  'Cho phép bán',
-                                  style: new TextStyle(fontSize: 17),
-                                )),
-                                Container(
-                                    child: new Switch(
-                                        activeColor: HexColor('#54D3C2'),
-                                        value: allowSale,
-                                        onChanged: (bool s) {
-                                          setState(() {
-                                            allowSale = s;
-                                            print(allowSale);
-                                          });
-                                        })),
-                              ],
                             ),
                           ]),
                     ),
@@ -526,7 +465,9 @@ class _ProductAddState extends State<ProductAdd> {
                   textColor: Colors.black87,
                   fontSize: 16.0);
             } else {
-              checkId(context);
+              if (formKey.currentState.validate()) {
+                checkId(context);
+              }
             }
           },
           backgroundColor: HexColor('#54D3C2'),
@@ -540,7 +481,7 @@ class _ProductAddState extends State<ProductAdd> {
   }
 
   checkId(BuildContext context) {
-    String idFood = productCate.id.toString();
+    String idFood = productCate.categoryId.toString();
     DatabaseReference referenceList = FirebaseDatabase.instance
         .reference()
         .child('productList')
@@ -554,7 +495,7 @@ class _ProductAddState extends State<ProductAdd> {
       bool cId() {
         if (formKey.currentState.validate()) {
           for (var key in keys) {
-            if (values[key]["id"] == id) {
+            if (values[key]["id"] == _product.id) {
               Fluttertoast.showToast(
                   msg: "Sản phẩm đã thêm rồi",
                   toastLength: Toast.LENGTH_SHORT,
@@ -575,8 +516,8 @@ class _ProductAddState extends State<ProductAdd> {
         print('-----------------');
         print('chưa có sp thím ơi');
         uploadImg();
-        uploadSearchList();
-        upload();
+        //uploadSearchList();
+
         Fluttertoast.showToast(
             msg: "Thêm sản phẩm thành công",
             toastLength: Toast.LENGTH_SHORT,
@@ -605,68 +546,26 @@ class _ProductAddState extends State<ProductAdd> {
     });
   }
 
-  Future<void> upload() async {
-    final now = DateTime.now();
-    String fileName = basename(_image.path);
-    String idFood = productCate.id.toString();
-    if (formKey.currentState.validate()) {
-      DatabaseReference referenceList = FirebaseDatabase.instance
-          .reference()
-          .child('productList')
-          .child(idFood)
-          .child('Product');
-      // String uploadId = reference.push().key;
-      HashMap mapProList = new HashMap();
+  // Future<void> uploadSearchList() async {
+  //   String fileName = basename(_image.path);
+  //   DateTime now = DateTime.now();
+  //   if (formKey.currentState.validate()) {
+  //     DatabaseReference referenceSearch =
+  //         FirebaseDatabase.instance.reference().child('SearchList');
 
-      weight = weight.replaceAll(",", "");
-      price = price.replaceAll(",", "");
-      priceBuon = priceBuon.replaceAll(",", "");
-      priceNhap = priceNhap.replaceAll(",", "");
-      priceVon = priceVon.replaceAll(",", "");
-      amount = amount.replaceAll(",", "");
+  //     HashMap mapSearch = new HashMap();
 
-      mapProList["id"] = id;
-      mapProList["brand"] = brand;
-      mapProList["image"] = fileName;
-      mapProList["name"] = name;
-      mapProList["price"] = price;
-      mapProList["barcode"] = barcode;
-      mapProList["weight"] = weight;
-      mapProList["cate"] = productCate.id.toString();
-      mapProList["priceNhap"] = priceNhap;
-      mapProList["priceBuon"] = priceBuon;
-      mapProList["priceVon"] = priceVon;
-      mapProList["amount"] = amount;
-      mapProList["desc"] = desc;
-      mapProList["allowSale"] = allowSale;
-      mapProList["tax"] = tax;
-      mapProList["ngayUp"] = DateFormat('dd/MM/yyyy').format(now).toString();
-      mapProList["daban"] = "0";
+  //     price = price.replaceAll(",", "");
 
-      referenceList.child(id).set(mapProList);
-    }
-  }
+  //     mapSearch["id"] = id;
+  //     mapSearch["image"] = fileName;
+  //     mapSearch["brand"] = brand;
+  //     mapSearch["name"] = name;
+  //     mapSearch["price"] = price;
+  //     mapSearch["idMain"] = productCate.id.toString();
+  //     mapSearch["dateUp"] = now.toString();
 
-  Future<void> uploadSearchList() async {
-    String fileName = basename(_image.path);
-    DateTime now = DateTime.now();
-    if (formKey.currentState.validate()) {
-      DatabaseReference referenceSearch =
-          FirebaseDatabase.instance.reference().child('SearchList');
-
-      HashMap mapSearch = new HashMap();
-
-      price = price.replaceAll(",", "");
-
-      mapSearch["id"] = id;
-      mapSearch["image"] = fileName;
-      mapSearch["brand"] = brand;
-      mapSearch["name"] = name;
-      mapSearch["price"] = price;
-      mapSearch["idMain"] = productCate.id.toString();
-      mapSearch["dateUp"] = now.toString();
-
-      referenceSearch.child(id).set(mapSearch);
-    }
-  }
+  //     referenceSearch.child(id).set(mapSearch);
+  //   }
+  // }
 }

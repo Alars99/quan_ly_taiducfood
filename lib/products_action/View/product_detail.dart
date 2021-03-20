@@ -31,17 +31,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
 
   ProductCate productCate;
   // ignore: non_constant_identifier_names
-  List<ProductCate> data_cate = <ProductCate>[
-    ProductCate(1, 'Thịt Bò Úc'),
-    ProductCate(2, 'Thịt Gà'),
-    ProductCate(3, 'Thịt Bò Mỹ'),
-    ProductCate(4, 'Thịt Cừu'),
-    ProductCate(5, 'Thịt Dê'),
-    ProductCate(6, 'Thịt Heo'),
-    ProductCate(7, 'Thịt Trâu'),
-    ProductCate(8, 'Hải Sản'),
-    ProductCate(9, 'Sản Phẩm Khác'),
-  ];
+  List<ProductCate> data_cate = <ProductCate>[];
 
   @override
   void initState() {
