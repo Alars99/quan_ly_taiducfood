@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:quan_ly_taiducfood/models/api_repository.dart';
 import 'package:quan_ly_taiducfood/models/product.dart';
+import 'package:quan_ly_taiducfood/products_action/View/product_detail.dart';
 import 'package:quan_ly_taiducfood/products_action/theme/order&pro_theme.dart';
 import 'package:quan_ly_taiducfood/products_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/products_action/models/product_search_data.dart';
@@ -525,7 +526,14 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
 
   Widget listUI(Product product) {
     return ListTile(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProductDetailScreen(
+                      id: product.id,
+                    )));
+      },
       subtitle: Text(product.id),
       leading: Icon(Icons.phone),
       title: Text(product.name),
@@ -581,105 +589,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
                     RadioListTile(
                       title: Text("Giá giảm dần"),
                       value: 2,
-                      groupValue: tienship,
-                      onChanged: (value) {
-                        setState(() {
-                          getLocList(value);
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text("Thịt Bò Úc"),
-                      value: 3,
-                      groupValue: tienship,
-                      onChanged: (value) {
-                        setState(() {
-                          getLocList(value);
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text("Thịt Gà"),
-                      value: 4,
-                      groupValue: tienship,
-                      onChanged: (value) {
-                        setState(() {
-                          getLocList(value);
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text("Thịt Bò Mỹ"),
-                      value: 5,
-                      groupValue: tienship,
-                      onChanged: (value) {
-                        setState(() {
-                          getLocList(value);
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text("Thịt Cừu"),
-                      value: 6,
-                      groupValue: tienship,
-                      onChanged: (value) {
-                        setState(() {
-                          getLocList(value);
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text("Thịt Dê"),
-                      value: 7,
-                      groupValue: tienship,
-                      onChanged: (value) {
-                        setState(() {
-                          getLocList(value);
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text("Thịt Heo"),
-                      value: 8,
-                      groupValue: tienship,
-                      onChanged: (value) {
-                        setState(() {
-                          getLocList(value);
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text("Thịt Trâu"),
-                      value: 9,
-                      groupValue: tienship,
-                      onChanged: (value) {
-                        setState(() {
-                          getLocList(value);
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text("Hải Sản"),
-                      value: 10,
-                      groupValue: tienship,
-                      onChanged: (value) {
-                        setState(() {
-                          getLocList(value);
-                          Navigator.pop(context);
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: Text("Sản Phẩm Khác"),
-                      value: 11,
                       groupValue: tienship,
                       onChanged: (value) {
                         setState(() {

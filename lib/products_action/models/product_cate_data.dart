@@ -6,5 +6,7 @@ class ProductCate {
 
   static List<ProductCate> listProductCate = <ProductCate>[
     ProductCate(categoryId: "ap", name: "Apple"),
+    ProductCate(categoryId: "sm", name: "Samsung"),
+    ProductCate(categoryId: "xi", name: "Xiaomi"),
   ];
 }

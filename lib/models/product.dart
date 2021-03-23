@@ -1,9 +1,11 @@
+import 'dart:math';
+
 class Product {
   String id;
   String name;
   String categoryId;
   int amout;
-  String barcode;
+  int barcode;
   String desc;
   String img;
   String updateDay;
@@ -30,7 +32,7 @@ class Product {
       this.updateDay,
       this.wholesalePrice});
 
-  List<Product> _listProduct = <Product>[];
+
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
       id: json["id"],
@@ -60,8 +62,8 @@ class Product {
       "img": img,
       "importPrice": importPrice,
       "price": price,
-      "status": status,
-      "tax": tax,
+      "status": true,
+      "tax": 10,
       "updateDay": updateDay,
       "wholesalePrice": wholesalePrice,
     };

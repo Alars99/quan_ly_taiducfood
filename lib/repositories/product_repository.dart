@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:quan_ly_taiducfood/models/api_repository.dart';
 import 'package:quan_ly_taiducfood/models/product.dart';
@@ -27,7 +28,7 @@ class ProductRespository {
       product.name = element["name"];
       product.categoryId = element["categoryId"];
       product.amout = element["amout"];
-      product.barcode = element["barcode"].toString();
+      product.barcode = element["barcode"];
       product.costPrice = element["costPrice"];
       product.desc = element["desc"];
       product.img = element["img"];
@@ -37,25 +38,32 @@ class ProductRespository {
       product.tax = element["tax"];
       product.updateDay = element["updateDay"];
       product.wholesalePrice = element["wholesalePrice"];
-
       productList.add(product);
     });
     return APIResponse<List<Product>>(data: productList);
   }
 
-  Future addProduct(Product product) async {
-    final response = await this.httpClient.post((url), body: {
-      'id': product.id,
-      'name': product.name,
-      'categoryId': product.categoryId,
-      'status': product.status.toString()
-    });
-    if (response.statusCode == 201) {
-      Product product = Product.fromJson(jsonDecode(response.body));
+  Future<APIResponse<Product>> getSingleProduct(String id) async {
+    final reponse = await this.httpClient.get(url + id);
+    if (reponse.statusCode == 200) {
+      Product product = Product.fromJson(jsonDecode(reponse.body));
+      return APIResponse<Product>(data: product);
+    }
+    return null;
+  }
 
-      return product;
-    } else
-      return null;
+  Future<APIResponse<Product>> addProduct(Product product) async {
+    final response = await this.httpClient.post((url),
+        body: json.encode(product.toJson()),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 201) {
+      APIResponse<bool>(data: true);
+    } else {
+      print(response.request.toString());
+    }
+    return null;
   }
 
   Future updateProduct(Product product, String id) async {
