@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -25,6 +26,7 @@ class _ProductAddState extends State<ProductAdd> {
   bool tax = false;
   String _data = "";
   File _image;
+  final now = DateTime.now();
 
   var formKey = GlobalKey<FormState>();
   final _controllerAmount = MoneyMaskedTextController(
@@ -400,9 +402,6 @@ class _ProductAddState extends State<ProductAdd> {
                                 ],
                               ),
                             ),
-                            // new Text(
-                            //     "Loại: ${productCate.name}  ----  Id : ${productCate.id}"),
-
                             Container(
                               child: new TextFormField(
                                 // ignore: missing_return
@@ -444,7 +443,10 @@ class _ProductAddState extends State<ProductAdd> {
                   fontSize: 16.0);
             } else {
               if (formKey.currentState.validate()) {
+                String fileName = basename(_image.path);
                 _product.id = createID(_product.categoryId);
+                _product.img = fileName;
+                _product.updateDay = DateFormat('dd/MM/yyyy').format(now).toString();
                 service.addProduct(_product);
               }
             }
