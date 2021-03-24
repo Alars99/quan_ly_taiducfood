@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:quan_ly_taiducfood/models/api_repository.dart';
 import 'package:quan_ly_taiducfood/models/product.dart';
@@ -22,6 +21,7 @@ class ProductRespository {
 
   Future<APIResponse<List<Product>>> getProductsList() async {
     final list = await loadData();
+    productList.clear();
     list.forEach((element) {
       Product product = new Product();
       product.id = element["id"];

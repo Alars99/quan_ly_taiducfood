@@ -55,6 +55,12 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchProducts();
+  }
+
   _fetchProducts() async {
     setState(() {
       isLoading = true;
@@ -69,7 +75,6 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
 
   Future<Null> refreshList() async {
     await Future.delayed(Duration(seconds: 1));
-
     return null;
   }
 

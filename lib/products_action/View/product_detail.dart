@@ -520,8 +520,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                   height: 50,
                   child: FlatButton(
                     onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(ProductEdit.routeName, arguments: {});
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductEdit(
+                                    id: product.id,
+                                  )));
                     },
                     color: HexColor('#54D3C2'),
                     // ignore: missing_required_param
@@ -551,8 +555,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                           actions: <Widget>[
                             FlatButton(
                               onPressed: () {
-                                delete();
-                                deleteSearchList();
+                                service.deleteProduct(product);
                                 Fluttertoast.showToast(
                                     msg: "Xóa sản phẩm thành công",
                                     toastLength: Toast.LENGTH_SHORT,
@@ -596,29 +599,5 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         ],
       ),
     );
-
-    return Container();
-  }
-
-  Future<void> delete() async {
-    final Map data = ModalRoute.of(context).settings.arguments;
-    final idFood = data['id'];
-    final idFoodMain = data['idMain'];
-    DatabaseReference referenceList = FirebaseDatabase.instance
-        .reference()
-        .child('productList')
-        .child(idFoodMain)
-        .child('Product');
-
-    referenceList.child(idFood).remove();
-  }
-
-  Future<void> deleteSearchList() async {
-    final Map data = ModalRoute.of(context).settings.arguments;
-    final idFood = data['id'];
-    DatabaseReference referenceList =
-        FirebaseDatabase.instance.reference().child('SearchList');
-
-    referenceList.child(idFood).remove();
   }
 }
