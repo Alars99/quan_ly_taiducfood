@@ -1026,6 +1026,8 @@ class _OrderScreenState extends State<OrderScreen>
         context: context,
         builder: (context) {
           return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
             title: Text(
               "Chiết khấu (%)",
               textAlign: TextAlign.center,
@@ -1045,7 +1047,15 @@ class _OrderScreenState extends State<OrderScreen>
                     },
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
-                    cursorHeight: 30,
+                    cursorHeight: 17,
+                    decoration: new InputDecoration(
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      hintText: "0",
+                    ),
                   ),
                   CupertinoDialogAction(
                     child: Container(
