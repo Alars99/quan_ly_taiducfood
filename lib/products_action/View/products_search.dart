@@ -540,7 +540,15 @@ class _ProductSearchScreenState extends State<ProductSearchScreen>
                     )));
       },
       subtitle: Text(product.id),
-      leading: Icon(Icons.phone),
+      leading: Container(
+        width: 80,
+        height: 200,
+        child: Image.network(product.img.toString().startsWith("image_picker")
+            ? 'https://firebasestorage.googleapis.com/v0/b/app-quan-ly-taiducfood.appspot.com/o/' +
+                product.img +
+                '?alt=media&token=63435cda-cb54-4b82-bec7-08edadbb049e'
+            : 'https://firebasestorage.googleapis.com/v0/b/app-quan-ly-taiducfood.appspot.com/o/image_picker00000.png?alt=media&token=0a7279d8-2d2e-46aa-aeee-2874a520b0fe'),
+      ),
       title: Text(product.name),
     );
   }
