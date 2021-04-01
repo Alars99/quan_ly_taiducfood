@@ -17,10 +17,8 @@ class AddCustomer extends StatefulWidget {
 class _AddcustomerScreen extends State<AddCustomer> {
   var customer = Customer();
   var _customerService = CustomerService();
-
   List<Quan> quanList = Quan.quanList;
   List<ThanhPho> tpList = ThanhPho.tpList;
-
   String thanhpho, quanhuyen, phuongxa, duong, tp;
 
   @override
@@ -598,26 +596,6 @@ class _AddcustomerScreen extends State<AddCustomer> {
                   ),
                 ),
               ],
-            ),
-          ),
-          Container(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(32.0),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.person_search,
-                    color: OrderAppTheme.buildLightTheme().primaryColor,
-                  ),
-                ),
-              ),
             ),
           ),
         ],
