@@ -1,5 +1,5 @@
-import 'dart:collection';
 import 'dart:io';
+import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -12,7 +12,9 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quan_ly_taiducfood/main.dart';
+import 'package:quan_ly_taiducfood/models/product.dart';
 import 'package:quan_ly_taiducfood/products_action/models/product_cate_data.dart';
+import 'package:quan_ly_taiducfood/repositories/product_repository.dart';
 
 class ProductAdd extends StatefulWidget {
   @override
@@ -20,27 +22,13 @@ class ProductAdd extends StatefulWidget {
 }
 
 class _ProductAddState extends State<ProductAdd> {
-  String id,
-      brand,
-      name,
-      image,
-      price,
-      barcode,
-      weight,
-      cate,
-      priceNhap,
-      priceBuon,
-      priceVon,
-      amount,
-      desc;
-  String _data = "";
+  Product _product = Product();
   bool tax = false;
-  bool allowSale = false;
-
+  String _data = "";
   File _image;
+  final now = DateTime.now();
 
   var formKey = GlobalKey<FormState>();
-
   final _controllerAmount = MoneyMaskedTextController(
       precision: 0, decimalSeparator: '', thousandSeparator: ',');
   final _controllerWeight = MoneyMaskedTextController(
@@ -64,23 +52,19 @@ class _ProductAddState extends State<ProductAdd> {
   }
 
   ProductCate productCate;
-  // ignore: non_constant_identifier_names
-  List<ProductCate> data_cate = <ProductCate>[
-    ProductCate(1, 'Thịt Bò Úc'),
-    ProductCate(2, 'Thịt Gà'),
-    ProductCate(3, 'Thịt Bò Mỹ'),
-    ProductCate(4, 'Thịt Cừu'),
-    ProductCate(5, 'Thịt Dê'),
-    ProductCate(6, 'Thịt Heo'),
-    ProductCate(7, 'Thịt Trâu'),
-    ProductCate(8, 'Hải Sản'),
-    ProductCate(9, 'Sản Phẩm Khác'),
-  ];
+  List<ProductCate> dataCate = ProductCate.listProductCate;
+  ProductRespository service = ProductRespository();
+
+  String createID(String category) {
+    int number = Random().nextInt(1000000000);
+    String id = category + number.toString();
+    return id;
+  }
 
   @override
   void initState() {
     super.initState();
-    productCate = data_cate[0];
+    productCate = dataCate[0];
   }
 
   @override
@@ -177,7 +161,7 @@ class _ProductAddState extends State<ProductAdd> {
                                 if (value.isEmpty) {
                                   return 'Chưa nhập Tên sản phẩm';
                                 } else {
-                                  name = value;
+                                  _product.name = value;
                                 }
                               },
                               autocorrect: true,
@@ -188,34 +172,18 @@ class _ProductAddState extends State<ProductAdd> {
                               ),
                             ),
                             new TextFormField(
-                              // ignore: missing_return
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Chưa nhập Mã sản phẩm';
-                                } else {
-                                  id = value;
-                                }
-                              },
-                              autocorrect: true,
-                              textInputAction: TextInputAction.next,
-                              onEditingComplete: () => node.nextFocus(),
-                              decoration: InputDecoration(
-                                labelText: 'Mã sản phẩm',
-                              ),
-                            ),
-                            new TextFormField(
-                                // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Chưa nhập Barcode sản phẩm';
                                   } else {
-                                    barcode = value;
+                                    _product.barcode = int.parse(value);
+                                    return null;
                                   }
                                 },
                                 keyboardType: TextInputType.number,
                                 key: Key(_data), // <- Magic!
                                 initialValue: _data,
-                                //controller: _controller,
+
                                 //onChanged: (text) {},
                                 autocorrect: true,
                                 decoration: InputDecoration(
@@ -226,24 +194,6 @@ class _ProductAddState extends State<ProductAdd> {
                                       icon:
                                           Icon(Icons.qr_code_scanner_outlined)),
                                 )),
-                            new TextFormField(
-                              // ignore: missing_return
-                              validator: (value) {
-                                if (value.isEmpty || value == '0') {
-                                  return 'Chưa nhập Khối lượng sản phẩm';
-                                } else {
-                                  weight = value;
-                                }
-                              },
-                              controller: _controllerWeight,
-                              autocorrect: true,
-                              keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.next,
-                              onEditingComplete: () => node.nextFocus(),
-                              decoration: InputDecoration(
-                                labelText: 'Khối lượng (g)',
-                              ),
-                            ),
                           ]),
                     ),
                   ),
@@ -274,7 +224,7 @@ class _ProductAddState extends State<ProductAdd> {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Tồn kho sản phẩm';
                                       } else {
-                                        amount = value;
+                                        _product.amout = int.parse(value);
                                       }
                                     },
                                     controller: _controllerAmount,
@@ -295,7 +245,9 @@ class _ProductAddState extends State<ProductAdd> {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Giá vốn sản phẩm';
                                       } else {
-                                        priceVon = value;
+                                        _product.wholesalePrice =
+                                            _controllerPriceVon.numberValue
+                                                .toDouble();
                                       }
                                     },
                                     controller: _controllerPriceVon,
@@ -321,7 +273,9 @@ class _ProductAddState extends State<ProductAdd> {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Giá bán lẻ sản phẩm';
                                       } else {
-                                        price = value;
+                                        _product.price = _controllerPrice
+                                            .numberValue
+                                            .toDouble();
                                       }
                                     },
                                     controller: _controllerPrice,
@@ -342,7 +296,9 @@ class _ProductAddState extends State<ProductAdd> {
                                       if (value.isEmpty || value == '0') {
                                         return 'Chưa nhập Giá bán buôn sản phẩm';
                                       } else {
-                                        priceBuon = value;
+                                        _product.costPrice =
+                                            _controllerPriceBuon.numberValue
+                                                .toDouble();
                                       }
                                     },
                                     controller: _controllerPriceBuon,
@@ -364,7 +320,9 @@ class _ProductAddState extends State<ProductAdd> {
                                   if (value.isEmpty || value == '0') {
                                     return 'Chưa nhập Giá nhập sản phẩm';
                                   } else {
-                                    priceNhap = value;
+                                    _product.importPrice = _controllerPriceNhap
+                                        .numberValue
+                                        .toDouble();
                                   }
                                 },
                                 controller: _controllerPriceNhap,
@@ -428,11 +386,11 @@ class _ProductAddState extends State<ProductAdd> {
                                     onChanged: (ProductCate newValue) {
                                       setState(() {
                                         productCate = newValue;
-                                        print(
-                                            "Loại: ${productCate.name}  ----  Id : ${productCate.id}");
+                                        _product.categoryId =
+                                            productCate.categoryId;
                                       });
                                     },
-                                    items: data_cate.map((ProductCate pdCate) {
+                                    items: dataCate.map((ProductCate pdCate) {
                                       return new DropdownMenuItem<ProductCate>(
                                         value: pdCate,
                                         child: new Text(
@@ -444,34 +402,14 @@ class _ProductAddState extends State<ProductAdd> {
                                 ],
                               ),
                             ),
-                            // new Text(
-                            //     "Loại: ${productCate.name}  ----  Id : ${productCate.id}"),
                             Container(
                               child: new TextFormField(
                                 // ignore: missing_return
                                 validator: (value) {
                                   if (value.isEmpty) {
-                                    brand = 'Không có thương hiệu';
+                                    _product.desc = 'Không có mô tả';
                                   } else {
-                                    brand = value;
-                                  }
-                                },
-                                decoration: InputDecoration(
-                                  labelText: 'Thương Hiệu',
-                                ),
-                                autocorrect: true,
-                                textInputAction: TextInputAction.next,
-                                onEditingComplete: () => node.nextFocus(),
-                              ),
-                            ),
-                            Container(
-                              child: new TextFormField(
-                                // ignore: missing_return
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    desc = 'Không có mô tả';
-                                  } else {
-                                    desc = value;
+                                    _product.desc = value;
                                   }
                                 },
                                 decoration: InputDecoration(
@@ -481,28 +419,6 @@ class _ProductAddState extends State<ProductAdd> {
                                 textInputAction: TextInputAction.next,
                                 onEditingComplete: () => node.nextFocus(),
                               ),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Container(
-                                    child: new Text(
-                                  'Cho phép bán',
-                                  style: new TextStyle(fontSize: 17),
-                                )),
-                                Container(
-                                    child: new Switch(
-                                        activeColor: HexColor('#54D3C2'),
-                                        value: allowSale,
-                                        onChanged: (bool s) {
-                                          setState(() {
-                                            allowSale = s;
-                                            print(allowSale);
-                                          });
-                                        })),
-                              ],
                             ),
                           ]),
                     ),
@@ -517,7 +433,7 @@ class _ProductAddState extends State<ProductAdd> {
         width: MediaQuery.of(context).size.width - 33,
         child: FloatingActionButton.extended(
           onPressed: () {
-            if (_image == null) {
+            if (_image != null) {
               Fluttertoast.showToast(
                   msg: "Sản phẩm chưa có ảnh",
                   toastLength: Toast.LENGTH_SHORT,
@@ -526,7 +442,13 @@ class _ProductAddState extends State<ProductAdd> {
                   textColor: Colors.black87,
                   fontSize: 16.0);
             } else {
-              checkId(context);
+              if (formKey.currentState.validate()) {
+                String fileName = basename(_image.path);
+                _product.id = createID(_product.categoryId);
+                _product.img = fileName;
+                _product.updateDay = DateFormat('dd/MM/yyyy').format(now).toString();
+                service.addProduct(_product);
+              }
             }
           },
           backgroundColor: HexColor('#54D3C2'),
@@ -537,60 +459,6 @@ class _ProductAddState extends State<ProductAdd> {
         ),
       ),
     );
-  }
-
-  checkId(BuildContext context) {
-    String idFood = productCate.id.toString();
-    DatabaseReference referenceList = FirebaseDatabase.instance
-        .reference()
-        .child('productList')
-        .child(idFood)
-        .child('Product');
-    referenceList.once().then((DataSnapshot snapshot) {
-      var keys = snapshot.value.keys;
-      var values = snapshot.value;
-
-      // ignore: missing_return
-      bool cId() {
-        if (formKey.currentState.validate()) {
-          for (var key in keys) {
-            if (values[key]["id"] == id) {
-              Fluttertoast.showToast(
-                  msg: "Sản phẩm đã thêm rồi",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  textColor: Colors.black87,
-                  fontSize: 16.0);
-              print('a');
-              return true;
-            }
-          }
-          print('b');
-          return false;
-        }
-      }
-
-      if (cId() == false) {
-        print('-----------------');
-        print('chưa có sp thím ơi');
-        uploadImg();
-        uploadSearchList();
-        upload();
-        Fluttertoast.showToast(
-            msg: "Thêm sản phẩm thành công",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            textColor: Colors.black87,
-            fontSize: 16.0);
-        Navigator.pop(context);
-      }
-      if (cId() == true) {
-        print('-----------------');
-        print('có sp r thím ơi');
-      }
-    });
   }
 
   Future<void> uploadImg() async {
@@ -605,68 +473,26 @@ class _ProductAddState extends State<ProductAdd> {
     });
   }
 
-  Future<void> upload() async {
-    final now = DateTime.now();
-    String fileName = basename(_image.path);
-    String idFood = productCate.id.toString();
-    if (formKey.currentState.validate()) {
-      DatabaseReference referenceList = FirebaseDatabase.instance
-          .reference()
-          .child('productList')
-          .child(idFood)
-          .child('Product');
-      // String uploadId = reference.push().key;
-      HashMap mapProList = new HashMap();
+  // Future<void> uploadSearchList() async {
+  //   String fileName = basename(_image.path);
+  //   DateTime now = DateTime.now();
+  //   if (formKey.currentState.validate()) {
+  //     DatabaseReference referenceSearch =
+  //         FirebaseDatabase.instance.reference().child('SearchList');
 
-      weight = weight.replaceAll(",", "");
-      price = price.replaceAll(",", "");
-      priceBuon = priceBuon.replaceAll(",", "");
-      priceNhap = priceNhap.replaceAll(",", "");
-      priceVon = priceVon.replaceAll(",", "");
-      amount = amount.replaceAll(",", "");
+  //     HashMap mapSearch = new HashMap();
 
-      mapProList["id"] = id;
-      mapProList["brand"] = brand;
-      mapProList["image"] = fileName;
-      mapProList["name"] = name;
-      mapProList["price"] = price;
-      mapProList["barcode"] = barcode;
-      mapProList["weight"] = weight;
-      mapProList["cate"] = productCate.id.toString();
-      mapProList["priceNhap"] = priceNhap;
-      mapProList["priceBuon"] = priceBuon;
-      mapProList["priceVon"] = priceVon;
-      mapProList["amount"] = amount;
-      mapProList["desc"] = desc;
-      mapProList["allowSale"] = allowSale;
-      mapProList["tax"] = tax;
-      mapProList["ngayUp"] = DateFormat('dd/MM/yyyy').format(now).toString();
-      mapProList["daban"] = "0";
+  //     price = price.replaceAll(",", "");
 
-      referenceList.child(id).set(mapProList);
-    }
-  }
+  //     mapSearch["id"] = id;
+  //     mapSearch["image"] = fileName;
+  //     mapSearch["brand"] = brand;
+  //     mapSearch["name"] = name;
+  //     mapSearch["price"] = price;
+  //     mapSearch["idMain"] = productCate.id.toString();
+  //     mapSearch["dateUp"] = now.toString();
 
-  Future<void> uploadSearchList() async {
-    String fileName = basename(_image.path);
-    DateTime now = DateTime.now();
-    if (formKey.currentState.validate()) {
-      DatabaseReference referenceSearch =
-          FirebaseDatabase.instance.reference().child('SearchList');
-
-      HashMap mapSearch = new HashMap();
-
-      price = price.replaceAll(",", "");
-
-      mapSearch["id"] = id;
-      mapSearch["image"] = fileName;
-      mapSearch["brand"] = brand;
-      mapSearch["name"] = name;
-      mapSearch["price"] = price;
-      mapSearch["idMain"] = productCate.id.toString();
-      mapSearch["dateUp"] = now.toString();
-
-      referenceSearch.child(id).set(mapSearch);
-    }
-  }
+  //     referenceSearch.child(id).set(mapSearch);
+  //   }
+  // }
 }
