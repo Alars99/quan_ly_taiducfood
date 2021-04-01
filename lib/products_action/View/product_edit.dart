@@ -34,24 +34,19 @@ class _ProductEditState extends State<ProductEdit> {
   File _image;
 
   var formKey = GlobalKey<FormState>();
-  final _controllerAmount = MoneyMaskedTextController(
-      precision: 0, decimalSeparator: '', thousandSeparator: ',');
-  final _controllerWeight = MoneyMaskedTextController(
-      precision: 0, decimalSeparator: '', thousandSeparator: ',');
-  final _controllerPriceVon = MoneyMaskedTextController(
-      precision: 0, decimalSeparator: '', thousandSeparator: ',');
-  final _controllerPrice = MoneyMaskedTextController(
-      precision: 0, decimalSeparator: '', thousandSeparator: ',');
-  final _controllerPriceNhap = MoneyMaskedTextController(
-      precision: 0, decimalSeparator: '', thousandSeparator: ',');
-  final _controllerPriceBuon = MoneyMaskedTextController(
-      precision: 0, decimalSeparator: '', thousandSeparator: ',');
+  // MoneyMaskedTextController(
+  //     precision: 0, decimalSeparator: '', thousandSeparator: ',');
+  final _controllerAmount = TextEditingController();
+  final _controllerPriceVon = TextEditingController();
+  final _controllerPrice = TextEditingController();
+  final _controllerPriceNhap = TextEditingController();
+  final _controllerPriceBuon = TextEditingController();
 
   TextEditingController _controllerEditId = TextEditingController();
   TextEditingController _controllerEditName = TextEditingController();
-  TextEditingController _controllerEditBrand = TextEditingController();
   TextEditingController _controllerEditImage = TextEditingController();
   TextEditingController _controllerEditDesc = TextEditingController();
+  TextEditingController _controllerEditBarcode = TextEditingController();
   _ProductEditState(this.id);
 
   //new
@@ -69,7 +64,7 @@ class _ProductEditState extends State<ProductEdit> {
   }
 
   ProductCate productCate;
-  List<ProductCate> data_cate = ProductCate.listProductCate;
+  List<ProductCate> cate = ProductCate.listProductCate;
 
   Future downdloadImage() async {
     await Firebase.initializeApp();
@@ -90,6 +85,15 @@ class _ProductEditState extends State<ProductEdit> {
       isLoading = false;
       product = _apiResponse.data;
       _controllerPrice.text = product.price.toString();
+      _controllerPriceBuon.text = product.costPrice.toString();
+      _controllerPriceNhap.text = product.importPrice.toString();
+      _controllerPriceVon.text = product.wholesalePrice.toString();
+      _controllerAmount.text = product.amout.toString();
+      _controllerEditName.text = product.name.toString();
+      _controllerEditId.text = product.id.toString();
+      _controllerEditBarcode.text = product.barcode.toString();
+      _controllerEditImage.text = product.img.toString();
+      downdloadImage();
     });
   }
 
@@ -225,6 +229,7 @@ class _ProductEditState extends State<ProductEdit> {
                                       labelText: 'Mã sản phẩm',
                                     )),
                                 new TextFormField(
+                                    controller: _controllerEditBarcode,
                                     // ignore: missing_return
                                     validator: (value) {
                                       if (value.isEmpty) {
@@ -304,8 +309,7 @@ class _ProductEditState extends State<ProductEdit> {
                                             return 'Chưa nhập Giá vốn sản phẩm';
                                           } else {
                                             product.wholesalePrice =
-                                                _controllerPriceVon.numberValue
-                                                    .toDouble();
+                                                double.parse(value);
                                           }
                                         },
                                         controller: _controllerPriceVon,
@@ -333,9 +337,7 @@ class _ProductEditState extends State<ProductEdit> {
                                           if (value.isEmpty || value == '0') {
                                             return 'Chưa nhập Giá bán lẻ sản phẩm';
                                           } else {
-                                            product.price = _controllerPrice
-                                                .numberValue
-                                                .toDouble();
+                                            product.price = double.parse(value);
                                           }
                                         },
                                         controller: _controllerPrice,
@@ -358,8 +360,7 @@ class _ProductEditState extends State<ProductEdit> {
                                             return 'Chưa nhập Giá bán buôn sản phẩm';
                                           } else {
                                             product.costPrice =
-                                                _controllerPriceBuon.numberValue
-                                                    .toDouble();
+                                                double.parse(value);
                                           }
                                         },
                                         controller: _controllerPriceBuon,
@@ -383,8 +384,7 @@ class _ProductEditState extends State<ProductEdit> {
                                         return 'Chưa nhập Giá nhập sản phẩm';
                                       } else {
                                         product.importPrice =
-                                            _controllerPriceNhap.numberValue
-                                                .toDouble();
+                                            double.parse(value);
                                       }
                                     },
                                     controller: _controllerPriceNhap,
@@ -436,7 +436,6 @@ class _ProductEditState extends State<ProductEdit> {
         child: FloatingActionButton.extended(
           onPressed: () {
             edit();
-            editSearchList();
             if (_image != null) {
               editImg();
             }
@@ -472,66 +471,24 @@ class _ProductEditState extends State<ProductEdit> {
   }
 
   Future<void> edit() async {
-    String fileName;
     if (_image != null) {
-      fileName = basename(_image.path);
-      print(fileName);
-    } else {
-      fileName = _controllerEditImage.text.toString();
-      print(fileName);
+      product.img = basename(_image.path);
     }
-    String _controllerPriceString;
-    String _controllerPriceVonString;
-    String _controllerPriceBuonString;
-    String _controllerPriceNhapString;
-    String _controllerAmountString;
-    String _controllerWeightString;
-    String idFood = productCate.categoryId.toString();
     if (formKey.currentState.validate()) {
-      DatabaseReference referenceList = FirebaseDatabase.instance
-          .reference()
-          .child('productList')
-          .child(idFood)
-          .child('Product');
-
-      _controllerPriceString =
-          _controllerPrice.text.toString().replaceAll(",", "");
-      _controllerPriceVonString =
-          _controllerPriceVon.text.toString().replaceAll(",", "");
-      _controllerPriceNhapString =
-          _controllerPriceNhap.text.toString().replaceAll(",", "");
-      _controllerPriceBuonString =
-          _controllerPriceBuon.text.toString().replaceAll(",", "");
-      _controllerAmountString =
-          _controllerAmount.text.toString().replaceAll(",", "");
-      _controllerWeightString =
-          _controllerWeight.text.toString().replaceAll(",", "");
-    }
-  }
-
-  Future<void> editSearchList() async {
-    String _controllerPriceString;
-    String fileName;
-    if (_image != null) {
-      fileName = basename(_image.path);
-    } else {
-      fileName = _controllerEditImage.text.toString();
-    }
-
-    if (formKey.currentState.validate()) {
-      DatabaseReference referenceSearch =
-          FirebaseDatabase.instance.reference().child('SearchList');
-
-      _controllerPriceString =
-          _controllerPrice.text.toString().replaceAll(",", "");
-      print(_controllerPriceString);
-      referenceSearch.child(_controllerEditId.text.toString()).update({
-        "name": _controllerEditName.text.toString(),
-        // "id": _controllerEditId.text.toString(),
-        "brand": _controllerEditBrand.text.toString(),
-        "price": _controllerPriceString.toString(),
-        "image": fileName.toString(),
-      });
+      print(product.id);
+      print(product.amout);
+      print(product.barcode);
+      print(product.categoryId);
+      print(product.costPrice);
+      print(product.desc);
+      print(product.img);
+      print(product.importPrice);
+      print(product.name);
+      print(product.price);
+      print(product.status);
+      print(product.tax);
+      print(product.wholesalePrice);
+      service.updateProduct(product, product.id);
     }
   }
 }

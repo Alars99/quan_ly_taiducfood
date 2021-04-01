@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:quan_ly_taiducfood/models/api_repository.dart';
 import 'package:quan_ly_taiducfood/models/customer.dart';
 
-final url = 'http://www.spcable.somee.com/api/customers/';
+final url = 'https://www.spcable.somee.com/api/customers/';
 
 class CustomerRespository {
   http.Client httpClient = new http.Client();

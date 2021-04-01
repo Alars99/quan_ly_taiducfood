@@ -1,11 +1,11 @@
 import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quan_ly_taiducfood/main.dart';
 import 'package:quan_ly_taiducfood/models/api_repository.dart';
+import 'package:quan_ly_taiducfood/models/format.dart';
 import 'package:quan_ly_taiducfood/models/product.dart';
 import 'package:quan_ly_taiducfood/products_action/models/product_cate_data.dart';
 import 'package:quan_ly_taiducfood/repositories/product_repository.dart';
@@ -37,6 +37,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   bool isLoading = false;
   ProductRespository service = ProductRespository();
   Product productDetailList;
+  FormatCurrency formatCurrency;
 
   _ProductDetailScreenState(this.id);
 
@@ -130,6 +131,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          Container(
+            width: 330,
+            child: Image.network(product.img
+                    .toString()
+                    .startsWith("image_picker")
+                ? 'https://firebasestorage.googleapis.com/v0/b/app-quan-ly-taiducfood.appspot.com/o/' +
+                    product.img +
+                    '?alt=media&token=63435cda-cb54-4b82-bec7-08edadbb049e'
+                : 'https://firebasestorage.googleapis.com/v0/b/app-quan-ly-taiducfood.appspot.com/o/image_picker00000.png?alt=media&token=0a7279d8-2d2e-46aa-aeee-2874a520b0fe'),
+          ),
           Padding(
             padding: const EdgeInsets.all(7.0),
             child: new Card(
@@ -324,6 +335,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                           width: valueWidth,
                           child: Text(
                             product.costPrice.toString(),
+                            // final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
+                            // final priceInt = int.parse(price.toString());
+                            // formatCurrency.format(priceInt),
                             style: new TextStyle(
                               fontSize: 16,
                               fontFamily: "Roboto",
@@ -345,7 +359,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                         Container(
                           width: valueWidth,
                           child: Text(
-                            product.costPrice.toString(),
+                            product.wholesalePrice.toString(),
                             style: new TextStyle(
                               fontSize: 16,
                               fontFamily: "Roboto",

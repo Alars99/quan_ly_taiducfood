@@ -26,7 +26,8 @@ class _ProductAddState extends State<ProductAdd> {
   bool tax = false;
   String _data = "";
   File _image;
-  final now = DateTime.now();
+  String fileName;
+  final datetime = DateTime.now();
 
   var formKey = GlobalKey<FormState>();
   final _controllerAmount = MoneyMaskedTextController(
@@ -433,7 +434,7 @@ class _ProductAddState extends State<ProductAdd> {
         width: MediaQuery.of(context).size.width - 33,
         child: FloatingActionButton.extended(
           onPressed: () {
-            if (_image != null) {
+            if (_image == null) {
               Fluttertoast.showToast(
                   msg: "Sản phẩm chưa có ảnh",
                   toastLength: Toast.LENGTH_SHORT,
@@ -443,11 +444,12 @@ class _ProductAddState extends State<ProductAdd> {
                   fontSize: 16.0);
             } else {
               if (formKey.currentState.validate()) {
-                String fileName = basename(_image.path);
                 _product.id = createID(_product.categoryId);
-                _product.img = fileName;
-                _product.updateDay = DateFormat('dd/MM/yyyy').format(now).toString();
+                _product.img = basename(_image.path);
+                _product.updateDay = datetime.toString();
                 service.addProduct(_product);
+                uploadImg();
+                Navigator.pop(context);
               }
             }
           },
@@ -463,36 +465,12 @@ class _ProductAddState extends State<ProductAdd> {
 
   Future<void> uploadImg() async {
     await Firebase.initializeApp();
-    String fileName = basename(_image.path);
+    fileName = basename(_image.path);
     Reference imgReference = FirebaseStorage.instance.ref().child(fileName);
     UploadTask uploadTask = imgReference.putFile(_image);
-    // ignore: unused_local_variable
     TaskSnapshot taskSnapshot = await uploadTask;
     setState(() {
       print('uploaded');
     });
   }
-
-  // Future<void> uploadSearchList() async {
-  //   String fileName = basename(_image.path);
-  //   DateTime now = DateTime.now();
-  //   if (formKey.currentState.validate()) {
-  //     DatabaseReference referenceSearch =
-  //         FirebaseDatabase.instance.reference().child('SearchList');
-
-  //     HashMap mapSearch = new HashMap();
-
-  //     price = price.replaceAll(",", "");
-
-  //     mapSearch["id"] = id;
-  //     mapSearch["image"] = fileName;
-  //     mapSearch["brand"] = brand;
-  //     mapSearch["name"] = name;
-  //     mapSearch["price"] = price;
-  //     mapSearch["idMain"] = productCate.id.toString();
-  //     mapSearch["dateUp"] = now.toString();
-
-  //     referenceSearch.child(id).set(mapSearch);
-  //   }
-  // }
 }
