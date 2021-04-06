@@ -21,6 +21,7 @@ class CustomerRespository {
 
   Future<APIResponse<List<Customer>>> getCustomersList() async {
     final list = await loadData();
+    customerList.clear();
     list.forEach((element) {
       Customer customer = new Customer();
       customer.id = element["id"];
@@ -36,23 +37,20 @@ class CustomerRespository {
   }
 
   Future addCustomer(Customer customer) async {
-    final response = await this.httpClient.post((url), body: {
-      'id': customer.id,
-      'name': customer.name,
-    });
+    final response = await this.httpClient.post((url),
+        body: json.encode(customer.toJson()),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
     if (response.statusCode == 201) {
       Customer customer = Customer.fromJson(jsonDecode(response.body));
-
       return customer;
     } else
       return null;
   }
 
   Future updateCustomer(Customer customer, String id) async {
-    final response = await this.httpClient.put((url + "/" + id), body: {
-      'id': customer.id,
-      'name': customer.name,
-    });
+    final response = await this.httpClient.put((url + "/" + id), body: {});
     if (response.statusCode == 204) {
     } else
       return null;
@@ -67,41 +65,5 @@ class CustomerRespository {
     } else {
       throw Exception('error');
     }
-  }
-
-  Future<void> upload() async {
-    final now = DateTime.now();
-    // String fileName = basename(_image.path);
-    String fileName = "";
-
-    // // String uploadId = reference.push().key;
-    // HashMap mapProList = new HashMap();
-
-    // weight = weight.replaceAll(",", "");
-    // price = price.replaceAll(",", "");
-    // priceBuon = priceBuon.replaceAll(",", "");
-    // priceNhap = priceNhap.replaceAll(",", "");
-    // priceVon = priceVon.replaceAll(",", "");
-    // amount = amount.replaceAll(",", "");
-
-    // mapProList["id"] = id;
-    // mapProList["brand"] = brand;
-    // mapProList["image"] = fileName;
-    // mapProList["name"] = name;
-    // mapProList["price"] = price;
-    // mapProList["barcode"] = barcode;
-    // mapProList["weight"] = weight;
-    // mapProList["cate"] = customerCate.id.toString();
-    // mapProList["priceNhap"] = priceNhap;
-    // mapProList["priceBuon"] = priceBuon;
-    // mapProList["priceVon"] = priceVon;
-    // mapProList["amount"] = amount;
-    // mapProList["desc"] = desc;
-    // mapProList["allowSale"] = allowSale;
-    // mapProList["tax"] = tax;
-    // mapProList["ngayUp"] = DateFormat('dd/MM/yyyy').format(now).toString();
-    // mapProList["daban"] = "0";
-
-    // referenceList.child(id).set(mapProList);
   }
 }

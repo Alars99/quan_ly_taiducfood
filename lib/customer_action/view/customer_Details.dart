@@ -17,19 +17,6 @@ class _DetailscustomerScreen extends State<DetailsCustomer> {
   var customer = Customer();
   _DetailscustomerScreen(this.customer);
 
-  // getAllCustomer() async {
-  //   var customers = await _customerService.readCustomer("1");
-  //   customers.forEach((customer) {
-  //     setState(() {
-  //       customer.idCustomer = customer['idCustomer'];
-  //       customer.name = customer['name'];
-  //       customer.phone = customer['phone'];
-  //       customer.email = customer['email'];
-  //       customer.address = customer['address'];
-  //     });
-  //   });
-  // }
-
   @override
   void initState() {
     super.initState();

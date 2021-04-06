@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quan_ly_taiducfood/customer_action/view/add_customer.dart';
-import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
 import 'package:quan_ly_taiducfood/customer_action/view/customer_list_view.dart';
 import 'package:quan_ly_taiducfood/main.dart';
-import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_theme.dart';
 import 'package:quan_ly_taiducfood/statistical_action/theme/stat&cus_theme.dart';
 
@@ -13,28 +11,6 @@ class CustomerScreen extends StatefulWidget {
 }
 
 class _CustomerScreenState extends State<CustomerScreen> {
-  var customer = Customer();
-  var _customerService = CustomerService();
-  // ignore: deprecated_member_use
-  List<Customer> _customerList = List();
-
-  getAllCustomerList() async {
-    _customerList.clear();
-    var customers = await _customerService.readCustomerList();
-    customers.forEach((customer) {
-      setState(() {
-        var customerModel = new Customer();
-        customerModel.idCustomer = customer['idCustomer'];
-        customerModel.name = customer['name'];
-        customerModel.phone = customer['phone'];
-        customerModel.email = customer['email'];
-        customerModel.address = customer['address'];
-        customerModel.idship = customer['idShip'];
-        _customerList.add(customerModel);
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
