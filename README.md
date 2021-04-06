@@ -1,4 +1,4 @@
-# quan_ly_taiducfood
+# quan_ly_banhang
 
 A new Flutter project.
 
