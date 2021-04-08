@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
+
 import 'package:quan_ly_taiducfood/main.dart';
+import 'package:quan_ly_taiducfood/models/customer.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_theme.dart';
 import 'package:quan_ly_taiducfood/statistical_action/theme/stat&cus_theme.dart';
@@ -294,7 +295,7 @@ class _UpdateCustomer extends State<UpdateCustomer> {
                             padding: const EdgeInsets.only(left: 16, right: 16),
                             child: TextFormField(
                               onChanged: (value) {
-                                customer.email = value;
+                                customer.mail = value;
                               },
                               style: TextStyle(
                                 fontFamily: 'WorkSans',
@@ -304,7 +305,7 @@ class _UpdateCustomer extends State<UpdateCustomer> {
                               ),
                               keyboardType: TextInputType.text,
                               decoration: InputDecoration(
-                                hintText: customer.email,
+                                hintText: customer.mail,
                                 border: InputBorder.none,
                                 helperStyle: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -363,7 +364,6 @@ class _UpdateCustomer extends State<UpdateCustomer> {
                             padding: const EdgeInsets.only(left: 16, right: 16),
                             child: RaisedButton(
                               onPressed: () {
-                                _customerService.updateCustomer(customer);
                                 Navigator.pop(context);
                               },
                               child: Text("Cập nhật"),

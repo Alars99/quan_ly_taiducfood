@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:quan_ly_taiducfood/customer_action/view/customer_Details.dart';
-import 'package:quan_ly_taiducfood/main.dart';
+import 'package:flutter/rendering.dart';
 import 'package:quan_ly_taiducfood/models/api_repository.dart';
 import 'package:quan_ly_taiducfood/models/customer.dart';
-import 'package:quan_ly_taiducfood/order_action/View/Order/order_theme.dart';
 import 'package:quan_ly_taiducfood/repositories/customer_repository.dart';
+
+import 'customer_Details.dart';
 
 class CustomerListView extends StatefulWidget {
   const CustomerListView({Key key, this.callBack}) : super(key: key);
@@ -54,24 +54,11 @@ class _CustomerListViewState extends State<CustomerListView>
           if (isLoading) {
             return CircularProgressIndicator();
           } else {
-            return ListView(
-              padding: const EdgeInsets.all(8),
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              children: List<Widget>.generate(
-                customerList.length,
-                (int index) {
-                  return CategoryView(
-                    getInfoCustomer: () {
-                      Navigator.pop(context, index.toString());
-                    },
-                    callback: () {
-                      setState(() {});
-                    },
-                    customer: customerList[index],
-                  );
-                },
-              ),
+            return ListView.builder(
+              itemCount: customerList.length,
+              itemBuilder: (context, index) {
+                return CategoryView(customer: customerList[index]);
+              },
             );
           }
         },
@@ -91,85 +78,47 @@ class CategoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 17.0),
-      child: Builder(
-        builder: (BuildContext context) {
-          return InkWell(
-            splashColor: Colors.transparent,
-            onTap: () {},
-            child: SizedBox(
-              height: 120,
-              child: Stack(
-                alignment: AlignmentDirectional.bottomCenter,
-                children: <Widget>[
-                  Container(
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: HexColor('#D1FAFB'),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(16.0)),
-                              // border: new Border.all(
-                              //     color: DesignCourseAppTheme.notWhite),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  width: 400,
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 8.0, left: 16),
-                                            child: Text(
-                                              "Họ tên: " +
-                                                  customer.name.toUpperCase(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 16),
-                                          child: customer.phone == null
-                                              ? Text(
-                                                  "Số diện thoại: " + "Empty")
-                                              : Text(
-                                                  "Số diện thoại: " +
-                                                      customer.phone,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      fontSize: 13),
-                                                ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+    return ListTile(
+      mouseCursor: MouseCursor.defer,
+      isThreeLine: true,
+      leading: Icon(Icons.person),
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailsCustomer(
+              customer: customer,
             ),
-          );
-        },
+          )),
+      title: Text(
+        customer.name,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      subtitle: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Phone: " + customer.phone),
+          Text("Address: " + customer.address),
+        ],
+      ),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          InkWell(
+            child: Icon(Icons.close),
+            onTap: () => print("object"),
+            radius: 32,
+          ),
+          Padding(padding: EdgeInsets.symmetric(vertical: 2)),
+          Text(
+            customer.point.toString(),
+            style: TextStyle(
+                color: Colors.greenAccent,
+                fontSize: 20,
+                fontWeight: FontWeight.w700),
+          )
+        ],
       ),
     );
   }

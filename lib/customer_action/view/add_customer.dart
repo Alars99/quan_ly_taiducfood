@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/quan.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/thanhpho.dart';
 import 'package:quan_ly_taiducfood/main.dart';
+import 'package:quan_ly_taiducfood/models/customer.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_theme.dart';
 import 'package:quan_ly_taiducfood/statistical_action/theme/stat&cus_theme.dart';
@@ -21,9 +21,41 @@ class _AddcustomerScreen extends State<AddCustomer> {
   List<ThanhPho> tpList = ThanhPho.tpList;
   String thanhpho, quanhuyen, phuongxa, duong, tp;
 
+  bool isLoading = false;
+
+  // String id;
+  // String name;
+  // String phone;
+  // String mail;
+  // String address;
+  // int point;
+
+  final name = "Họ và tên:";
+  final phone = "Số điện thoại:";
+  final email = "Email:";
+  final address = "Địa chỉ";
+
   @override
   void initState() {
+    // random id cua khach hang
+    customer.id = "customer" + Random().nextInt(100000).toString();
+    customer.name = "";
+    customer.address = "";
+    customer.mail = "";
+    customer.phone = "";
+    customer.point = 0;
     super.initState();
+  }
+
+  _isLoading() async {
+    setState(() {
+      isLoading = true;
+    });
+    customer.updateCustomer(customer);
+    setState(() {
+      isLoading = false;
+      Navigator.pop(context);
+    });
   }
 
   @override
@@ -38,18 +70,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
               height: MediaQuery.of(context).padding.top,
             ),
             getAppBarUI(),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                    children: <Widget>[
-                      getInfoUI(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            getInfoUI(),
           ],
         ),
       ),
@@ -57,545 +78,282 @@ class _AddcustomerScreen extends State<AddCustomer> {
   }
 
   Widget getInfoUI() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 50),
-      child: Container(
-          child: Column(
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(32),
+        color: OrderAppTheme.buildLightTheme().primaryColor,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                height: 64,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: HexColor('#F8FAFB'),
-                      borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                        bottomLeft: Radius.circular(13.0),
-                        topLeft: Radius.circular(13.0),
-                        topRight: Radius.circular(13.0),
-                      ),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  return customer.name = value;
-                                } else {
-                                  return "chưa nhập gì";
-                                }
-                              },
-                              style: TextStyle(
-                                fontFamily: 'WorkSans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: DesignCourseAppTheme.nearlyBlue,
-                              ),
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                labelText: 'Họ và tên: ',
-                                border: InputBorder.none,
-                                helperStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  letterSpacing: 0.2,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                              ),
-                              onEditingComplete: () {},
+          Padding(
+              padding: const EdgeInsets.only(
+                  top: 16, right: 16, left: 16, bottom: 16),
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: HexColor('#F8FAFB'),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        child: TextFormField(
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              return customer.name = value;
+                            } else {
+                              return "chưa nhập gì";
+                            }
+                          },
+                          style: TextStyle(
+                            fontFamily: 'WorkSans',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: DesignCourseAppTheme.nearlyBlue,
+                          ),
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            suffixIcon: Icon(Icons.person_outline_sharp),
+                            labelText: name,
+                            border: InputBorder.none,
+                            helperStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              letterSpacing: 0.2,
+                              color: Colors.black,
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Icon(Icons.person, color: HexColor('#B9BABC')),
-                        )
-                      ],
+                      ),
                     ),
+                  ]))),
+          Padding(
+              padding: const EdgeInsets.only(
+                  top: 16, right: 16, left: 16, bottom: 16),
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: HexColor('#F8FAFB'),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                ),
-              ),
-              const Expanded(
-                child: SizedBox(),
-              )
-            ],
-          ),
+                  child: Row(children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        child: TextFormField(
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              return customer.phone = value;
+                            } else {
+                              return "chưa nhập gì";
+                            }
+                          },
+                          style: TextStyle(
+                            fontFamily: 'WorkSans',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: DesignCourseAppTheme.nearlyBlue,
+                          ),
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            suffixIcon: Icon(Icons.phone),
+                            labelText: phone,
+                            border: InputBorder.none,
+                            helperStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              letterSpacing: 0.2,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]))),
+          Padding(
+              padding: const EdgeInsets.only(
+                  top: 16, right: 16, left: 16, bottom: 16),
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: HexColor('#F8FAFB'),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        child: TextFormField(
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              return customer.mail = value;
+                            } else {
+                              return "chưa nhập gì";
+                            }
+                          },
+                          style: TextStyle(
+                            fontFamily: 'WorkSans',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: DesignCourseAppTheme.nearlyBlue,
+                          ),
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            suffixIcon: Icon(Icons.mail),
+                            labelText: email,
+                            border: InputBorder.none,
+                            helperStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              letterSpacing: 0.2,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]))),
+          Padding(
+              padding: const EdgeInsets.only(
+                  top: 16, right: 16, left: 16, bottom: 16),
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: HexColor('#F8FAFB'),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        child: TextFormField(
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              return customer.address = value;
+                            } else {
+                              return "chưa nhập gì";
+                            }
+                          },
+                          style: TextStyle(
+                            fontFamily: 'WorkSans',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: DesignCourseAppTheme.nearlyBlue,
+                          ),
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            suffixIcon: Icon(Icons.home),
+                            labelText: address,
+                            border: InputBorder.none,
+                            helperStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              letterSpacing: 0.2,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]))),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                height: 64,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: HexColor('#F8FAFB'),
-                      borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                        bottomLeft: Radius.circular(13.0),
-                        topLeft: Radius.circular(13.0),
-                        topRight: Radius.circular(13.0),
-                      ),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  return customer.phone = value;
-                                } else {
-                                  return "chưa nhập gì";
-                                }
-                              },
-                              style: TextStyle(
-                                fontFamily: 'WorkSans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: DesignCourseAppTheme.nearlyBlue,
-                              ),
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                labelText: 'Số điện thoại: ',
-                                border: InputBorder.none,
-                                helperStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  letterSpacing: 0.2,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Icon(Icons.phone, color: HexColor('#B9BABC')),
-                        )
-                      ],
-                    ),
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: FlatButton(
+                  onPressed: () {
+                    print(customer.toJson());
+                  },
+                  textColor: Colors.white,
+                  color: Colors.green,
+                  child: Text(
+                    "OK",
+                    style: TextStyle(fontSize: 20),
                   ),
                 ),
               ),
-              const Expanded(
-                child: SizedBox(),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                height: 64,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: HexColor('#F8FAFB'),
-                      borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                        bottomLeft: Radius.circular(13.0),
-                        topLeft: Radius.circular(13.0),
-                        topRight: Radius.circular(13.0),
-                      ),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  return customer.email = value;
-                                } else {
-                                  return "chưa nhập gì";
-                                }
-                              },
-                              style: TextStyle(
-                                fontFamily: 'WorkSans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: DesignCourseAppTheme.nearlyBlue,
-                              ),
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                labelText: 'Email: ',
-                                border: InputBorder.none,
-                                helperStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  letterSpacing: 0.2,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                              ),
-                              onEditingComplete: () {},
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Icon(Icons.email, color: HexColor('#B9BABC')),
-                        )
-                      ],
-                    ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  textColor: Colors.white,
+                  color: Colors.red,
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(fontSize: 20),
                   ),
                 ),
               ),
-              const Expanded(
-                child: SizedBox(),
-              )
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                height: 64,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: HexColor('#F8FAFB'),
-                      borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                        bottomLeft: Radius.circular(13.0),
-                        topLeft: Radius.circular(13.0),
-                        topRight: Radius.circular(13.0),
-                      ),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                              padding:
-                                  const EdgeInsets.only(left: 16, right: 16),
-                              child: DropdownButton<String>(
-                                value: thanhpho,
-                                style: TextStyle(color: Colors.blue[400]),
-                                underline: Container(
-                                  height: 0,
-                                  color: Colors.deepPurpleAccent,
-                                  alignment: Alignment.center,
-                                ),
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    thanhpho = newValue;
-                                  });
-                                },
-                                items: tpList.map((valueItem) {
-                                  return DropdownMenuItem<String>(
-                                    value: valueItem.name,
-                                    child: Text(valueItem.name),
-                                  );
-                                }).toList(),
-                              )),
-                        ),
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Icon(Icons.location_city,
-                              color: HexColor('#B9BABC')),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const Expanded(
-                child: SizedBox(),
-              )
-            ],
+          SizedBox(
+            height: 16,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                height: 64,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: HexColor('#F8FAFB'),
-                      borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                        bottomLeft: Radius.circular(13.0),
-                        topLeft: Radius.circular(13.0),
-                        topRight: Radius.circular(13.0),
-                      ),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                              padding:
-                                  const EdgeInsets.only(left: 16, right: 16),
-                              child: DropdownButton<String>(
-                                value: tp,
-                                style: TextStyle(color: Colors.blue[400]),
-                                underline: Container(
-                                  height: 0,
-                                  color: Colors.deepPurpleAccent,
-                                ),
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    customer.idship = newValue;
-                                    tp = newValue;
-                                  });
-                                },
-                                items: quanList.map((valueItem) {
-                                  return DropdownMenuItem<String>(
-                                    value: valueItem.id.toString(),
-                                    child: Text(valueItem.name),
-                                    onTap: () {
-                                      quanhuyen = valueItem.name;
-                                    },
-                                  );
-                                }).toList(),
-                              )),
-                        ),
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Icon(Icons.location_city,
-                              color: HexColor('#B9BABC')),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const Expanded(
-                child: SizedBox(),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                height: 64,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: HexColor('#F8FAFB'),
-                      borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                        bottomLeft: Radius.circular(13.0),
-                        topLeft: Radius.circular(13.0),
-                        topRight: Radius.circular(13.0),
-                      ),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  return duong = value;
-                                } else {
-                                  return "chưa nhập gì";
-                                }
-                              },
-                              style: TextStyle(
-                                fontFamily: 'WorkSans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: DesignCourseAppTheme.nearlyBlue,
-                              ),
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                labelText: 'Địa chỉ: ',
-                                border: InputBorder.none,
-                                helperStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  letterSpacing: 0.2,
-                                  color: HexColor('#B9BABC'),
-                                ),
-                              ),
-                              onEditingComplete: () {},
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Icon(Icons.location_city,
-                              color: HexColor('#B9BABC')),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const Expanded(
-                child: SizedBox(),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                height: 64,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: HexColor('#F8FAFB'),
-                      borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                        bottomLeft: Radius.circular(13.0),
-                        topLeft: Radius.circular(13.0),
-                        topRight: Radius.circular(13.0),
-                      ),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: RaisedButton(
-                              onPressed: () {
-                                customer.idCustomer =
-                                    "cus" + Random().nextInt(100).toString();
-                                customer.address = "Đường " +
-                                    duong +
-                                    "/ " +
-                                    quanhuyen +
-                                    "/ " +
-                                    thanhpho;
-                                print(customer.idship);
-                                _customerService.saveOrderList(customer);
-                                Navigator.pop(context);
-                              },
-                              child: Text("Tạo"),
-                              padding: EdgeInsets.only(top: 8, bottom: 8),
-                              color: Colors.green[300],
-                              textColor: Colors.white,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: RaisedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("Hủy"),
-                              padding: EdgeInsets.only(top: 8, bottom: 8),
-                              color: Colors.red[300],
-                              textColor: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const Expanded(
-                child: SizedBox(),
-              )
-            ],
-          ),
+          if (isLoading)
+            CircularProgressIndicator(
+              strokeWidth: 6.5,
+            )
+          else
+            Center(
+              child: Text(""),
+            )
         ],
-      )),
+      ),
     );
   }
 
   Widget getAppBarUI() {
     return Padding(
-      padding: const EdgeInsets.only(right: 8, bottom: 8, left: 8),
+      padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Container(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(32.0),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: OrderAppTheme.buildLightTheme().primaryColor,
-                  ),
-                ),
+          InkWell(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(32.0),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.arrow_back,
+                color: OrderAppTheme.buildLightTheme().primaryColor,
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 70, right: 65),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  'Thêm khách hàng',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    letterSpacing: 0.2,
-                    color: DesignCourseAppTheme.grey,
-                  ),
-                ),
-              ],
+            padding: const EdgeInsets.symmetric(horizontal: 80),
+            child: Text(
+              'Thêm khách hàng',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                letterSpacing: 0.2,
+                color: DesignCourseAppTheme.grey,
+              ),
             ),
           ),
         ],

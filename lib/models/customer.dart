@@ -1,4 +1,8 @@
+import 'package:quan_ly_taiducfood/repositories/customer_repository.dart';
+
 class Customer {
+  var _rep = CustomerRespository();
+
   String id;
   String name;
   String phone;
@@ -29,5 +33,13 @@ class Customer {
       "address": address,
       "point": point,
     };
+  }
+
+  void addCustomer(Customer customer) {
+    final e = _rep.addCustomer(customer);
+  }
+
+  void updateCustomer(Customer customer) {
+    final e = _rep.updateCustomer(customer, customer.id);
   }
 }
