@@ -9,6 +9,7 @@ import 'customer_Details.dart';
 class CustomerListView extends StatefulWidget {
   const CustomerListView({Key key, this.callBack}) : super(key: key);
   final Function callBack;
+
   @override
   _CustomerListViewState createState() => _CustomerListViewState();
 }
@@ -33,9 +34,20 @@ class _CustomerListViewState extends State<CustomerListView>
     });
   }
 
+  _deleteCustomer(Customer cus) async {
+    setState(() {
+      isLoading = true;
+    });
+    await service.deleteCustomer(cus);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   void initState() {
     _fetchCustomers();
+
     super.initState();
   }
 
@@ -57,7 +69,13 @@ class _CustomerListViewState extends State<CustomerListView>
             return ListView.builder(
               itemCount: customerList.length,
               itemBuilder: (context, index) {
-                return CategoryView(customer: customerList[index]);
+                return CategoryView(
+                  customer: customerList[index],
+                  callback: () {
+                    _deleteCustomer(customerList[index]);
+                    _fetchCustomers();
+                  },
+                );
               },
             );
           }
@@ -107,7 +125,39 @@ class CategoryView extends StatelessWidget {
         children: [
           InkWell(
             child: Icon(Icons.close),
-            onTap: () => print("object"),
+            onTap: () => showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Text("Bạn có muốn Xóa ${customer.name} ?",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      )),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(2.0))),
+                  actions: [
+                    ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.green[900]),
+                        onPressed: () {
+                          callback();
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.check),
+                        label: Text("Có")),
+                    ElevatedButton.icon(
+                        style:
+                            ElevatedButton.styleFrom(primary: Colors.red[900]),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.close),
+                        label: Text("Không")),
+                  ],
+                );
+              },
+            ),
             radius: 32,
           ),
           Padding(padding: EdgeInsets.symmetric(vertical: 2)),

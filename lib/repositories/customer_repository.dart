@@ -49,11 +49,18 @@ class CustomerRespository {
       return null;
   }
 
-  Future updateCustomer(Customer customer, String id) async {
-    final response = await this.httpClient.put((url + "/" + id), body: {});
+  Future<APIResponse<bool>> updateCustomer(Customer customer, String id) async {
+    final response = await this.httpClient.put((url + "/" + id),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(customer.toJson()));
+
     if (response.statusCode == 204) {
-    } else
+      return APIResponse<bool>(data: true);
+    } else {
       return null;
+    }
   }
 
   Future<void> deleteCustomer(Customer customer) async {

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/quan.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/thanhpho.dart';
 import 'package:quan_ly_taiducfood/main.dart';
@@ -51,7 +52,8 @@ class _AddcustomerScreen extends State<AddCustomer> {
     setState(() {
       isLoading = true;
     });
-    customer.updateCustomer(customer);
+    var a = customer.addCustomer(customer);
+
     setState(() {
       isLoading = false;
       Navigator.pop(context);
@@ -66,11 +68,20 @@ class _AddcustomerScreen extends State<AddCustomer> {
         backgroundColor: Colors.transparent,
         body: Column(
           children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).padding.top,
+            Container(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).padding.top,
+                  ),
+                  getAppBarUI(),
+                  SingleChildScrollView(
+                    child: getInfoUI(),
+                    padding: EdgeInsets.all(16),
+                  )
+                ],
+              ),
             ),
-            getAppBarUI(),
-            getInfoUI(),
           ],
         ),
       ),
@@ -79,6 +90,7 @@ class _AddcustomerScreen extends State<AddCustomer> {
 
   Widget getInfoUI() {
     return Container(
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(32),
         color: OrderAppTheme.buildLightTheme().primaryColor,
@@ -279,12 +291,14 @@ class _AddcustomerScreen extends State<AddCustomer> {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: FlatButton(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.green),
                   onPressed: () {
-                    print(customer.toJson());
+                    if (customer.toJson().isNotEmpty &&
+                        customer.name.isNotEmpty) {
+                      _isLoading();
+                    }
                   },
-                  textColor: Colors.white,
-                  color: Colors.green,
                   child: Text(
                     "OK",
                     style: TextStyle(fontSize: 20),
@@ -293,12 +307,11 @@ class _AddcustomerScreen extends State<AddCustomer> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: FlatButton(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.red),
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  textColor: Colors.white,
-                  color: Colors.red,
                   child: Text(
                     "Cancel",
                     style: TextStyle(fontSize: 20),
