@@ -14,7 +14,7 @@ import 'products_action/View/product_edit.dart';
 import 'statistical_action/View/bao_cao_chi_tiet/loi_nhuan_in_a_day.dart';
 import 'statistical_action/View/bao_cao_chi_tiet/doanh_thu_in_a_day.dart';
 import 'statistical_action/View/bao_cao_chi_tiet/thanh_toan_in_a_day.dart';
-
+import 'package:quan_ly_taiducfood/login_action/Login/login_screen.dart';
 
 
 void main() async {
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           textTheme: AppTheme.textTheme,
           platform: TargetPlatform.iOS,
         ),
-        home: HomeWidget(),
+        home: Login_screen(),
         routes: {
           ProductDetailScreen.routeName: (ctxPD) => ProductDetailScreen(),
           ProductEdit.routeName: (ctxPE) => ProductEdit(),
