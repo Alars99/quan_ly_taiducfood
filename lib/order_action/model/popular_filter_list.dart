@@ -1,58 +1,35 @@
+import 'package:flutter/widgets.dart';
+
 class PopularFilterListData {
   PopularFilterListData({
     this.titleTxt = '',
     this.isSelected = false,
-    this.id = 0,
+    this.id = "",
   });
 
   String titleTxt;
   bool isSelected;
-  int id;
+  String id;
 
   static List<PopularFilterListData> popularFList = <PopularFilterListData>[
     PopularFilterListData(
-      titleTxt: "Thịt Bò Úc",
-      id: 1,
+      titleTxt: "Apple",
+      id: 'ap',
       isSelected: false,
     ),
     PopularFilterListData(
-      titleTxt: "Thịt Gà",
-      id: 2,
+      titleTxt: "Samsung",
+      id: 'sm',
       isSelected: false,
     ),
     PopularFilterListData(
-      titleTxt: "Thịt Bò Mỹ",
-      id: 3,
+      titleTxt: "Xiaomi",
+      id: 'xi',
       isSelected: false,
     ),
     PopularFilterListData(
-      titleTxt: "Thịt Cừu",
-      id: 4,
-      isSelected: false,
-    ),
-    PopularFilterListData(
-      titleTxt: "Thịt Dê",
-      id: 5,
-      isSelected: false,
-    ),
-    PopularFilterListData(
-      titleTxt: "Thịt Heo",
-      id: 6,
-      isSelected: false,
-    ),
-    PopularFilterListData(
-      titleTxt: "Thịt Trâu",
-      id: 7,
-      isSelected: false,
-    ),
-    PopularFilterListData(
-      titleTxt: "Hải sản",
-      id: 8,
-      isSelected: false,
-    ),
-    PopularFilterListData(
-      titleTxt: "Sản phẩm khác",
-      id: 9,
+      titleTxt: "VinSmart",
+      id: 'vi',
       isSelected: false,
     ),
   ];

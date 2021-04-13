@@ -15,6 +15,8 @@ class Product {
   double costPrice;
   double tax;
   bool status;
+  bool isSelected;
+  int count;
 
   Product(
       {this.id,
@@ -30,9 +32,9 @@ class Product {
       this.status,
       this.tax,
       this.updateDay,
-      this.wholesalePrice});
-
-
+      this.isSelected = false,
+      this.wholesalePrice,
+      this.count = 1});
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
       id: json["id"],
@@ -48,7 +50,8 @@ class Product {
       status: json["status"],
       tax: json["tax"],
       updateDay: json["updateDay"],
-      wholesalePrice: json["wholesalePrice"]);
+      wholesalePrice: json["wholesalePrice"],
+      count: json['count']);
 
   Map<String, dynamic> toJson() {
     return {
@@ -66,6 +69,7 @@ class Product {
       "tax": 10,
       "updateDay": updateDay,
       "wholesalePrice": wholesalePrice,
+      'count': count,
     };
   }
 }
