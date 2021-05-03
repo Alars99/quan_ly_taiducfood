@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'package:quan_ly_taiducfood/customer_action/view/customer_screen.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/customer.dart';
 import 'package:quan_ly_taiducfood/customer_action/models/quan.dart';
+import 'package:quan_ly_taiducfood/helper/search_delegate.dart';
 import 'package:quan_ly_taiducfood/models/product.dart';
 import 'package:quan_ly_taiducfood/products_action/models/product_detail_data.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/CustomerController.dart';
@@ -11,6 +11,7 @@ import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart'
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'add_food.dart';
+import 'customer_list_widget.dart';
 import 'order_list_screen.dart';
 import 'order_theme.dart';
 import 'order_list_view.dart';
@@ -283,7 +284,6 @@ class _OrderScreenState extends State<OrderScreen>
     );
   }
 
-
   Widget getTimeDateUI() {
     int phiGiaohangInt = phiGiaohang.round();
     return Padding(
@@ -507,16 +507,9 @@ class _OrderScreenState extends State<OrderScreen>
                     borderRadius: const BorderRadius.all(
                       Radius.circular(4.0),
                     ),
-                    onTap: () async {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CustomerScreen()),
-                      );
-
-                      setState(() {
-                        getInfoCustomer(int.parse(result));
-                      });
+                    onTap: () {
+    
+                      setState(() {});
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(

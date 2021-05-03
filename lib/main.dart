@@ -8,7 +8,6 @@ import 'package:quan_ly_taiducfood/products_action/View/product_out_soluong/prod
 import 'package:quan_ly_taiducfood/products_action/View/products_search.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_detail_screen.dart';
 import 'package:quan_ly_taiducfood/order_action/View/Order/order_list_screen.dart';
-import 'package:quan_ly_taiducfood/repositories/product_repository.dart';
 import 'products_action/View/product_detail.dart';
 import 'products_action/View/product_edit.dart';
 import 'statistical_action/View/bao_cao_chi_tiet/loi_nhuan_in_a_day.dart';
