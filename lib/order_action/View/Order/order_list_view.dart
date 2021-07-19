@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:quan_ly_taiducfood/models/product.dart';
+import 'package:quan_ly_taiducfood/order_action/model/test.dart';
 import 'order_theme.dart';
 
 class OrderListView extends StatelessWidget {
@@ -11,20 +11,18 @@ class OrderListView extends StatelessWidget {
     this.animation,
     this.callback,
     this.removeItem,
-    this.updateItem,
   }) : super(key: key);
 
   final VoidCallback callback;
   final VoidCallback removeItem;
-  final VoidCallback updateItem;
-  final Product sanpham;
+  final Sanpham sanpham;
   final AnimationController animationController;
   final Animation<dynamic> animation;
 
   @override
   Widget build(BuildContext context) {
     final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
-    int giaspInt = double.parse(sanpham.price.toString()).round();
+    int giaspInt = double.parse(sanpham.price).round();
     return AnimatedBuilder(
       animation: animationController,
       builder: (BuildContext context, Widget child) {

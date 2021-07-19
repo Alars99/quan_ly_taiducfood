@@ -50,10 +50,4 @@ class Repository {
     var connection = await database;
     return await connection.update(table, data);
   }
-
-  updateAData(table, String id, int count) async {
-    var connection = await database;
-    String sql = "Update $table SET count = '$count' WHERE id = '$id'";
-    return await connection.rawUpdate(sql);
-  }
 }

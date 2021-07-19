@@ -3,12 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:quan_ly_taiducfood/models/api_repository.dart';
-import 'package:quan_ly_taiducfood/models/product.dart';
 import 'package:quan_ly_taiducfood/order_action/Controller/OrderController.dart';
 import 'package:quan_ly_taiducfood/order_action/model/popular_filter_list.dart';
 import 'package:quan_ly_taiducfood/order_action/model/test.dart';
-import 'package:quan_ly_taiducfood/repositories/product_repository.dart';
 import 'order_theme.dart';
 
 class AddFood extends StatefulWidget {
@@ -18,58 +15,40 @@ class AddFood extends StatefulWidget {
 
 class _AddFoodState extends State<AddFood> {
   final formatCurrency = new NumberFormat.simpleCurrency(locale: 'vi');
-  var product = Product();
+  var sanpham = Sanpham();
   var _orderService = OrderService();
-  List<Sanpham> orderList = [];
-
-  APIResponse<List<Product>> _apiResponse;
-  bool isLoading = false;
-  ProductRespository service = ProductRespository();
+  double tongTienhang;
+  // ignore: deprecated_member_use
+  List<Sanpham> orderList = List<Sanpham>();
 
   @override
   void initState() {
-    _fetchProduct();
     super.initState();
   }
 
-  checkOderList(Product product) async {
-    bool flag = false;
-    final list1 = await _orderService.readOrderList();
-    list1.forEach((element) {
-      Product pro = Product();
-      pro.id = element['id'];
-      if (product.id == pro.id) {
-        flag = true;
+  List<Sanpham> list = [];
+  doSomeThing(int id) {
+    DatabaseReference ref = FirebaseDatabase.instance.reference();
+    var data = ref.child("productList").child(id.toString()).child("Product");
+    data.once().then((DataSnapshot dataSnapshot) {
+      var keys = dataSnapshot.value.keys;
+      var values = dataSnapshot.value;
+      list.clear();
+      for (var key in keys) {
+        Sanpham sanpham = new Sanpham(
+          id: values[key]["id"],
+          name: values[key]["name"],
+          brand: values[key]["brand"],
+          price: values[key]["price"],
+          img: values[key]["image"],
+          amout: int.parse(values[key]["amount"]),
+          priceBuon: values[key]["priceBuon"],
+          priceVon: values[key]["priceVon"],
+          count: values[key]["count"],
+        );
+        list.add(sanpham);
       }
-    });
-    if (flag == false) {
-      _orderService.saveOrderList(product);
-    } else {
-      print("Show message box");
-      flag = false;
-    }
-  }
-
-  List<Product> list = [];
-
-  doSomething(String id) {
-    list.clear();
-    _apiResponse.data.forEach((element) {
-      if (element.categoryId == id) {
-        list.add(element);
-      }
-    });
-  }
-
-  _fetchProduct() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    _apiResponse = await service.getProductsList();
-
-    setState(() {
-      isLoading = false;
+      setState(() {});
     });
   }
 
@@ -137,7 +116,12 @@ class _AddFoodState extends State<AddFood> {
                     onTap: () async {
                       for (var sp in list) {
                         if (sp.isSelected) {
-                          checkOderList(sp);
+                          try {
+                            var result = await _orderService.saveOrderList(sp);
+                            print(result);
+                          } catch (e) {
+                            print("Sản phẩm đã thêm rồi");
+                          }
                         }
                       }
                       Navigator.pop(context);
@@ -266,7 +250,7 @@ class _AddFoodState extends State<AddFood> {
     );
   }
 
-  String danhmuc = '';
+  int danhmuc = 0;
   List<Widget> getPList() {
     final List<Widget> noList = <Widget>[];
 
@@ -288,16 +272,12 @@ class _AddFoodState extends State<AddFood> {
                         value: a.id,
                         groupValue: danhmuc,
                         onChanged: (value) {
-                          setState(() {
-                            danhmuc = value;
-                            doSomething(danhmuc);
-                          });
+                          danhmuc = value;
+                          doSomeThing(danhmuc);
                         },
                       ),
                       Text(
                         a.titleTxt,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
                       )
                     ],
                   ),
@@ -343,14 +323,12 @@ class _AddFoodState extends State<AddFood> {
         const SizedBox(
           height: 8,
         ),
-        (isLoading)
-            ? Center(child: CircularProgressIndicator())
-            : Padding(
-                padding: const EdgeInsets.only(right: 16, left: 16),
-                child: Column(
-                  children: getProList(),
-                ),
-              ),
+        Padding(
+          padding: const EdgeInsets.only(right: 16, left: 16),
+          child: Column(
+            children: getProList(),
+          ),
+        ),
       ],
     );
   }
@@ -363,8 +341,8 @@ class _AddFoodState extends State<AddFood> {
       final List<Widget> listUI = <Widget>[];
       for (int i = 0; i < columnCount; i++) {
         try {
-          final Product date = list[count];
-          int priceInt = double.parse(date.price.toString()).round();
+          final Sanpham date = list[count];
+          int priceInt = double.parse(date.price).round();
           listUI.add(Expanded(
             child: Column(
               children: <Widget>[
@@ -436,43 +414,48 @@ class _AddFoodState extends State<AddFood> {
                                           ),
                                         ],
                                       ),
-                                      Padding(
-                                          padding: EdgeInsets.only(right: 50)),
                                       Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          (date.img == null)
-                                              ? Container(
-                                                  height: 50,
-                                                  width: 50,
-                                                  color: Colors.red,
-                                                )
-                                              : Image.network(
-                                                  date.img.contains(
-                                                          "image_picker")
-                                                      ? 'https://firebasestorage.googleapis.com/v0/b/app-quan-ly-taiducfood.appspot.com/o/' +
-                                                          date.img +
-                                                          '?alt=media&token=63435cda-cb54-4b82-bec7-08edadbb049e'
-                                                      : date.img,
-                                                  height: 50,
-                                                ),
                                           Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 80),
-                                            child: Icon(
-                                              date.isSelected
-                                                  ? Icons.check_box
-                                                  : Icons
-                                                      .check_box_outline_blank,
-                                              color: date.isSelected
-                                                  ? OrderAppTheme
-                                                          .buildLightTheme()
-                                                      .primaryColor
-                                                  : Colors.grey
-                                                      .withOpacity(0.6),
-                                            ),
-                                          )
+                                            padding: EdgeInsets.only(left: 105),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          // Image(
+                                          //   image: NetworkImage(date.img),
+                                          //   width: 50,
+                                          // ),
+                                          Image.network(
+                                            date.img.contains("image_picker")
+                                                ? 'https://firebasestorage.googleapis.com/v0/b/app-quan-ly-taiducfood.appspot.com/o/' +
+                                                    date.img +
+                                                    '?alt=media&token=63435cda-cb54-4b82-bec7-08edadbb049e'
+                                                : date.img,
+                                            height: 50,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.zero,
+                                          ),
+                                          Icon(
+                                            date.isSelected
+                                                ? Icons.check_box
+                                                : Icons.check_box_outline_blank,
+                                            color: date.isSelected
+                                                ? OrderAppTheme
+                                                        .buildLightTheme()
+                                                    .primaryColor
+                                                : Colors.grey.withOpacity(0.6),
+                                          ),
                                         ],
                                       ),
                                     ],

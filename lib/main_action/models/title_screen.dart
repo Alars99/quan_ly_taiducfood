@@ -52,15 +52,5 @@ class MealsListData {
       titleTxt: 'Quản lý khách hàng',
       uiId: 5,
     ),
-    MealsListData(
-      imagePath: 'assets/fitness_app/048-support.png',
-      titleTxt: 'Hỗ trợ khách hàng',
-      uiId: 6,
-    ),
-    MealsListData(
-      imagePath: 'assets/fitness_app/037-cash register.png',
-      titleTxt: 'Quản lý nhân viên',
-      uiId: 7,
-    ),
   ];
 }
