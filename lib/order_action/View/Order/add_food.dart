@@ -22,9 +22,9 @@ class _AddFoodState extends State<AddFood> {
   var _orderService = OrderService();
   List<Sanpham> orderList = [];
 
-  APIResponse<List<Product>> _apiResponse;
+  //APIResponse<List<Product>> _apiResponse;
   bool isLoading = false;
-  ProductRespository service = ProductRespository();
+  //ProductRespository service = ProductRespository();
 
   @override
   void initState() {
@@ -54,11 +54,11 @@ class _AddFoodState extends State<AddFood> {
 
   doSomething(String id) {
     list.clear();
-    _apiResponse.data.forEach((element) {
-      if (element.categoryId == id) {
-        list.add(element);
-      }
-    });
+    // _apiResponse.data.forEach((element) {
+    //   if (element.categoryId == id) {
+    //     list.add(element);
+    //   }
+    // });
   }
 
   _fetchProduct() async {
@@ -66,7 +66,7 @@ class _AddFoodState extends State<AddFood> {
       isLoading = true;
     });
 
-    _apiResponse = await service.getProductsList();
+    // _apiResponse = await service.getProductsList();
 
     setState(() {
       isLoading = false;
